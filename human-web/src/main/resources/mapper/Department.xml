@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.DepartmentMapper">
+
+    <!--定义数据表列字段-->
+    <sql id="sqlColumn">
+        id, name, createTime, memo, tel, manager
+    </sql>
+
+    <!--添加员工-->
+    <insert id="add" parameterType="Department">
+        INSERT INTO
+        T_DEPARTMENT(<include refid="sqlColumn"/>)
+        VALUES
+        (#{id}, #{name}, NOW(), #{memo}, #{tel}, #{manager})
+    </insert>
+
+    <!--修改员工-->
+    <update id="modify" parameterType="Department">
+        UPDATE T_DEPARTMENT
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="tel != null">
+                tel = #{tel},
+            </if>
+            <if test="manager != null">
+                manager = #{manager}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--删除员工-->
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM T_DEPARTMENT WHERE id=#{departmentId}
+    </delete>
+
+    <!--查询员工信息-->
+    <select id="findById" parameterType="Integer" resultType="Department">
+        SELECT <include refid="sqlColumn"/> FROM T_DEPARTMENT WHERE id = #{departmentId};
+    </select>
+
+    <!--查询员工信息-->
+    <select id="findByCondition" parameterType="Map" resultType="Department">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_DEPARTMENT WHERE 1=1
+        <if test="name != NULL">
+            AND name = #{name}
+        </if>
+        <if test="manager != NULL">
+            AND id = #{manager}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="findCountByCondition" parameterType="Map" resultType="Integer">
+        SELECT COUNT(1) FROM T_DEPARTMENT WHERE 1=1
+        <if test="name != NULL">
+            AND name = #{name}
+        </if>
+        <if test="manager != NULL">
+            AND id = #{manager}
+        </if>
+    </select>
+
+</mapper>

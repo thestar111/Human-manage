@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.EmployeeRelationMapper">
+
+    <!--定义数据表列字段-->
+    <sql id="sqlColumn">
+        id, employeeId, departmentId, rankId, jobId
+    </sql>
+
+    <!--添加-->
+    <insert id="add" parameterType="EmployeeRelation">
+        INSERT INTO
+          T_EMPLOYEE_RELATION(<include refid="sqlColumn"/>)
+        VALUES
+          (#{id}, #{employeeId}, #{departmentId}, #{rankId}, #{jobId})
+    </insert>
+
+    <!--修改-->
+    <update id="modify" parameterType="EmployeeRelation">
+        UPDATE T_EMPLOYEE_RELATION
+        <set>
+            <if test="employeeId != null">
+                employeeId = #{employeeId},
+            </if>
+            <if test="departmentId != null">
+                departmentId = #{departmentId},
+            </if>
+            <if test="rankId != null">
+                rankId = #{rankId},
+            </if>
+            <if test="jobId != null">
+                jobId = #{jobId}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM T_EMPLOYEE_RELATION WHERE id=#{employeeRelationId}
+    </delete>
+    
+    <select id="findById" parameterType="Integer" resultType="EmployeeRelation">
+        SELECT <include refid="sqlColumn"/> FROM T_EMPLOYEE_RELATION WHERE id = #{employeeRelationId}
+    </select>
+
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.MenuMapper">
+    <!--定义数据表列字段-->
+    <sql id="sqlColumn">
+        menuId, menuName, parentMenuId, menuType, leaf, sort, menuUrl, memo
+    </sql>
+
+    <!--添加菜单-->
+    <insert id="add" parameterType="Menu">
+        INSERT INTO
+        T_MENU(<include refid="sqlColumn"/>)
+        VALUES
+        (#{menuId}, #{menuName}, #{parentMenuId}, #{menuType}, #{leaf}, #{sort}, #{menuUrl}, #{memo})
+    </insert>
+
+    <!--修改菜单-->
+    <update id="update" parameterType="Menu">
+        UPDATE T_MENU
+        <set>
+            <if test="menuName != null">
+                menuName = #{menuName},
+            </if>
+            <if test="parentMenuId != null">
+                parentMenuId = #{parentMenuId},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="menuType != null">
+                menuType = #{menuType},
+            </if>
+            <if test="leaf != null">
+                leaf = #{leaf},
+            </if>
+            <if test="menuUrl != null">
+                menuUrl = #{menuUrl},
+            </if>
+            <if test="memo != null">
+                memo = #{memo}
+            </if>
+        </set>
+        WHERE menuId = #{menuId}
+    </update>
+
+    <!--删除菜单-->
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM T_MENU WHERE menuId=${menuId}
+    </delete>
+
+    <select id="findById" parameterType="Integer" resultType="Menu">
+        SELECT
+          <include refid="sqlColumn"/>
+        FROM T_MENU WHERE id=#{menuId}
+    </select>
+
+    <!--查询菜单信息-->
+    <select id="queryAll" parameterType="Map" resultType="Menu">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_MENU WHERE 1=1
+        <if test="menuName != null">
+            AND menuName = #{menuName}
+        </if>
+        <if test="parentMenuId != null">
+            AND parentMenuId = #{parentMenuId}
+        </if>
+        <if test="sort != null">
+            AND sort = #{sort}
+        </if>
+        <if test="menuType != null">
+            AND menuType = #{menuType}
+        </if>
+        <if test="leaf != null">
+            AND leaf = #{leaf}
+        </if>
+        <if test="menuUrl != null">
+            AND menuUrl = #{menuUrl}
+        </if>
+        <if test="memo != null">
+            AND memo = #{memo}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="queryCount" parameterType="Map" resultType="Integer">
+        SELECT
+        COUNT (1)
+        FROM T_MENU WHERE 1=1
+        <if test="menuName != null">
+            AND menuName = #{menuName}
+        </if>
+        <if test="parentMenuId != null">
+            AND parentMenuId = #{parentMenuId}
+        </if>
+        <if test="sort != null">
+            AND sort = #{sort}
+        </if>
+        <if test="menuType != null">
+            AND menuType = #{menuType}
+        </if>
+        <if test="leaf != null">
+            AND leaf = #{leaf}
+        </if>
+        <if test="menuUrl != null">
+            AND menuUrl = #{menuUrl}
+        </if>
+        <if test="memo != null">
+            AND memo = #{memo}
+        </if>
+    </select>
+</mapper>

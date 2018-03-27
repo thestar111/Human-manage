@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.EmployeeMappper">
+
+    <!--定义数据表列字段-->
+    <sql id="sqlColumn">
+        id, name, password, englishName, sex, homeAddr, birthday, tel, nation, email, lastUpdateTime, createTime, department, salary, job, rank
+    </sql>
+
+    <!--添加员工-->
+    <insert id="add" parameterType="Employee">
+        INSERT INTO
+        T_EMPLOYEE(<include refid="sqlColumn"/>)
+        VALUES
+        (#{id}, #{name}, #{password}, #{englishName}, #{sex}, #{homeAddr}, #{birthday}, #{tel}, #{nation}, #{email},
+        NOW(), NOW(), #{department}, #{salary}, #{job}, #{rank})
+    </insert>
+
+    <!--修改-->
+    <update id="modify" parameterType="Employee">
+        UPDATE T_EMPLOYEE
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="englishName != null">
+                englishName = #{englishName},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="homeAddr != null">
+                homeAddr = #{homeAddr},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="tel != null">
+                tel = #{tel},
+            </if>
+            <if test="nation != null">
+                nation = #{nation},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="department != null">
+                department = #{department},
+            </if>
+            <if test="salary != null">
+                salary = #{salary},
+            </if>
+            <if test="job != null">
+                job = #{job},
+            </if>
+            <if test="rank != null">
+                rank = #{rank},
+            </if>
+            lastUpdateTime = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete" parameterType="String">
+        DELETE FROM T_EMPLOYEE WHERE id=#{employeeId}
+    </delete>
+
+    <!--根据编号查询-->
+    <select id="queryEmployById" parameterType="String" resultType="Employee">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_EMPLOYEE WHERE id = #{employeeId}
+    </select>
+
+    <!--查询列表-->
+    <select id="queryEmploy" parameterType="Map" resultType="Employee">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_EMPLOYEE WHERE 1=1
+        <if test="name != NULL">
+            AND name = #{name}
+        </if>
+        <if test="nation != NULL">
+            AND nation = #{nation}
+        </if>
+        <if test="department != NULL">
+            AND department = #{department}
+        </if>
+        <if test="job != NULL">
+            AND job = #{job}
+        </if>
+        <if test="rank != NULL">
+            AND rank = #{rank}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+</mapper>

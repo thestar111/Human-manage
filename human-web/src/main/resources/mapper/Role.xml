@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.RoleMapper">
+
+    <!-- 全部字段-->
+    <sql id="sqlColumn">
+        roleId,parentRoleId,roleType,roleName,memo
+    </sql>
+
+    <!-- Role结果集-->
+    <resultMap id="RoleMap" type="Role">
+        <id property="roleId" column="roleId"/>
+        <result column="parentRoleId" property="parentRoleId"/>
+        <result column="roleType" property="roleType"/>
+        <result column="roleName" property="roleName"/>
+        <result column="memo" property="memo"/>
+    </resultMap>
+
+    <insert id="add" parameterType="Role">
+        INSERT INTO T_ROLE(<include refid="sqlColumn"/>)
+        VALUES (#{roleId}, #{parentRoleId}, #{roleType}, #{roleName}, #{memo})
+    </insert>
+
+    <select id="query" resultMap="RoleMap" parameterType="Map">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_ROLE WHERE 1 = 1
+        <if test="roleId != null">
+            AND roleId = #{roleId}
+        </if>
+        <if test="parentRoleId != null">
+            AND parentRoleId = #{parentRoleId}
+        </if>
+        <if test="roleName != null">
+            AND roleName = #{roleName}
+        </if>
+        <if test="roleType != null">
+            AND roleType = #{roleType}
+        </if>
+        /*limit start, psize*/
+    </select>
+
+    <select id="count" resultType="int" parameterType="Map">
+        SELECT COUNT(1) FROM T_ROLE WHERE 1 = 1
+        <if test="parentRoleId != null">
+            AND parentRoleId = #{parentRoleId}
+        </if>
+        <if test="roleName != null">
+            AND roleName = #{roleName}
+        </if>
+        <if test="roleType != null">
+            AND roleType = #{roleType}
+        </if>
+    </select>
+
+    <update id="modify" parameterType="Role">
+        UPDATE T_ROLE
+        <set>
+            <if test="roleName != null">
+                roleName = #{roleName},
+            </if>
+            <if test="roleType != null">
+                roleType = #{roleType},
+            </if>
+            <if test="parentRoleId != null">
+                parentRoleId = #{parentRoleId},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+        </set>
+        WHERE roleId = #{roleId}
+    </update>
+
+    <select id="find" parameterType="String" resultMap="RoleMap">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_ROLE WHERE roleId = #{roleId}
+    </select>
+</mapper>

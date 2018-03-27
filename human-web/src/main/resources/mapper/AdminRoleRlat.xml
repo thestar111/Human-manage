@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.AdminRoleMapper">
+
+    <resultMap id="AdminRoleRlatMap" type="AdminRoleRlat">
+        <id property="id" column="id"/>
+        <result column="adminId" property="adminId"/>
+        <result column="roleId" property="roleId"/>
+        <result column="memo" property="memo"/>
+    </resultMap>
+
+    <insert id="add" parameterType="AdminRoleRlat">
+        INSERT INTO T_ADMINROLERLAT(id, adminId, roleId, memo)
+        VALUES (#{id}, #{adminId}, #{roleId}, #{memo})
+    </insert>
+
+    <select id="findById" parameterType="String" resultMap="AdminRoleRlatMap">
+        SELECT * FROM T_ADMINROLERLAT WHERE adminId = #{adminId}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM T_ADMINROLERLAT WHERE adminId=#{adminId} AND roleId=#{roleId}
+    </delete>
+</mapper>

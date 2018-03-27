@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- status 是否输出log4j自身的日志信息，默认为OFF状态 monitorInterval : 30s 刷新此配置 -->
+<Configuration status="OFF" monitorInterval="30">
+    <!-- 定义引用名 -->
+    <Properties>
+        <property name="file_log_prefix">%d{yyyy-MM-dd}_%i.gz</property><!-- 日志备份格式 -->
+        <property name="every_file_size">10M</property><!-- 日志切割的最小单位 -->
+        <property name="debug_log_level">DEBUG</property><!-- 日志输出级别 -->
+        <property name="info_log_level">INFO</property><!-- 日志输出级别 -->
+        <property name="error_log_level">ERROR</property><!-- 日志输出级别 -->
+        <Property name="PID">????</Property>
+        <property name="logPath">D:\\human/tomcat/log</property><!-- 日志输出路径 -->
+        <property name="LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{${sys:PID}}{magenta}
+            %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx
+        </property>
+    </Properties>
+
+    <!--定义所有的appender-->
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="${debug_log_level}" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!--日志输出格式-->
+            <PatternLayout>
+                <pattern>%d %X{traceID} >> %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+        </Console>
+
+        <!--
+        重要的是，如果有多个ThresholdFilter，那么Filters是必须的，同时在Filters中，首先要过滤不符合的日志级别，
+        把不需要的首先DENY掉，然后再ACCEPT需要的日志级别，这个次序不能搞颠倒。
+        -->
+
+        <!--DEBUG-->
+        <RollingRandomAccessFile name="HUMAN_PORTAL_DEBUG" fileName="${logPath}/debug.log" immediateFlush="false"
+                                 filePattern="${logPath}/GCMS_PORTAL_debug_${file_log_prefix}">
+            <!--输出格式-->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS z} %X{traceID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <!--只显示debug级别的信息-->
+            <Filters>
+                <!--首先需要过滤不符合的日志级别，把不需要的首先DENY掉，然后在ACCEPT需要的日志级别，次序不能颠倒-->
+                <!--INFO及以上级别拒绝输出-->
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="${debug_log_level}" onMatch="ACCEPT"/>
+            </Filters>
+            <!---->
+            <Policies>
+                <!--时间策略，每隔24小时产生新的日志文件-->
+                <TimeBasedTriggeringPolicy/>
+                <!--大小策略，每到30M时产生新的日志文件-->
+                <SizeBasedTriggeringPolicy size="${every_file_size}"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <!--INFO-->
+        <RollingRandomAccessFile name="HUMAN_PORTAL_INFO" fileName="${logPath}/info.log" immediateFlush="false"
+                                 filePattern="${logPath}/GCMS_PORTAL_info_${file_log_prefix}">
+            <Filters>
+                <!--onMatch:Action to take when the filter matches. The default value is NEUTRAL-->
+                <!--onMismatch:    Action to take when the filter does not match. The default value is DENY-->
+                <!--级别在ERROR之上的都拒绝输出-->
+                <!--在组合过滤器中，接受使用NEUTRAL（中立），被第一个过滤器接受的日志信息，
+                会继续用后面的过滤器进行过滤，只有符合所有过滤器条件的日志信息，才会被最终写入日志文件-->
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="${info_log_level}" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS z} %X{userID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <Policies>
+                <!--<TimeBasedTriggeringPolicy/>-->
+                <SizeBasedTriggeringPolicy size="${every_file_size}"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <!--ERROR-->
+        <RollingRandomAccessFile name="HUMAN_PORTAL_ERROR" fileName="${logPath}/error.log" immediateFlush="false"
+                                 filePattern="${logPath}/GCMS_PORTAL_error_${file_log_prefix}">
+            <Filters>
+                <ThresholdFilter level="${error_log_level}" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS z} %X{userID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <Policies>
+                <!--<TimeBasedTriggeringPolicy/>-->
+                <SizeBasedTriggeringPolicy size="${every_file_size}"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+    </Appenders>
+
+    <!--定义logger，只有定义logger引用appenders才会生效 Mixed sync/async-->
+    <Loggers>
+        <!--logger用于定义log的level以及所采用的appender，如果无需自定义，可以使用root解决，root标签是log的默认输出形式-->
+        <!-- 级别顺序（低到高）：TRACE < DEBUG < INFO < WARN < ERROR < FATAL -->
+        <Root level="${debug_log_level}" includeLocation="true">
+            <AppenderRef ref="Console"/>
+            <!--appender-ref中的值必须是在前面定义的appenders-->
+            <appender-ref ref="HUMAN_PORTAL_DEBUG"/>
+            <appender-ref ref="HUMAN_PORTAL_INFO"/>
+            <appender-ref ref="HUMAN_PORTAL_ERROR"/>
+        </Root>
+
+        <AsyncRoot level="${debug_log_level}" includeLocation="true">
+            <AppenderRef ref="Console"/>
+            <!--appender-ref中的值必须是在前面定义的appenders-->
+            <appender-ref ref="HUMAN_PORTAL_DEBUG"/>
+            <appender-ref ref="HUMAN_PORTAL_INFO"/>
+            <appender-ref ref="HUMAN_PORTAL_ERROR"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

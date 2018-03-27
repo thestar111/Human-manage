@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.PermsionMapper">
+
+    <!-- 全部字段 -->
+    <sql id="sqlColumn">
+        permsionId,permsionName,permsionFlag,menuId,memo
+    </sql>
+
+    <!-- Permsion结果集 -->
+    <resultMap id="PermsionMap" type="Permsion">
+        <id property="permsionId" column="permsionId"/>
+        <result column="permsionName" property="permsionName"/>
+        <result column="permsionFlag" property="permsionFlag"/>
+        <result column="menuId" property="menuId"/>
+        <result column="memo" property="memo"/>
+    </resultMap>
+
+    <insert id="add" parameterType="Permsion">
+        INSERT INTO T_PERMSION(<include refid="sqlColumn"/>)
+        VALUES (#{permsionId}, #{permsionName}, #{permsionFlag}, #{menuId}, #{memo})
+    </insert>
+
+    <select id="query" resultMap="PermsionMap" parameterType="Map">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_PERMSION WHERE 1 = 1
+        <if test="permsionName != null">
+            AND permsionName = #{permsionName}
+        </if>
+        <if test="permsionFlag != null">
+            AND permsionFlag = #{permsionFlag}
+        </if>
+        <if test="menuId != null">
+            AND menuId = #{menuId}
+        </if>
+        /*limit start, psize*/
+    </select>
+
+    <select id="count" resultType="int" parameterType="Map">
+        SELECT COUNT(1) FROM T_PERMSION WHERE 1 = 1
+        <if test="permsionName != null">
+            AND permsionName = #{permsionName}
+        </if>
+        <if test="permsionFlag != null">
+            AND permsionFlag = #{permsionFlag}
+        </if>
+        <if test="menuId != null">
+            AND menuId = #{menuId}
+        </if>
+    </select>
+
+    <select id="find" parameterType="String" resultMap="PermsionMap">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_PERMSION WHERE permsionId = #{permsionId}
+    </select>
+</mapper>

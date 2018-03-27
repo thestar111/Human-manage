@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.MenuRoleRlatMapper">
+    <!--定义数据表列字段-->
+    <sql id="sqlColumn">
+        id, menuId, roleId, memo
+    </sql>
+
+    <!--添加-->
+    <insert id="add" parameterType="MenuRoleRlat">
+        INSERT INTO
+        T_MENUROLERLAT(<include refid="sqlColumn"/>)
+        VALUES
+        (#{id}, #{menuId}, #{roleId}, #{memo})
+    </insert>
+
+    <!--删除-->
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM T_MENUROLERLAT WHERE menuId=${menuId} AND  roleId=#{roleId}
+    </delete>
+
+    <!--查询员工信息-->
+    <select id="findAllMenu" parameterType="int" resultType="MenuRoleRlat">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_MENUROLERLAT WHERE roleId = #{roleId}
+    </select>
+</mapper>

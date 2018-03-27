@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.PermsionRoleRlatMapper">
+
+    <!-- 全部字段 -->
+    <sql id="sqlColumn">
+        id,permsionId,roleId,optType,memo
+    </sql>
+
+    <!-- 权限角色关系结果集 -->
+    <resultMap id="PermsionRoleRlatMap" type="PermsionRoleRlat">
+        <id property="id" column="id"/>
+        <result column="permsionId" property="permsionId"/>
+        <result column="roleId" property="roleId"/>
+        <result column="optType" property="optType"/>
+        <result column="memo" property="memo"/>
+    </resultMap>
+
+    <insert id="add" parameterType="PermsionRoleRlat">
+        INSERT INTO T_PERMSIONROLERLAT(<include refid="sqlColumn"/>)
+        VALUES (#{id}, #{permsionId}, #{roleId}, #{optType}, #{memo})
+    </insert>
+
+    <select id="query" resultMap="PermsionRoleRlatMap" parameterType="String">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_PERMSIONROLERLAT WHERE roleId = #{roleId}
+    </select>
+</mapper>
