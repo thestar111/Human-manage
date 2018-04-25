@@ -331,8 +331,9 @@ var app = new Vue({
 							success : function(data) {
 								if(data.resultCode=='0') {
 									layer.msg("修改成功");
-									$.cookie('supplement', "1");
-									parent.location.href="index.html";
+                                    $.cookie('supplement', "1");
+                                    parent.location.href="/human/system/exit";
+									//parent.location.href="index.html";
 								} else {
 									layer.msg(data.resultMessage);
 								}

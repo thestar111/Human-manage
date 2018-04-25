@@ -7,7 +7,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
 	<meta http-equiv="Cache-Control" content="no-siteapp" />
-	
+
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="./css/xadmin.css">
 	<link rel="stylesheet" href="./css/font.css">
@@ -28,7 +28,7 @@
 		<div class="layui-row">
 			<div class="layui-form-item">
 				<div class="layui-col-xs3">
-					<label for="topicId" class="layui-form-label"> 
+					<label for="topicId" class="layui-form-label">
 						<span class="x-red">*</span>职级
 					</label>
 					<div class="layui-input-inline">
@@ -39,7 +39,7 @@
 					</div>
 				</div>
 				<div class="layui-col-xs3">
-					<label for="title" class="layui-form-label"> 
+					<label for="title" class="layui-form-label">
 						<span class="x-red">*</span>部门
 					</label>
 					<div class="layui-input-inline">
@@ -50,7 +50,7 @@
 					</div>
 				</div>
 				<div class="layui-col-xs6">
-					<label for="title" class="layui-form-label"> 
+					<label for="title" class="layui-form-label">
 						<span class="x-red">*</span>员工
 					</label>
 					<div class="layui-input-inline">
@@ -62,10 +62,10 @@
 				</div>
 			</div>
 		</div>
-		<blockquote class="layui-elem-quote layui-text">当前考核主题{{assessTopic.title}}
+		<blockquote class="layui-elem-quote layui-text">当前考核主题 : {{assessTopic.title}}
 		</blockquote>
 		<form class="layui-form" id="assessFrom" v-if="showForm">
-			<input type="hidden" id="topic" name="topic" v-model="assessTopic.topicId"> 
+			<input type="hidden" id="topic" name="topic" v-model="assessTopic.topicId">
 			<input type="hidden" id="weight" name="weight" v-model="weight">
 			<div class="layui-form-item" v-for="(item,index) in assessContents">
 				<!-- <label for="username" class="layui-form-label">
@@ -75,12 +75,12 @@
 				<div class="layui-input-inline">
 					<span class="x-red"></span>{{ item.content }}
 				</div>
-				<div class="layui-input-inline">
-					<input type="text" :id="gernerateId(index)" name="contentScore" required="" autocomplete="off" class="layui-input">
+				<div class="layui-input-inline" style="text-align: right;" >
+					<input type="text" :id="gernerateId(index)" name="contentScore" required="" autocomplete="off" class="layui-input" placeholder="分数">
 				</div>
 			</div>
-			<div class="layui-form-item">
-				<label for="L_btn" class="layui-form-label"> </label> 
+			<div class="layui-form-item" style="text-align:right;">
+				<label for="L_btn" class="layui-form-label"> </label>
 				<a class="layui-btn layui-btn-normal" lay-filter="save" v-on:click="assessGrade" lay-submit=""> 保存 </a>
 			</div>
 		</form>
@@ -94,7 +94,7 @@
 			rankdata:[],
 			empdata:[],
 			dptdata:[],
-			assessTopic:[],
+			assessTopics:[],
 			assessContents:[],
 			rankId:"",
 			departmentId:"",
@@ -124,7 +124,7 @@
 							layer.msg(data.resultMessage);
 						}
 					},error : function(request) {
-						layer.msg('网络错误'); 
+						layer.msg('网络错误');
 			        }
 				});
 			},
@@ -145,7 +145,7 @@
 							layer.msg(data.resultMessage);
 						}
 					},error : function(request) {
-						layer.msg('网络错误'); 
+						layer.msg('网络错误');
 			        }
 				});
 			},
@@ -157,7 +157,7 @@
 					url : "/human/assessment/query/effective",
 					contentType : "application/json",
 					type : "POST",
-					data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
+					//data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
 					dataType : "json",
 					success : function(data) {
 						if(data.resultCode=='0') {
@@ -167,11 +167,12 @@
 							layer.msg(data.resultMessage);
 						}
 					},error : function(request) {
-						layer.msg('网络错误'); 
+						layer.msg('网络错误');
 			        }
 				});
 			},
 			assessGrade() {
+                let that = this;
 				var jsonStr = $('#assessFrom').serializeObject();
 				var gradeArr = jsonStr.assessResult.contentScore;
 				var totalScore = 0;
@@ -179,6 +180,7 @@
 					totalScore = totalScore + parseInt(gradeArr[i]);
 				}
 				jsonStr.assessResult.score = totalScore;
+                jsonStr.assessResult.employeeId = that.employeeId;
 				var subObj =  {};
 				delete jsonStr.assessResult["contentScore"];
 				$.ajax({
@@ -191,15 +193,15 @@
 					dataType : "json",
 					success : function(data) {
 						if(data.resultCode=='0') {
-							
+
 						} else {
 							layer.msg(data.resultMessage);
 						}
 					},error : function(request) {
-						layer.msg('网络错误'); 
+						layer.msg('网络错误');
 			        }
 				});
-				
+
 			},
 			gernerateId(index) {
 				return "contentScore_" +index;
@@ -251,13 +253,13 @@
 							layer.msg(data.resultMessage);
 						}
 					},error : function(request) {
-						layer.msg('网络错误'); 
+						layer.msg('网络错误');
 			        }
 				});
 			}
 		}
-	})	
-		
+	})
+
 	$.fn.serializeObject = function(flag) {
 	    var o = {};
 	    var dpt = {"assessResult":o};

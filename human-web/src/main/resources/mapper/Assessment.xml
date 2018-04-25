@@ -107,11 +107,11 @@
         WHERE status = '0'
         AND
         <![CDATA[
-              DATE_FORMAT(NOW(), '%Y%m%d %H:%i:%s') >= startTime
+              DATE_FORMAT(NOW(), '%Y-%m-%d') >= startTime
             ]]>
         AND
         <![CDATA[
-              DATE_FORMAT(NOW(), '%Y%m%d %H:%i:%s') <= endTime LIMIT 0, 1
+              DATE_FORMAT(NOW(), '%Y-%m-%d') <= endTime LIMIT 0, 1
             ]]>
     </select>
 

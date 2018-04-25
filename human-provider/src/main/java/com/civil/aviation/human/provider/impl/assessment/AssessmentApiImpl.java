@@ -21,6 +21,7 @@ import com.civil.aviation.human.api.assess.response.QryAssessTopicResponse;
 import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.cons.Constants;
 import com.civil.aviation.human.common.core.domain.Result;
+import com.civil.aviation.human.common.core.utils.SessionUtils;
 import com.civil.aviation.human.database.entity.AssessContent;
 import com.civil.aviation.human.database.entity.AssessResult;
 import com.civil.aviation.human.database.entity.AssessTopic;
@@ -212,6 +213,7 @@ public class AssessmentApiImpl implements AssessmentApi
 		{
 			AssessResult assessResult = EntityMapperHandler.INSTANCE
 					.voToAssessResult (createAssessResultRequest.getAssessResult ());
+			assessResult.setDiscussant ((String) SessionUtils.getValue (SessionUtils.EMPLOYEE_ID_SESSION_KEY));
 			int flag = assessmentMapper.addAssessResult (assessResult);
 
 			if (flag > 0)
