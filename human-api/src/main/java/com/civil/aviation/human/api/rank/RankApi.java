@@ -23,7 +23,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <员工职级接口API>
  *
  * @author zping
  * @version 2018/3/22 0022
@@ -43,7 +43,7 @@ public interface RankApi
 	@POST
 	@Path ("/add")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result add (@Context HttpServletRequest request, CreateRankRequest createRankRequest);
+	Result add (@Context HttpServletRequest request, CreateRankRequest createRankRequest) throws Exception;
 
 	/**
 	 * 修改
@@ -55,7 +55,7 @@ public interface RankApi
 	@POST
 	@Path ("/modify")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result update (@Context HttpServletRequest request, ModifyRankRequest modifyRankRequest);
+	Result update (@Context HttpServletRequest request, ModifyRankRequest modifyRankRequest) throws Exception;
 
 	/**
 	 * 删除
@@ -67,7 +67,7 @@ public interface RankApi
 	@POST
 	@Path ("/delete")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result delete (@Context HttpServletRequest request, DelRankRequest delRankRequest);
+	Result delete (@Context HttpServletRequest request, DelRankRequest delRankRequest) throws Exception;
 
 	/**
 	 * 查询
@@ -79,7 +79,8 @@ public interface RankApi
 	@POST
 	@Path ("/findById")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryRankByIdResponse findById (@Context HttpServletRequest request, QryRankByIdRequest qryRankByIdRequest);
+	QryRankByIdResponse findById (@Context HttpServletRequest request, QryRankByIdRequest qryRankByIdRequest)
+			throws Exception;
 
 	/**
 	 * 查询列表
@@ -92,5 +93,5 @@ public interface RankApi
 	@Path ("/query")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryRankConditionResponse queryConditionPage (@Context HttpServletRequest request,
-			QryRankConditionRequest qryRankConditionRequest);
+			QryRankConditionRequest qryRankConditionRequest) throws Exception;
 }

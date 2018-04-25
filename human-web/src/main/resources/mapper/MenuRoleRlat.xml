@@ -15,14 +15,14 @@
     </insert>
 
     <!--删除-->
-    <delete id="delete" parameterType="Integer">
-        DELETE FROM T_MENUROLERLAT WHERE menuId=${menuId} AND  roleId=#{roleId}
+    <delete id="delete">
+        DELETE FROM T_MENUROLERLAT WHERE menuId=${0} AND  roleId=#{1}
     </delete>
 
-    <!--查询员工信息-->
-    <select id="findAllMenu" parameterType="int" resultType="MenuRoleRlat">
-        SELECT
-        <include refid="sqlColumn"/>
-        FROM T_MENUROLERLAT WHERE roleId = #{roleId}
+    <!--根据角色编号查询所有菜单信息-->
+    <select id="findAllMenu" parameterType="String" resultType="Menu">
+        SELECT * FROM T_MENU T
+          WHERE EXISTS (SELECT menuId FROM T_MENUROLERLAT R
+          WHERE roleId IN (SELECT roleId FROM T_ADMINROLERLAT A WHERE A.adminId = #{employeeId}) AND R.menuId = T.menuId)
     </select>
 </mapper>

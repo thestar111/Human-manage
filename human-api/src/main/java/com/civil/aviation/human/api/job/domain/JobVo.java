@@ -27,7 +27,7 @@ import java.io.Serializable;
 @Setter
 public class JobVo implements Serializable
 {
-	private int jobId;
+	private Integer jobId;
 
 	private String name;
 

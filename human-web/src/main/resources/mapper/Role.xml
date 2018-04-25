@@ -72,9 +72,20 @@
         WHERE roleId = #{roleId}
     </update>
 
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM T_ROLE WHERE roleId=#{roleId}
+    </delete>
+
     <select id="find" parameterType="String" resultMap="RoleMap">
         SELECT
         <include refid="sqlColumn"/>
         FROM T_ROLE WHERE roleId = #{roleId}
+    </select>
+
+    <select id="qryRoleByEmployeeId" parameterType="String" resultMap="RoleMap">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_ROLE T
+        WHERE EXISTS (SELECT * FROM T_ADMINROLERLAT A WHERE A.adminId=#{employeeId} AND T.roleId=A.roleId)
     </select>
 </mapper>

@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 public class QryRoleByIdRequest extends BaseRequest
 {
-	private int roleId;
+	private Integer roleId;
 
 	@Override
 	public String toString ()

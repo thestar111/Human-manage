@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 public class QryPermsionByIdRequest extends BaseRequest
 {
-	private int permsionId;
+	private Integer permsionId;
 
 	@Override
 	public String toString ()

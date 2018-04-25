@@ -59,6 +59,26 @@ public class Employee implements Serializable
 
 	private String rank;
 
+	/**
+	 * 部门名称
+	 */
+	private String departName;
+
+	/**
+	 * 职级名称
+	 */
+	private String rankName;
+
+	/**
+	 * 职位称呼
+	 */
+	private String jobName;
+
+	/**
+	 * 是否需要补充信息（0：要补充  1：已补充）
+	 */
+	private Integer supplement;
+
 	@Override
 	public String toString ()
 	{
@@ -79,6 +99,9 @@ public class Employee implements Serializable
 		sb.append (", salary='").append (salary).append ('\'');
 		sb.append (", job='").append (job).append ('\'');
 		sb.append (", rank='").append (rank).append ('\'');
+		sb.append (", departName='").append (departName).append ('\'');
+		sb.append (", rankName='").append (rankName).append ('\'');
+		sb.append (", jobName='").append (jobName).append ('\'');
 		sb.append ('}');
 		return sb.toString ();
 	}

@@ -19,6 +19,18 @@
     </select>
 
     <delete id="delete">
-        DELETE FROM T_ADMINROLERLAT WHERE adminId=#{adminId} AND roleId=#{roleId}
+        DELETE FROM T_ADMINROLERLAT WHERE adminId=#{0} AND roleId=#{1}
     </delete>
+
+    <!--绑定角色-->
+    <parameterMap type="java.util.Map" id="bindRoleMap">
+        <parameter property="admin" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="role" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    </parameterMap>
+
+    <select id="bindRole" parameterMap="bindRoleMap" statementType="CALLABLE">
+        <![CDATA[
+          {CALL PRO_ADMINROLE(?,?)}
+        ]]>
+    </select>
 </mapper>

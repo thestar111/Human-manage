@@ -27,8 +27,8 @@ import java.io.Serializable;
 @Setter
 public class Role implements Serializable
 {
-	private int roleId;
-	private int parentRoleId;
+	private Integer roleId;
+	private Integer parentRoleId;
 	private String roleType;
 	private String roleName;
 	private String memo;

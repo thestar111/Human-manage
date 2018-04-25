@@ -21,6 +21,29 @@
         VALUES (#{permsionId}, #{permsionName}, #{permsionFlag}, #{menuId}, #{memo})
     </insert>
 
+    <update id="modify" parameterType="Permsion">
+        UPDATE T_PERMSION
+        <set>
+            <if test="permsionName != null">
+                permsionName = #{permsionName},
+            </if>
+            <if test="permsionFlag != null">
+                permsionFlag = #{permsionFlag},
+            </if>
+            <if test="menuId != null">
+                menuId = #{menuId},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+        </set>
+        WHERE permsionId = #{permsionId}
+    </update>
+    
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM T_PERMSION WHERE permsionId = #{permsionId}
+    </delete>
+
     <select id="query" resultMap="PermsionMap" parameterType="Map">
         SELECT
         <include refid="sqlColumn"/>
@@ -55,4 +78,18 @@
         <include refid="sqlColumn"/>
         FROM T_PERMSION WHERE permsionId = #{permsionId}
     </select>
+
+    <select id="qryUserAllPersion" parameterType="List" resultType="String">
+        SELECT permsionFlag FROM T_PERMSION P
+        WHERE EXISTS
+        (
+        SELECT permsionId from T_PERMSIONROLERLAT R
+        WHERE R.roleId IN
+        <foreach collection="list" item="roleId" index="index" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+        AND P.permsionId = R.permsionId
+        )
+    </select>
+
 </mapper>

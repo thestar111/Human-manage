@@ -15,7 +15,7 @@ import com.civil.aviation.human.database.entity.PermsionRoleRlat;
 import java.util.List;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <角色权限管理Mapper>
  *
  * @author zping
  * @version 2017/7/11 0011

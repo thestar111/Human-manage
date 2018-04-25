@@ -4,7 +4,7 @@
 
     <!--定义数据表列字段-->
     <sql id="sqlColumn">
-        id, name, password, englishName, sex, homeAddr, birthday, tel, nation, email, lastUpdateTime, createTime, department, salary, job, rank
+        id, name, password, englishName, sex, homeAddr, birthday, tel, nation, email, lastUpdateTime, createTime, department, salary, job, rank, supplement
     </sql>
 
     <!--添加员工-->
@@ -13,7 +13,7 @@
         T_EMPLOYEE(<include refid="sqlColumn"/>)
         VALUES
         (#{id}, #{name}, #{password}, #{englishName}, #{sex}, #{homeAddr}, #{birthday}, #{tel}, #{nation}, #{email},
-        NOW(), NOW(), #{department}, #{salary}, #{job}, #{rank})
+        NOW(), NOW(), #{department}, #{salary}, #{job}, #{rank}, 0)
     </insert>
 
     <!--修改-->
@@ -22,9 +22,6 @@
         <set>
             <if test="name != null">
                 name = #{name},
-            </if>
-            <if test="password != null">
-                password = #{password},
             </if>
             <if test="englishName != null">
                 englishName = #{englishName},
@@ -59,9 +56,16 @@
             <if test="rank != null">
                 rank = #{rank},
             </if>
+            <if test="supplement != null">
+                supplement = #{supplement},
+            </if>
             lastUpdateTime = NOW()
         </set>
         WHERE id = #{id}
+    </update>
+
+    <update id="resetPassword" parameterType="String">
+       UPDATE T_EMPLOYEE SET password = #{1} WHERE employeeId=#{0}
     </update>
 
     <!--删除-->
@@ -78,9 +82,8 @@
 
     <!--查询列表-->
     <select id="queryEmploy" parameterType="Map" resultType="Employee">
-        SELECT
-        <include refid="sqlColumn"/>
-        FROM T_EMPLOYEE WHERE 1=1
+        SELECT E.*, D.`name` AS departName, R.`name` AS rankName , J.`name` AS jobName
+        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id
         <if test="name != NULL">
             AND name = #{name}
         </if>
@@ -98,6 +101,36 @@
         </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="queryAssessEmploy" resultType="Employee">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_EMPLOYEE T WHERE
+        NOT EXISTS (SELECT employee FROM T_ASSESS_RESULT A WHERE A.discussant = #{2} AND
+        A.time=DATE_FORMAT(NOW(),'%Y-01-01 00:00:00') AND A.employee = T.id)
+        AND department = #{0} AND rank = #{1};
+    </select>
+
+    <select id="queryCountByCondition" parameterType="Map" resultType="Integer">
+        SELECT
+        COUNT(1)
+        FROM T_EMPLOYEE WHERE 1=1
+        <if test="name != NULL">
+            AND name = #{name}
+        </if>
+        <if test="nation != NULL">
+            AND nation = #{nation}
+        </if>
+        <if test="department != NULL">
+            AND department = #{department}
+        </if>
+        <if test="job != NULL">
+            AND job = #{job}
+        </if>
+        <if test="rank != NULL">
+            AND rank = #{rank}
         </if>
     </select>
 

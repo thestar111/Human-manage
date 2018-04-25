@@ -36,5 +36,6 @@ public class Constants
 	{
 		public static final String NOT_LOGIN = "999998";
 		public static final String FAILED = "-1";
+		public static final String SUCCESS = "0";
 	}
 }

@@ -14,9 +14,10 @@ import com.civil.aviation.human.database.entity.Role;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * <角色信息Mapper>
+ * <员工角色信息Mapper>
  *
  * @author zping
  * @version 2017/7/11 0011
@@ -30,7 +31,7 @@ public interface RoleMapper
 	 *
 	 * @param role
 	 */
-	void add (Role role);
+	int add (Role role);
 
 	/**
 	 * 查询
@@ -53,7 +54,14 @@ public interface RoleMapper
 	 *
 	 * @param role
 	 */
-	void modify (Role role);
+	int modify (Role role);
+
+	/**
+	 * shanghcu
+	 *
+	 * @param roleId
+	 */
+	int delete (int roleId);
 
 	/**
 	 * 查询
@@ -61,5 +69,13 @@ public interface RoleMapper
 	 * @param roleId
 	 * @return
 	 */
-	Role find (String roleId);
+	Role find (int roleId);
+
+	/**
+	 * 根据员工编号查询角色信息
+	 *
+	 * @param employeeId
+	 * @return
+	 */
+	Set<Role> qryRoleByEmployeeId (String employeeId);
 }

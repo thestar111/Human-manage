@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>人事考核管理系统</title>
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="./css/xadmin.css">
+	<link rel="stylesheet" href="./css/font.css">
+	<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="./js/vue.min.js"></script>
+	<script type="text/javascript" src="./lib/layui/layui.js"></script>
+	<script src="./lib/layui/layui.js" charset="utf-8"></script>
+	<script type="text/javascript" src="./js/xadmin.js"></script>
+</head>
+<body>
+	<div class="x-nav">
+		<span class="layui-breadcrumb"> <a href="">首页</a> <a href="">考核管理</a>
+			<a> <cite>员工考核</cite></a>
+		</span>
+	</div>
+	<div class="x-body" id="x-body">
+
+		<div class="layui-row">
+			<div class="layui-form-item">
+				<div class="layui-col-xs3">
+					<label for="topicId" class="layui-form-label"> 
+						<span class="x-red">*</span>职级
+					</label>
+					<div class="layui-input-inline">
+						<select id="rankId" v-model="rankId" @change="chooseRankId">
+							<option value="">请选择职级</option>
+							<option v-for="(item,index) in rankdata" :value="item.rankId">{{ item.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-col-xs3">
+					<label for="title" class="layui-form-label"> 
+						<span class="x-red">*</span>部门
+					</label>
+					<div class="layui-input-inline">
+						<select id="departmentId" v-model="departmentId" @change="chooseDptId">
+							<option value="">请选择部门</option>
+							<option v-for="(item,index) in dptdata" :value="item.departmentId">{{ item.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="title" class="layui-form-label"> 
+						<span class="x-red">*</span>员工
+					</label>
+					<div class="layui-input-inline">
+						<select name="employeeId" id="employeeId" v-model="employeeId" @change="chooseEmpId">
+							<option value="">请选择考核员工</option>
+							<option v-for="(item,index) in empdata" :value="item.employeeId">{{ item.name }}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<blockquote class="layui-elem-quote layui-text">当前考核主题{{assessTopic.title}}
+		</blockquote>
+		<form class="layui-form" id="assessFrom" v-if="showForm">
+			<input type="hidden" id="topic" name="topic" v-model="assessTopic.topicId"> 
+			<input type="hidden" id="weight" name="weight" v-model="weight">
+			<div class="layui-form-item" v-for="(item,index) in assessContents">
+				<!-- <label for="username" class="layui-form-label">
+					  <span class="x-red"></span>{{ item.content }}
+				  </label> -->
+				<input type="hidden" id="score" name="score">
+				<div class="layui-input-inline">
+					<span class="x-red"></span>{{ item.content }}
+				</div>
+				<div class="layui-input-inline">
+					<input type="text" :id="gernerateId(index)" name="contentScore" required="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_btn" class="layui-form-label"> </label> 
+				<a class="layui-btn layui-btn-normal" lay-filter="save" v-on:click="assessGrade" lay-submit=""> 保存 </a>
+			</div>
+		</form>
+	</div>
+</body>
+<script>
+	var app = new Vue({
+		el: '#x-body',
+		data: {
+			assessTopic: {},
+			rankdata:[],
+			empdata:[],
+			dptdata:[],
+			assessTopic:[],
+			assessContents:[],
+			rankId:"",
+			departmentId:"",
+			employeeId:"",
+			weight: 0,
+			showForm: false
+		},
+		created(){
+			this.queryrankList();
+			this.querydptList();
+		},
+		methods: {
+			queryrankList() {
+				let that = this;
+				$.ajax({
+					async : false,
+					cache : false,
+					url : "/human/rank/query",
+					contentType : "application/json",
+					type : "POST",
+					data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
+					dataType : "json",
+					success : function(data) {
+						if(data.resultCode=='0') {
+							that.rankdata = data.ranks;
+						} else {
+							layer.msg(data.resultMessage);
+						}
+					},error : function(request) {
+						layer.msg('网络错误'); 
+			        }
+				});
+			},
+			querydptList(){
+				let that = this;
+				$.ajax({
+					async : false,
+					cache : false,
+					url : "/human/department/query",
+					contentType : "application/json",
+					type : "POST",
+					data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
+					dataType : "json",
+					success : function(data) {
+						if(data.resultCode=='0') {
+							that.dptdata = data.departments;
+						} else {
+							layer.msg(data.resultMessage);
+						}
+					},error : function(request) {
+						layer.msg('网络错误'); 
+			        }
+				});
+			},
+			queryeffective() {
+				let that = this;
+				$.ajax({
+					async : false,
+					cache : false,
+					url : "/human/assessment/query/effective",
+					contentType : "application/json",
+					type : "POST",
+					data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
+					dataType : "json",
+					success : function(data) {
+						if(data.resultCode=='0') {
+							that.assessTopic = data.assessTopic;
+							that.assessContents = data.assessContents;
+						} else {
+							layer.msg(data.resultMessage);
+						}
+					},error : function(request) {
+						layer.msg('网络错误'); 
+			        }
+				});
+			},
+			assessGrade() {
+				var jsonStr = $('#assessFrom').serializeObject();
+				var gradeArr = jsonStr.assessResult.contentScore;
+				var totalScore = 0;
+				for(var i=0,len=gradeArr.length;i<len;i++) {
+					totalScore = totalScore + parseInt(gradeArr[i]);
+				}
+				jsonStr.assessResult.score = totalScore;
+				var subObj =  {};
+				delete jsonStr.assessResult["contentScore"];
+				$.ajax({
+					async : false,
+					cache : false,
+					url : "/human/assessment/result/add",
+					contentType : "application/json",
+					type : "POST",
+					data : JSON.stringify(jsonStr),
+					dataType : "json",
+					success : function(data) {
+						if(data.resultCode=='0') {
+							
+						} else {
+							layer.msg(data.resultMessage);
+						}
+					},error : function(request) {
+						layer.msg('网络错误'); 
+			        }
+				});
+				
+			},
+			gernerateId(index) {
+				return "contentScore_" +index;
+			},
+			chooseRankId() {
+				if(this.departmentId != "" && this.rankId != "") {
+					this.queryEmplayee();
+				}
+			},
+			chooseDptId() {
+				if(this.departmentId != "" && this.rankId != "") {
+					this.queryEmplayee();
+				}
+			},
+			chooseEmpId() {
+				//调接口判断该员工是否已经被考核，如果被考核，则显示考核成绩，否则显示添加考核成绩内容
+				if(this.employeeId == "3213") {
+					this.showForm = false;
+					layer.msg('员工ID：' + this.employeeId);
+				} else {
+					this.showForm = true;
+					this.queryeffective();
+				}
+			},
+			queryEmplayee() {
+				let that = this;
+				$.ajax({
+					async : false,
+					cache : false,
+					url : "/human/user/assess/condition",
+					contentType : "application/json",
+					type : "POST",
+					data : JSON.stringify({ 'department': that.departmentId, 'rank': that.rankId }),
+					dataType : "json",
+					success : function(data) {
+						if(data.resultCode=='0') {
+							var data = data.employees;
+							if(data != null) {
+								for(var i=0,len=data.length;i<len;i++) {
+									var emp = {};
+									emp.employeeId = data[i].employeeId;
+									emp.name = data[i].name;
+									that.empdata.push(emp);
+								}
+							} else {
+								that.empdata = [];
+							}
+						} else {
+							layer.msg(data.resultMessage);
+						}
+					},error : function(request) {
+						layer.msg('网络错误'); 
+			        }
+				});
+			}
+		}
+	})	
+		
+	$.fn.serializeObject = function(flag) {
+	    var o = {};
+	    var dpt = {"assessResult":o};
+	    var a = this.serializeArray();
+	    $.each(a, function() {
+	        if (o[this.name]) {
+	            if (!o[this.name].push) {
+	                o[this.name] = [ o[this.name] ];
+	            }
+	            o[this.name].push(this.value || '');
+	        } else {
+	            o[this.name] = this.value || '';
+	        }
+	    });
+	    return dpt;
+	}
+    </script>
+</html>

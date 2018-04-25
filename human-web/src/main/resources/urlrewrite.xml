@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite3.0.dtd">
+
+<urlrewrite>
+    <!-- 不允许直接访问WEB-INF和 META-INF目录 -->
+    <rule>
+        <name>Disable directly access to WEB-INF or META-INF directory and any file in it</name>
+        <from>^.*/WEB-INF|META-INF/*</from>
+        <set type="status">404</set>
+        <to last="true">null</to>
+    </rule>
+
+    <!-- 重定向根路径访问 -->
+    <rule>
+        <from>^/$</from>
+        <to>/login.html</to>
+    </rule>
+
+    <rule>
+        <from>^/login$</from>
+        <to>/login.html</to>
+    </rule>
+
+    <!-- 重写页面HTML后缀 -->
+    <rule>
+        <from>^/(\w+)$</from>
+        <to last="true">/$1.html</to>
+    </rule>
+
+    <rule>
+        <from>^/(\w+)_(\w+)$</from>
+        <to last="true">/$1_$2.html</to>
+    </rule>
+
+    <rule>
+        <from>^/(\w+)_(\w+)_(\w+)$</from>
+        <to last="true">/$1_$2_$3.html</to>
+    </rule>
+
+    <rule>
+        <from>^/(\w+)_(\w+)_(\w+)_(\w+)$</from>
+        <to last="true">/$1_$2_$3_$4.html</to>
+    </rule>
+</urlrewrite>

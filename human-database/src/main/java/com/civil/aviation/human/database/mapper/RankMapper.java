@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <职级Mapper>
+ * <员工职级Mapper>
  *
  * @author zping
  * @version 2018/3/21 0021
@@ -54,6 +54,15 @@ public interface RankMapper
 	int delete (int rankId) throws SQLException;
 
 	/**
+	 * 根据编号查询职级信息
+	 *
+	 * @param rankId
+	 * @return
+	 * @throws SQLException
+	 */
+	Rank findById (Integer rankId) throws SQLException;
+
+	/**
 	 * 根据条件查询职级信息
 	 *
 	 * @param params
@@ -61,4 +70,13 @@ public interface RankMapper
 	 * @throws SQLException
 	 */
 	List<Rank> findByCondition (Map<String, Object> params) throws SQLException;
+
+	/**
+	 * 根据条件查询职级总数信息
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	int findCountByCondition (Map<String, Object> params) throws SQLException;
 }

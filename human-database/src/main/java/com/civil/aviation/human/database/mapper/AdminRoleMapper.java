@@ -13,9 +13,10 @@ package com.civil.aviation.human.database.mapper;
 import com.civil.aviation.human.database.entity.AdminRoleRlat;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * <根据员工编号查询角色信息>
+ * <员工角色Mapper接口>
  *
  * @author zping
  * @version 2017/7/11 0011
@@ -46,4 +47,9 @@ public interface AdminRoleMapper
 	 * @param roleId
 	 */
 	void delete (String adminId, int roleId);
+
+	/**
+	 * 绑定管理员角色关系信息
+	 */
+	void bindRole (Map<String, String> params);
 }

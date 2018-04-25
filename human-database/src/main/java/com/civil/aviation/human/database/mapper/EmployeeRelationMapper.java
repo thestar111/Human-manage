@@ -15,7 +15,7 @@ import com.civil.aviation.human.database.entity.EmployeeRelation;
 import java.sql.SQLException;
 
 /**
- * <员工关系Mapper>
+ * <员工职级，职位称呼关系管理Mapper>
  *
  * @author zping
  * @version 2018/3/21 0021

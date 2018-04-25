@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 public class DelRoleRequest extends BaseRequest
 {
-	private int roleId;
+	private Integer roleId;
 
 	@Override
 	public String toString ()

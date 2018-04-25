@@ -10,14 +10,15 @@
  */
 package com.civil.aviation.human.provider.mapper;
 
+import com.civil.aviation.human.api.assess.domain.AssessContentVo;
+import com.civil.aviation.human.api.assess.domain.AssessResultVo;
+import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
 import com.civil.aviation.human.api.department.domain.DepartmentVo;
 import com.civil.aviation.human.api.job.domain.JobVo;
 import com.civil.aviation.human.api.menu.domain.MenuVo;
+import com.civil.aviation.human.api.rank.domain.RankVo;
 import com.civil.aviation.human.api.user.domain.EmployeeVo;
-import com.civil.aviation.human.database.entity.Department;
-import com.civil.aviation.human.database.entity.Employee;
-import com.civil.aviation.human.database.entity.Job;
-import com.civil.aviation.human.database.entity.Menu;
+import com.civil.aviation.human.database.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -109,4 +110,78 @@ public interface EntityMapperHandler
 	 * @param menuVo
 	 */
 	void voToMenu (@MappingTarget Menu menu, MenuVo menuVo);
+
+	/**
+	 * @param rankVo
+	 * @return
+	 */
+	@Mapping (target = "id", source = "rankId")
+	Rank voToRank (RankVo rankVo);
+
+	/**
+	 * @param rank
+	 * @return
+	 */
+	@Mapping (target = "rankId", source = "id")
+	RankVo rankToVo (Rank rank);
+
+	/**
+	 * VO转实体
+	 *
+	 * @param assessTopicVo
+	 * @return
+	 */
+	@Mapping (target = "id", source = "topicId")
+	@Mapping (target = "rank", source = "rankId")
+	@Mapping (target = "department", source = "departmentId")
+	AssessTopic voTOAssessTopic (AssessTopicVo assessTopicVo);
+
+	/**
+	 * 实体转VO对象
+	 *
+	 * @param assessTopic
+	 * @return
+	 */
+	@Mapping (target = "topicId", source = "id")
+	@Mapping (target = "rankId", source = "rank")
+	@Mapping (target = "departmentId", source = "department")
+	AssessTopicVo assessTopicToVo (AssessTopic assessTopic);
+
+	/**
+	 * 实体转VO对象
+	 *
+	 * @param assessContent
+	 * @return
+	 */
+	@Mapping (target = "assessContentId", source = "id")
+	AssessContentVo assessContentToVo (AssessContent assessContent);
+
+	/**
+	 * VO转实体对象
+	 *
+	 * @param assessContent
+	 * @return
+	 */
+	@Mapping (target = "id", source = "assessContentId")
+	AssessContent voToAssessContent (AssessContentVo assessContent);
+
+	/**
+	 * VO转实体对象
+	 *
+	 * @param assessResultVo
+	 * @return
+	 */
+	@Mapping (target = "id", source = "assessResultId")
+	@Mapping (target = "employee", source = "employeeId")
+	AssessResult voToAssessResult (AssessResultVo assessResultVo);
+
+	/**
+	 * 实体转VO对象
+	 *
+	 * @param assessResult
+	 * @return
+	 */
+	@Mapping (target = "assessResultId", source = "id")
+	@Mapping (target = "employeeId", source = "employee")
+	AssessResultVo assessResultToVo (AssessResult assessResult);
 }

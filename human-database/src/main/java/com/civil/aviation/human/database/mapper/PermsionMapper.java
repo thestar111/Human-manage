@@ -12,11 +12,13 @@ package com.civil.aviation.human.database.mapper;
 
 import com.civil.aviation.human.database.entity.Permsion;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <员工权限管理Mapper>
  *
  * @author zping
  * @version 2017/7/11 0011
@@ -30,7 +32,7 @@ public interface PermsionMapper
 	 *
 	 * @param permsion
 	 */
-	void add (Permsion permsion);
+	int add (Permsion permsion) throws SQLException;
 
 	/**
 	 * 查询
@@ -38,7 +40,7 @@ public interface PermsionMapper
 	 * @param params
 	 * @return
 	 */
-	List<Permsion> query (Map<String, Object> params);
+	List<Permsion> query (Map<String, Object> params) throws SQLException;
 
 	/**
 	 * 总数
@@ -46,7 +48,7 @@ public interface PermsionMapper
 	 * @param params
 	 * @return
 	 */
-	int count (Map<String, Object> params);
+	int count (Map<String, Object> params) throws SQLException;
 
 	/**
 	 * 查询
@@ -54,5 +56,31 @@ public interface PermsionMapper
 	 * @param permsionId
 	 * @return
 	 */
-	Permsion find (String permsionId);
+	Permsion find (Integer permsionId) throws SQLException;
+
+	/**
+	 * 根据用户角色编号
+	 *
+	 * @param roleIds
+	 * @return
+	 */
+	Set<String> qryUserAllPersion (List<Integer> roleIds);
+
+	/**
+	 * 修改权限信息
+	 *
+	 * @param permsion
+	 * @return
+	 * @throws SQLException
+	 */
+	int modify (Permsion permsion) throws SQLException;
+
+	/**
+	 * 删除权限信息
+	 *
+	 * @param permsionId
+	 * @return
+	 * @throws SQLException
+	 */
+	int delete (Integer permsionId) throws SQLException;
 }

@@ -10,6 +10,7 @@
  */
 package com.civil.aviation.human.common.core.domain;
 
+import com.civil.aviation.human.common.core.cons.Constants;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -57,7 +58,18 @@ public class Result implements Serializable
 	 */
 	public static Result fail (String resultMessage)
 	{
-		return new Result ("-1", resultMessage);
+		return new Result (Constants.ResultCode.FAILED, resultMessage);
+	}
+
+	/**
+	 * 构造成功
+	 *
+	 * @param resultMessage
+	 * @return
+	 */
+	public static Result success (String resultMessage)
+	{
+		return new Result (Constants.ResultCode.SUCCESS, resultMessage);
 	}
 
 	@Override

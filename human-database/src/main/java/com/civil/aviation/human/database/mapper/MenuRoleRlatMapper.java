@@ -10,6 +10,7 @@
  */
 package com.civil.aviation.human.database.mapper;
 
+import com.civil.aviation.human.database.entity.Menu;
 import com.civil.aviation.human.database.entity.MenuRoleRlat;
 
 import java.sql.SQLException;
@@ -45,11 +46,11 @@ public interface MenuRoleRlatMapper
 	int delete (int menuId, int roleId) throws SQLException;
 
 	/**
-	 * 根据角色编号查找所有的菜单信息
+	 * 根据员工编号查询所有的菜单信息
 	 *
-	 * @param roleId
+	 * @param employeeId
 	 * @return
 	 * @throws SQLException
 	 */
-	List<MenuRoleRlat> findAllMenu (int roleId) throws SQLException;
+	List<Menu> findAllMenu (String employeeId) throws SQLException;
 }

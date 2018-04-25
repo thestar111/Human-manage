@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 public class DelRankRequest extends BaseRequest
 {
-	private int rankId;
+	private Integer rankId;
 
 	@Override
 	public String toString ()

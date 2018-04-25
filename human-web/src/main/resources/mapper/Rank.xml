@@ -34,6 +34,13 @@
         DELETE FROM T_RANK WHERE id=#{rankId}
     </delete>
 
+    <!--根据编号查询职级信息-->
+    <select id="findById" parameterType="Integer" resultType="Rank">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_RANK WHERE id=#{rankId}
+    </select>
+
     <!--查询员工信息-->
     <select id="findByCondition" parameterType="Map" resultType="Rank">
         SELECT
@@ -44,6 +51,14 @@
         </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="findCountByCondition" parameterType="Map" resultType="Integer">
+        SELECT COUNT(1)
+        FROM T_RANK WHERE 1=1
+        <if test="name != NULL">
+            AND name = #{name}
         </if>
     </select>
 

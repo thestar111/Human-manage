@@ -10,8 +10,6 @@
  */
 package com.civil.aviation.human.api.menu;
 
-import com.civil.aviation.human.api.department.request.*;
-import com.civil.aviation.human.api.department.response.QryDepartmentResponse;
 import com.civil.aviation.human.api.menu.request.*;
 import com.civil.aviation.human.api.menu.response.QryMenuByIdResponse;
 import com.civil.aviation.human.api.menu.response.QryMenuConditionResponse;
@@ -25,7 +23,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <系统菜单接口>
  *
  * @author zping
  * @version 2018/3/22 0022
@@ -81,7 +79,8 @@ public interface MenuApi
 	@POST
 	@Path ("/findById")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryMenuByIdResponse findById (@Context HttpServletRequest request, QryMenuByIdRequest qryMenuByIdRequest) throws Exception;
+	QryMenuByIdResponse findById (@Context HttpServletRequest request, QryMenuByIdRequest qryMenuByIdRequest)
+			throws Exception;
 
 	/**
 	 * 查询列表
@@ -95,4 +94,18 @@ public interface MenuApi
 	@Produces (MediaType.APPLICATION_JSON)
 	QryMenuConditionResponse queryConditionPage (@Context HttpServletRequest request,
 			QryMenuConditionRequest qryMenuConditionRequest) throws Exception;
+
+	/**
+	 * 查询员工所有菜单
+	 *
+	 * @param request
+	 * @param qryAllMenuRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path ("/query/all")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryMenuConditionResponse queryAllMenuByEmployeeId (@Context HttpServletRequest request,
+			QryAllMenuRequest qryAllMenuRequest) throws Exception;
 }

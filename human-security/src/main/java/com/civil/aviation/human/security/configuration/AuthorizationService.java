@@ -10,22 +10,31 @@
  */
 package com.civil.aviation.human.security.configuration;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import com.civil.aviation.human.common.core.encryt.Coder;
+import com.civil.aviation.human.common.core.utils.SessionUtils;
+import com.civil.aviation.human.database.entity.Employee;
+import com.civil.aviation.human.database.entity.Role;
+import com.civil.aviation.human.database.mapper.LoginMapper;
+import com.civil.aviation.human.database.mapper.PermsionMapper;
+import com.civil.aviation.human.database.mapper.RoleMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 /**
  * < 自定义 Relam >
+ * 1.用户登录时，用户名密码校验
+ * 2.用户系统拦截时，从数据库中获取用户权限和角色进行匹配
  *
  * @author zping
  * @version 2017/7/11 0011
@@ -35,7 +44,19 @@ import java.util.Set;
 public class AuthorizationService extends AuthorizingRealm
 {
 
+	/**
+	 *
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger (AuthorizationService.class);
+
+	@Autowired
+	private LoginMapper loginMapper;
+
+	@Autowired
+	private RoleMapper roleMapper;
+
+	@Autowired
+	private PermsionMapper permsionMapper;
 
 	/**
 	 * 权限验证
@@ -53,13 +74,21 @@ public class AuthorizationService extends AuthorizingRealm
 		SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo ();
 		//获取当前用户
 		String userAccount = (String) principalCollection.getPrimaryPrincipal ();
-		Map<String, Set<String>> roleAndPermsion = AdminService.queryUserPer (userAccount);
-		LOGGER.debug (String.format ("query user all permsion Set : %s", roleAndPermsion));
-		if (null != roleAndPermsion)
+		Set<Role> roles = roleMapper.qryRoleByEmployeeId (userAccount);
+		//设置角色类型
+		Set<String> roleTypes = null;
+		LOGGER.debug (String.format ("query user all Roles Set : %s", roles));
+		if (null != roles && roles.size () > 0)
 		{
-			Set<String> roles = roleAndPermsion.get ("roleSet");
-			Set<String> permsions = roleAndPermsion.get ("permsionSet");
-			simpleAuthorizationInfo.setRoles (roles);
+			List<Integer> roleIds = Lists.newArrayList ();
+			roleTypes = Sets.newHashSet ();
+			for (Role role : roles)
+			{
+				roleIds.add (role.getRoleId ());
+				roleTypes.add (role.getRoleType ());
+			}
+			Set<String> permsions = permsionMapper.qryUserAllPersion (roleIds);
+			simpleAuthorizationInfo.setRoles (roleTypes);
 			simpleAuthorizationInfo.setStringPermissions (permsions);
 		}
 		return simpleAuthorizationInfo;
@@ -67,6 +96,7 @@ public class AuthorizationService extends AuthorizingRealm
 
 	/**
 	 * 身份验证（是否登录系统）
+	 * 用户登录系统
 	 *
 	 * @param authenticationToken
 	 * @return
@@ -77,7 +107,28 @@ public class AuthorizationService extends AuthorizingRealm
 			throws AuthenticationException
 	{
 		UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-
-		return null;
+		char[] password = token.getPassword ();
+		String encrytPassword = null;
+		try
+		{
+			encrytPassword = Coder.encryptBASE64 (Coder.encryptMD5 (String.valueOf (password).getBytes ("UTF-8")));
+		}
+		catch (Exception e)
+		{
+			LOGGER.error ("user password encryt failed", e);
+		}
+		Employee employee = loginMapper.login (token.getUsername (), encrytPassword);
+		SessionUtils.setValue (SessionUtils.EMPLOYEE_SESSION_KEY, employee);
+		SessionUtils.setValue (SessionUtils.EMPLOYEE_ID_SESSION_KEY, employee.getId ());
+		if (null != employee)
+		{
+			SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo (token.getUsername (),
+					token.getPassword (), this.getName ());
+			return authenticationInfo;
+		}
+		else
+		{
+			throw new AuthenticationException ("User Login Failed.");
+		}
 	}
 }

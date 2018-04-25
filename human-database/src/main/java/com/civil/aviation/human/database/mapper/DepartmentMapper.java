@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <部门Mapper接口>
  *
  * @author zping
  * @version 2018/3/24 0024

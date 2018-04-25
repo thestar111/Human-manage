@@ -28,11 +28,20 @@ public class QryEmployeeConditionRequest extends BasePageRequest
 {
 	private String name;
 
-	private int department;
+	/**
+	 * 部门
+	 */
+	private Integer department;
 
-	private int rank;
+	/**
+	 * 职级
+	 */
+	private Integer rank;
 
-	private int job;
+	/**
+	 * 职位称呼
+	 */
+	private Integer job;
 
 	@Override
 	public String toString ()

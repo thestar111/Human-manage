@@ -37,13 +37,24 @@ public class AuthAccess extends AccessControlFilter
 
 	private static final Logger LOGGER = LoggerFactory.getLogger (OnlineAccess.class);
 
+	/**
+	 * 用户权限拦截管理器
+	 * 1.管理员配置具体权限路径配置
+	 * 2.用户访问给URL路径时，该方法进行拦截
+	 *
+	 * @param servletRequest
+	 * @param servletResponse
+	 * @param o
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	protected boolean isAccessAllowed (ServletRequest servletRequest, ServletResponse servletResponse, Object o)
 			throws Exception
 	{
 		//shiro中配置url拦截的权限url部分
 		String pers[] = (String[]) o;
-		LOGGER.debug (String.format ("GCMSPORTAL.AuthAccess.isAccessAllowed config urls .... %s", pers));
+		LOGGER.debug (String.format ("HUMAN.AuthAccess.isAccessAllowed config urls .... %s", pers));
 		if (pers == null || pers.length <= 0)
 		{
 			return true;
@@ -77,7 +88,8 @@ public class AuthAccess extends AccessControlFilter
 	}
 
 	/**
-	 * isAccessAllowed 返回false		会执行该方法
+	 * isAccessAllowed
+	 * 1.返回false  会执行该方法
 	 *
 	 * @param servletRequest
 	 * @param servletResponse
@@ -93,7 +105,7 @@ public class AuthAccess extends AccessControlFilter
 		PrintWriter writer = httpResponse.getWriter ();
 		Result result = new Result ();
 		result.setResultCode (Constants.ResultCode.FAILED);
-		result.setResultMessage ("you had no authorization.");
+		result.setResultMessage ("You had no authorization.");
 		writer.print (JSONSerialize.toJson (result));
 		return false;
 	}

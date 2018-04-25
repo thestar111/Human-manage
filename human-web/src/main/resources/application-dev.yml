@@ -1,0 +1,38 @@
+server:
+  port: 58088
+# 公钥
+public:
+  key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKJPW/iVT2jmolD/dFojc1zGDf+0ccOlbTHSe5USBgAceFewuomCp48dMJstKa8eOPeRSbe9GtzR2Bd2y7Qury0CAwEAAQ==
+password:
+  default: 123456
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    username: human
+    password: hjOhYv6++ByjV7q4gnfKrds+SdMT2iEfoNCsFwHV0jjHuAL/LxWZ3UOXeAyExce0oITtW/Fr401o9LKstSaFkg==
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.0.11:21000/human?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8
+    initial-size: 1
+    min-idle: 1
+    max-active: 50
+    test-on-borrow: true
+    max-wait: 60000
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT 1 FROM DUAL
+    test-While-Idle: true
+    test-on-return: false
+    pool-prepared-statements: false
+    max-pool-prepared-statement-per-connection-size: 20
+    filters: stat,wall,log4j,config
+    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${public.key}
+    monitor:
+      enabled: false
+      druid-stat-view: /druid/*
+      druid-web-stat-filter: /*
+      allow: 127.0.0.1
+      deny: 192.168.0.174
+      login-username: admin
+      login-password: 123456
+      exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+      reset-enable: false

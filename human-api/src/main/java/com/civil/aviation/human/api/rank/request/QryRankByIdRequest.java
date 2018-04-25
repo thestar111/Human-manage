@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 public class QryRankByIdRequest extends BaseRequest
 {
-	private String rankId;
+	private Integer rankId;
 
 	@Override
 	public String toString ()

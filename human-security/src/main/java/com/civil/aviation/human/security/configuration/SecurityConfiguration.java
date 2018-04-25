@@ -53,8 +53,8 @@ public class SecurityConfiguration
 	{
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean ();
 		shiroFilterFactoryBean.setSecurityManager (securityManager);
-		shiroFilterFactoryBean.setLoginUrl ("/login.jsp");
-		shiroFilterFactoryBean.setSuccessUrl ("/index");
+		shiroFilterFactoryBean.setLoginUrl ("/login.html");
+		shiroFilterFactoryBean.setSuccessUrl ("/index.html");
 
 		//自定义拦截器做权限验证
 		Map<String, Filter> filters = Maps.newLinkedHashMap ();
@@ -64,9 +64,25 @@ public class SecurityConfiguration
 
 		//拦截URL
 		Map<String, String> filterChain = new LinkedHashMap<> ();
-		filterChain.put ("/human/system/login", "online");
-		filterChain.put ("/human/system/regist", "online");
-		filterChain.put ("/*.html", "online");
+		filterChain.put ("/human/system/login", "anon");
+		filterChain.put ("/human/system/exit", "anon");
+		filterChain.put ("/human/system/login", "anon");
+		filterChain.put ("/human/system/exit", "anon");
+		filterChain.put ("/human/user/regist", "anon");
+		filterChain.put ("/human/menu/query/all", "anon");
+		filterChain.put ("/login.html", "anon");
+		filterChain.put ("/emp_regist.html", "anon");
+		filterChain.put ("/auth_list.html", "online");
+		filterChain.put ("/dpt_list.html", "online");
+		filterChain.put ("/emp_assess.html", "online");
+		filterChain.put ("/emp_assess_add.html", "online");
+		filterChain.put ("/emp_edit.html", "online");
+		filterChain.put ("/emp_list.html", "online");
+		filterChain.put ("/index.html", "online");
+		filterChain.put ("/rank_list.html", "online");
+		filterChain.put ("/rank_relation_list.html", "online");
+		filterChain.put ("/role_list.html", "online");
+		filterChain.put ("/welcome.html", "online");
 
 		shiroFilterFactoryBean.setFilterChainDefinitionMap (filterChain);
 		return shiroFilterFactoryBean;

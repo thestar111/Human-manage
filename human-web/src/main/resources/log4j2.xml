@@ -9,7 +9,7 @@
         <property name="info_log_level">INFO</property><!-- 日志输出级别 -->
         <property name="error_log_level">ERROR</property><!-- 日志输出级别 -->
         <Property name="PID">????</Property>
-        <property name="logPath">D:\\human/tomcat/log</property><!-- 日志输出路径 -->
+        <property name="logPath">/root/tomcat/log</property><!-- 日志输出路径 -->
         <property name="LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{${sys:PID}}{magenta}
             %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx
         </property>
@@ -36,7 +36,8 @@
         <RollingRandomAccessFile name="HUMAN_PORTAL_DEBUG" fileName="${logPath}/debug.log" immediateFlush="false"
                                  filePattern="${logPath}/GCMS_PORTAL_debug_${file_log_prefix}">
             <!--输出格式-->
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS z} %X{traceID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS z} %X{traceID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
             <!--只显示debug级别的信息-->
             <Filters>
                 <!--首先需要过滤不符合的日志级别，把不需要的首先DENY掉，然后在ACCEPT需要的日志级别，次序不能颠倒-->
@@ -65,7 +66,8 @@
                 <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="${info_log_level}" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
-            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS z} %X{userID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <PatternLayout
+                    pattern="%d{yyyy.MM.dd HH:mm:ss.SSS z} %X{userID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
             <Policies>
                 <!--<TimeBasedTriggeringPolicy/>-->
                 <SizeBasedTriggeringPolicy size="${every_file_size}"/>
@@ -78,7 +80,8 @@
             <Filters>
                 <ThresholdFilter level="${error_log_level}" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
-            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS z} %X{userID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <PatternLayout
+                    pattern="%d{yyyy.MM.dd HH:mm:ss.SSS z} %X{userID} >> %-5level %class{36} %L %M - %msg%xEx%n"/>
             <Policies>
                 <!--<TimeBasedTriggeringPolicy/>-->
                 <SizeBasedTriggeringPolicy size="${every_file_size}"/>

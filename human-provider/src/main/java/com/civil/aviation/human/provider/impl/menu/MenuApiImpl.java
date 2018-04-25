@@ -19,11 +19,13 @@ import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.domain.Result;
 import com.civil.aviation.human.database.entity.Menu;
 import com.civil.aviation.human.database.mapper.MenuMapper;
+import com.civil.aviation.human.database.mapper.MenuRoleRlatMapper;
 import com.civil.aviation.human.provider.mapper.EntityMapperHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -48,6 +50,9 @@ public class MenuApiImpl implements MenuApi
 
 	@Autowired
 	private MenuMapper menuMapper;
+
+	@Autowired
+	private MenuRoleRlatMapper menuRoleRlatMapper;
 
 	/**
 	 * 添加
@@ -183,7 +188,7 @@ public class MenuApiImpl implements MenuApi
 
 		if (! StringUtils.isEmpty (qryMenuConditionRequest.getMenuName ()))
 		{
-			params.put ("menuName", qryMenuConditionRequest.getMenuName ());
+			params.put ("name", qryMenuConditionRequest.getMenuName ());
 		}
 
 		params.put ("pageIndex", qryMenuConditionRequest.getPageIndex ());
@@ -210,5 +215,41 @@ public class MenuApiImpl implements MenuApi
 			qryJobConditionResponse.setCount (0);
 			return qryJobConditionResponse;
 		}
+	}
+
+	/**
+	 * 查询员工所有菜单
+	 *
+	 * @param request
+	 * @param qryAllMenuRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public QryMenuConditionResponse queryAllMenuByEmployeeId (HttpServletRequest request,
+			QryAllMenuRequest qryAllMenuRequest) throws Exception
+	{
+		if (StringUtils.isEmpty (qryAllMenuRequest))
+		{
+			return (QryMenuConditionResponse) Result.fail ("employeeId is null.");
+		}
+		QryMenuConditionResponse result = new QryMenuConditionResponse ();
+		//查询用户所有菜单
+		List<Menu> menuList = menuRoleRlatMapper.findAllMenu (qryAllMenuRequest.getEmployeeId ());
+		List<MenuVo> menus = null;
+		MenuVo menuVo = null;
+		if (! CollectionUtils.isEmpty (menuList))
+		{
+			menus = Lists.newArrayList ();
+			for (Menu menu : menuList)
+			{
+				menuVo = new MenuVo ();
+				BeanUtils.copyProperties (menu, menuVo);
+				menus.add (menuVo);
+			}
+		}
+		result.setResultMessage ("Get All menus success.");
+		result.setMenus (menus);
+		return result;
 	}
 }

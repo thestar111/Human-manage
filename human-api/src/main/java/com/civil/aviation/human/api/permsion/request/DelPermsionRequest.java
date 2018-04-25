@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 public class DelPermsionRequest extends BaseRequest
 {
-	private int permsionId;
+	private Integer permsionId;
 
 	@Override
 	public String toString ()

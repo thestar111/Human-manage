@@ -65,7 +65,7 @@ public class JobApiImpl implements JobApi
 		{
 			return Result.fail ("illage params");
 		}
-		Job job = null;
+		Job job = new Job ();
 		EntityMapperHandler.INSTANCE.voToJob (job, createJobRequest.getJob ());
 		int flag = jobMapper.add (job);
 
@@ -94,7 +94,7 @@ public class JobApiImpl implements JobApi
 			return Result.fail ("illage params");
 		}
 
-		Job job = null;
+		Job job = new Job ();
 		EntityMapperHandler.INSTANCE.voToJob (job, modifyJobRequest.getJob ());
 
 		int flag = jobMapper.modify (job);

@@ -23,7 +23,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
- * <用户API>
+ * <员工接口API>
  *
  * @author zping
  * @version 2018/3/19 0019
@@ -43,7 +43,7 @@ public interface UserApi
 	@POST
 	@Path ("/regist")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result regist (@Context HttpServletRequest request, CreateEmployeeRequest createEmployeeRequest);
+	Result regist (@Context HttpServletRequest request, CreateEmployeeRequest createEmployeeRequest) throws Exception;
 
 	/**
 	 * 用户修改接口
@@ -54,7 +54,7 @@ public interface UserApi
 	@POST
 	@Path ("/modify")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result modify (@Context HttpServletRequest request, ModifyEmployeeRequest modifyEmployeeRequest);
+	Result modify (@Context HttpServletRequest request, ModifyEmployeeRequest modifyEmployeeRequest) throws Exception;
 
 	/**
 	 * 用户删除接口
@@ -65,7 +65,7 @@ public interface UserApi
 	@POST
 	@Path ("/delete")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result delete (@Context HttpServletRequest request, DelEmployeeRequest delEmployeeRequest);
+	Result delete (@Context HttpServletRequest request, DelEmployeeRequest delEmployeeRequest) throws Exception;
 
 	/**
 	 * 用户查询接口
@@ -77,7 +77,7 @@ public interface UserApi
 	@Path ("/findById")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryEmployeeByIdResponse findById (@Context HttpServletRequest request,
-			QryEmployeeByIdRequest qryEmployeeByIdRequest);
+			QryEmployeeByIdRequest qryEmployeeByIdRequest) throws Exception;
 
 	/**
 	 * 用户查询接口
@@ -89,5 +89,57 @@ public interface UserApi
 	@Path ("/queryByCondition")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryEmployeeConditionResponse queryByCondition (@Context HttpServletRequest request,
-			QryEmployeeConditionRequest qryEmployeeConditionRequest);
+			QryEmployeeConditionRequest qryEmployeeConditionRequest) throws Exception;
+
+	/**
+	 * 查询部门下的员工信息
+	 *
+	 * @param request
+	 * @return
+	 */
+	@POST
+	@Path ("/department")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryEmployeeConditionResponse queryByDepartment (@Context HttpServletRequest request,
+			QryEmployeeConditionRequest qryEmployeeConditionRequest) throws Exception;
+
+	/**
+	 * 密码重置
+	 *
+	 * @param request
+	 * @param resetPasswordRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path ("/reset")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result resetPassword (@Context HttpServletRequest request, ResetPasswordRequest resetPasswordRequest)
+			throws Exception;
+
+	/**
+	 * 密码修改
+	 *
+	 * @param request
+	 * @param resetPasswordRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path ("/modifyPassword")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result modifyPassword (@Context HttpServletRequest request, ResetPasswordRequest resetPasswordRequest)
+			throws Exception;
+
+	/**
+	 * 根据部门，职级查询需要考核的员工
+	 *
+	 * @param request
+	 * @return
+	 */
+	@POST
+	@Path ("/assess/condition")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryEmployeeConditionResponse queryAssessEmpByCondition (@Context HttpServletRequest request,
+			QryAssessEmployeeConditionRequest qryAssessEmployeeConditionRequest) throws Exception;
 }

@@ -12,6 +12,9 @@ package com.civil.aviation.human.api.menu.domain;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * <一句话功能简述> <功能详细描述>
  *
@@ -20,6 +23,8 @@ import java.io.Serializable;
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
+@Getter
+@Setter
 public class MenuVo implements Serializable
 {
 	/**

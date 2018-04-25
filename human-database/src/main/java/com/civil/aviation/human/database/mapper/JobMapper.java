@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <职业称呼Mapper>
  *
  * @author zping
  * @version 2018/3/21 0021

@@ -59,6 +59,26 @@ public class EmployeeVo implements Serializable
 
 	private String rank;
 
+	/**
+	 * 部门名称
+	 */
+	private String departName;
+
+	/**
+	 * 职级名称
+	 */
+	private String rankName;
+
+	/**
+	 * 职位称呼
+	 */
+	private String jobName;
+
+	/**
+	 * 用户是否需要补充信息(0：补充  1：已补充)
+	 */
+	private Integer supplement = 0;
+
 	@Override
 	public String toString ()
 	{

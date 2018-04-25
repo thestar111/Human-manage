@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.civil.aviation.human.database.mapper.LoginMapper">
 
+    <!--定义数据表列字段-->
+    <sql id="sqlColumn">
+        id, name, password, englishName, sex, homeAddr, birthday, tel, nation, email, lastUpdateTime, createTime, department, salary, job, rank, supplement
+    </sql>
+
+    <select id="login" resultType="Employee">
+        SELECT <include refid="sqlColumn"/> FROM T_EMPLOYEE WHERE id=#{0} AND password=#{1}
+    </select>
+
 </mapper>

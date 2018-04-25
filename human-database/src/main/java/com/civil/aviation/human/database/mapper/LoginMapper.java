@@ -10,6 +10,8 @@
  */
 package com.civil.aviation.human.database.mapper;
 
+import com.civil.aviation.human.database.entity.Employee;
+
 /**
  * <系统登录Mapper>
  *
@@ -20,5 +22,12 @@ package com.civil.aviation.human.database.mapper;
  */
 public interface LoginMapper
 {
-
+	/**
+	 * 用户系统登录
+	 *
+	 * @param employeeId
+	 * @param password
+	 * @return
+	 */
+	Employee login (String employeeId, String password);
 }

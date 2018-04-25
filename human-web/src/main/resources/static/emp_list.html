@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>人事考核管理系统</title>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="./css/xadmin.css">
+<link rel="stylesheet" href="./css/font.css">
+<link rel="stylesheet"
+	href="./lib/layui/css/modules/layer/default/layer.css">
+<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="./js/vue.min.js"></script>
+<script type="text/javascript" src="./lib/layui/layui.js"></script>
+<script src="./lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/xadmin.js"></script>
+<style type="text/css">
+	#mask {
+		background: rgba(0, 0, 0, .5);
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		z-index: 999;
+		top: 0;
+		left: 0;
+	}
+	
+	.mask {
+		width: 500px;
+		height: 500px;
+		background: rgba(255, 255, 255, 1);
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		z-index: 47;
+		border-radius: 5px;
+	}
+	
+	.title {
+		padding: 10px;
+		border-bottom: 1px solid #eee;
+	}
+	
+	.title span {
+		float: right;
+		cursor: pointer;
+	}
+</style>
+</head>
+<body>
+	<div class="x-nav">
+		<span class="layui-breadcrumb"> <a href="javascript:;">首页</a>
+			<a href="javascript:;">员工管理</a> <a> <cite>员工列表</cite></a>
+		</span> 
+		<a class="layui-btn layui-btn-small" style="line-height: 1.6em; margin-top: 3px; float: right"
+			href="javascript:location.replace(location.href);" title="刷新">
+			<i class="layui-icon" style="line-height: 30px">ဂ</i>
+		</a>
+	</div>
+	<div class="x-body" id="emp-list">
+		<div class="layui-row">
+			<form class="layui-form layui-col-md12 x-so">
+				<input type="text" name="name" v-model="name"
+					placeholder="请输入员工姓名" autocomplete="off" class="layui-input">
+				<button class="layui-btn" lay-submit="" lay-filter="sreach" v-on:click="empEdit">
+					<i class="layui-icon">&#xe615;</i>
+				</button>
+			</form>
+		</div>
+		<xblock>
+		<!-- <button class="layui-btn layui-btn-danger" onclick="delAll()">
+			<i class="layui-icon"></i>批量删除
+		</button> -->
+		<!-- <a class="layui-btn" v-on:click="empEdit">
+			<i class="layui-icon"></i>添加
+		</a> -->
+		<span class="x-right" style="line-height: 40px">共有数据：{{totalNum}} 条</span> </xblock>
+		<table class="layui-table">
+			<thead>
+				<tr>
+					<th>
+						<div class="layui-unselect header layui-form-checkbox"
+							lay-skin="primary">
+							<i class="layui-icon">&#xe605;</i>
+						</div>
+					</th>
+					<th>员工编号</th>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>家庭住址</th>
+					<th>出生日期</th>
+					<th>电话号码</th>
+					<th>民族</th>
+					<th>部门</th>
+					<th>职位称呼</th>
+					<th>职级</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in empdata">
+					<td>
+						<div class="layui-unselect layui-form-checkbox" lay-skin="primary">
+							<i class="layui-icon">&#xe605;</i>
+						</div>
+					</td>
+					<td>{{item.employeeId}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.sex}}</td>
+					<td>{{item.homeAddr}}</td>
+					<td>{{item.birthday}}</td>
+					<td>{{item.tel}}</td>
+					<td>{{item.nation}}</td>
+					<td>{{item.department}}</td>
+					<td>{{item.job}}</td>
+					<td>{{item.rank}}</td>
+					<td class="td-manage">
+						<a title="编辑" v-on:click="empEdit(item)" href="javascript:;"> 
+							<i class="layui-icon">&#xe642;</i>
+						</a> 
+						<a title="删除" v-on:click="empDel(item.employeeId)" href="javascript:;"> 
+							<i class="layui-icon">&#xe640;</i>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- <div class="page">
+			<div>
+				<a class="prev" href="">&lt;&lt;</a> 
+				<a class="num" href="">1</a> 
+				<span class="current">2</span> 
+				<a class="num" href="">3</a> 
+				<a class="num" href="">489</a> 
+				<a class="next" href="">&gt;&gt;</a>
+			</div>
+		</div> -->
+
+		<div id="mask" v-if="editcontent">
+			<div class="mask">
+				<div class="title">
+					员工编辑 <span @click="editcontent=false"> X </span>
+				</div>
+				<div id="emp_eidt" class="x-body">
+					<form class="layui-form1" id="editfrom">
+						<div class="layui-form-item">
+							<label for="L_email" class="layui-form-label"> <span class="x-red"></span>员工编号</label>
+							<div class="layui-input-inline">
+								<input type="text" id="L_employeeId" name="employeeId" v-model="employee.employeeId" readonly="readonly" 
+									autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label for="L_email" class="layui-form-label"> <span class="x-red"></span>姓名</label>
+							<div class="layui-input-inline">
+								<input type="text" id="L_name" name="name" v-model="employee.name" readonly="readonly" lay-verify="name" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label for="L_repass" class="layui-form-label"> <span
+								class="x-red">*</span>职级
+							</label>
+							<div class="layui-input-inline">
+								<select id="rankId" name="rank" v-model="employee.rank" >
+									<option value="">请选择职级</option>
+									<option v-for="(item,index) in rankdata" :value="item.rankId" >{{ item.name }}</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label for="L_repass" class="layui-form-label"> <span
+								class="x-red">*</span>电话号码
+							</label>
+							<div class="layui-input-inline">
+								<input type="hidden" id="L_password" name="password" v-model="employee.password">
+								<input type="hidden" id="L_englishName" name="englishName" v-model="employee.englishName">
+								<input type="hidden" id="L_nation" name="nation" v-model="employee.nation">
+								<input type="hidden" id="L_email" name="email" v-model="employee.email">
+								<input type="hidden" id="L_salary" name="salary" v-model="employee.salary">
+								<input type="hidden" id="L_job" name="job" v-model="employee.job">
+								<input type="hidden" id="L_tel" name="tel" v-model="employee.tel">
+								<select id="departmentId" name="department" v-model="employee.department">
+									<option value="">请选择部门</option>
+									<option v-for="(item,index) in dptdata" :value="item.departmentId">{{ item.name }}</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label for="L_repass" class="layui-form-label"> </label>
+							<button class="layui-btn" lay-filter="saveEmp" v-on:click="saveEmp" lay-submit="">保存</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+
+
+var vm = new Vue({
+	el: '#emp-list',
+	data: {
+		empdata: [],
+		totalNum: "",
+		rankId:"",
+		employee: {},
+		rankdata:[],
+		dptdata:[],
+		editcontent: false
+		
+	},
+	created(){
+		this.queryEmpList();
+		this.queryrankList();
+		this.querydptList();
+	},
+	methods: {
+		queryEmpList(){
+			let that = this;
+			$.ajax({
+				async : false,
+				cache : false,
+				url : "/human/user/department",
+				contentType : "application/json",
+				type : "POST",
+				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
+				dataType : "json",
+				success : function(data) {
+					if(data.resultCode=='0') {
+						that.empdata = data.employees;
+						if(data.employees) {
+							that.totalNum = data.employees.length;
+						} else {
+							that.totalNum = 0;
+						}
+					} else {
+						layer.msg(data.resultMessage);
+					}
+				},error : function(request) {
+					layer.msg('网络错误'); 
+		        }
+			});
+		},
+		queryrankList() {
+			let that = this;
+			$.ajax({
+				async : false,
+				cache : false,
+				url : "/human/rank/query",
+				contentType : "application/json",
+				type : "POST",
+				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
+				dataType : "json",
+				success : function(data) {
+					if(data.resultCode=='0') {
+						that.rankdata = data.ranks;
+					} else {
+						layer.msg(data.resultMessage);
+					}
+				},error : function(request) {
+					layer.msg('网络错误'); 
+		        }
+			});
+		},
+		querydptList(){
+			let that = this;
+			$.ajax({
+				async : false,
+				cache : false,
+				url : "/human/department/query",
+				contentType : "application/json",
+				type : "POST",
+				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
+				dataType : "json",
+				success : function(data) {
+					if(data.resultCode=='0') {
+						that.dptdata = data.departments;
+					} else {
+						layer.msg(data.resultMessage);
+					}
+				},error : function(request) {
+					layer.msg('网络错误'); 
+		        }
+			});
+		},
+		empDel: function (id) //删除 
+		{
+			let that = this;
+			$.ajax({
+				async : false,
+				cache : false,
+				url : "/human/user/delete",
+				contentType : "application/json",
+				type : "POST",
+				data : JSON.stringify({ 'employeeId': id}),
+				dataType : "json",
+				success : function(data) {
+					if(data.resultCode=='0') {
+						that.queryEmpList();
+					} else {
+						layer.msg(data.resultMessage);
+					}
+				},error : function(request) {
+					layer.msg('网络错误'); 
+		        }
+			});
+		},
+		empEdit: function (item) //更新 
+		{
+			var that = this;
+			that.employee = {
+				employeeId: item.employeeId,
+				name: item.name,
+				sex: item.sex,
+				homeAddr: item.homeAddr,
+				birthday: item.birthday,
+				tel: item.tel,
+				nation: item.nation,
+				department: item.department,
+				job: item.job,
+				rank: item.rank
+			}
+			that.editcontent = true;
+		},
+		saveEmp: function() {
+			var that = this;
+			layui.use(['form','layer'], function(){
+			    $ = layui.jquery;
+			  var form = layui.form;
+			  var layer = layui.layer;
+			  var subFlag = true;
+			  //监听提交
+			 form.on('submit(saveEmp)', function(data){
+				 var jsonStr = $('#editfrom').serializeObject("employee");
+				 console.info(JSON.stringify(jsonStr));
+				 if($("#departmentId").val() == "") {
+					 layer.msg('请选择部门'); 
+					 var subFlag = false;
+				 }else if($("#rankId").val() == "") {
+					 layer.msg('请选择职级'); 
+					 var subFlag = false;
+				 } else {
+					 var subFlag = true;
+				 }
+				 if(subFlag) {
+				   $.ajax({
+						async : false,
+						cache : false,
+						url : "/human/user/modify",
+						contentType : "application/json",
+						type : "POST",
+						data : JSON.stringify(jsonStr),
+						dataType : "json",
+						success : function(data) {
+							if(data.resultCode=='0') {
+								layer.msg("修改成功");
+								that.queryEmpList();
+							    that.editcontent = false;
+							} else {
+								layer.msg(data.resultMessage);
+							}
+						},error : function(request) {
+							layer.msg('网络错误'); 
+				        }
+					});
+				 }
+				 subFlag = false;
+			    return false;
+			  });
+			});
+		}
+	}  
+}); 
+
+$.fn.serializeObject = function() {
+    var o = {};
+    var emp = {"employee":o};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [ o[this.name] ];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return emp;
+}
+</script>
+</html>

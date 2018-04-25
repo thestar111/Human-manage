@@ -43,7 +43,7 @@ public class OnlineAccess extends AccessControlFilter
 	/**
 	 * 登录地址
 	 */
-	private static final String LOGIN_PAGE = "/login";
+	private static final String LOGIN_PAGE = "/login.html";
 
 	/**
 	 * 权限拦截器，是否允许访问，通过返回true，否则false

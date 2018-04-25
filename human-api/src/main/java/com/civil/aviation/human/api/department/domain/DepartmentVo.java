@@ -30,16 +30,17 @@ import java.io.Serializable;
 public class DepartmentVo implements Serializable
 {
 
+	/** 业务编号 */
 	private Integer departmentId;
-
+	/** 部门名称 */
 	private String name;
-
+	/** 创建时间 */
 	private String createTime;
-
+	/** 部门描述 */
 	private String memo;
-
+	/** 业务编号 */
 	private String tel;
-
+	/** 部门经理 */
 	private String manager;
 
 	@Override

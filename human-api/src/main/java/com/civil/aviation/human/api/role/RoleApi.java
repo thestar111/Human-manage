@@ -30,7 +30,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <用户角色接口API>
  *
  * @author zping
  * @version 2018/3/22 0022
@@ -49,7 +49,7 @@ public interface RoleApi
 	@POST
 	@Path ("/add")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result add (@Context HttpServletRequest request, CreateRoleRequest createRoleRequest);
+	Result add (@Context HttpServletRequest request, CreateRoleRequest createRoleRequest) throws Exception;
 
 	/**
 	 * 修改接口
@@ -60,7 +60,7 @@ public interface RoleApi
 	@POST
 	@Path ("/modify")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result modify (@Context HttpServletRequest request, ModifyRoleRequest modifyRoleRequest);
+	Result modify (@Context HttpServletRequest request, ModifyRoleRequest modifyRoleRequest) throws Exception;
 
 	/**
 	 * 删除接口
@@ -71,7 +71,7 @@ public interface RoleApi
 	@POST
 	@Path ("/delete")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result delete (@Context HttpServletRequest request, DelRoleRequest delRoleRequest);
+	Result delete (@Context HttpServletRequest request, DelRoleRequest delRoleRequest) throws Exception;
 
 	/**
 	 * 角色查询接口
@@ -82,5 +82,5 @@ public interface RoleApi
 	@POST
 	@Path ("/findById")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryRoleByIdResponse findById (@Context HttpServletRequest request, QryRoleByIdRequest qryRoleByIdRequest);
+	QryRoleByIdResponse findById (@Context HttpServletRequest request, QryRoleByIdRequest qryRoleByIdRequest) throws Exception;
 }

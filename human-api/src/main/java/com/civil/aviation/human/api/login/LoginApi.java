@@ -14,6 +14,8 @@ import com.civil.aviation.human.api.login.request.LoginRequest;
 import com.civil.aviation.human.common.core.domain.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,4 +43,13 @@ public interface LoginApi
 	@Path ("/login")
 	@Produces (MediaType.APPLICATION_JSON)
 	Result login (@Context HttpServletRequest request, LoginRequest loginRequest);
+
+	/**
+	 * 系统登出接口
+	 *
+	 * @return
+	 */
+	@GET
+	@Path ("/exit")
+	void loginOut (@Context HttpServletRequest request, @Context HttpServletResponse response);
 }

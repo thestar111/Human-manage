@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.AssessmentMapper">
+
+    <!-- 全部字段-->
+    <sql id="assessContentColumn">
+        id, content, grade, topic, time
+    </sql>
+
+    <sql id="assessResultColumn">
+        id, employee, topic, weight, score, time, discussant
+    </sql>
+
+    <sql id="assessTopicColumn">
+        id, rank, department, title, startTime, endTime, status, extend1, extend2, extend3, extend4, extend5, extend6
+    </sql>
+
+    <insert id="addAssessContent" parameterType="AssessContent">
+        INSERT INTO T_ASSESS_CONTENT(<include refid="assessContentColumn"/>)
+        VALUES
+        <foreach collection="list" item="assessContent" separator=",">
+            (#{assessContent.id}, #{assessContent.content}, #{assessContent.grade}, #{assessContent.topic}, NOW())
+        </foreach>
+    </insert>
+
+    <insert id="addAssessTopic" parameterType="AssessTopic">
+        INSERT INTO T_ASSESS_TOPIC(<include refid="assessTopicColumn"/>)
+        VALUES
+        (#{id}, #{rank}, #{department}, #{title}, #{startTime}, #{endTime}, #{status}, #{extend1}, #{extend2},
+        #{extend3},
+        #{extend4}, #{extend5}, #{extend6})
+    </insert>
+
+    <insert id="addAssessResult" parameterType="AssessResult">
+        INSERT INTO T_ASSESS_RESULT(<include refid="assessResultColumn"/>)
+        VALUES (#{id}, #{employee}, #{topic}, #{weight}, #{score}, DATE_FORMAT(NOW(),'%Y-01-01 00:00:00'),#{discussant})
+    </insert>
+
+    <select id="queryAssessResult" resultType="AssessResult">
+        SELECT
+        <include refid="assessResultColumn"/>
+        FROM T_ASSESS_RESULT WHERE employee=#{0} AND discussant=#{1} AND time=DATE_FORMAT(NOW(),'%Y-01-01 00:00:00')
+    </select>
+
+    <!-- 查询上一年员工考核成绩 -->
+    <select id="queryAssessResultByEmployee" resultType="AssessResult">
+        SELECT
+        <include refid="assessResultColumn"/>
+        FROM T_ASSESS_RESULT WHERE employee=#{0} AND weight=#{1} AND YEAR(time) = YEAR(DATE_ADD(NOW(), Interval -1 year))
+    </select>
+
+    <!-- 查询上一年员工自评考核成绩 -->
+    <select id="queryAssessResultBySelf" resultType="AssessResult">
+        SELECT
+        <include refid="assessResultColumn"/>
+        FROM T_ASSESS_RESULT WHERE employee=#{employeeId} AND discussant=#{employeeId} AND YEAR(time) = YEAR(DATE_ADD(NOW(), Interval -1 year))
+    </select>
+
+    <update id="modifyAssessTopic" parameterType="AssessTopic">
+        UPDATE T_ASSESS_TOPIC
+        <set>
+            <if test="rank != null">
+                rank = #{rank},
+            </if>
+            <if test="department != null">
+                department = #{department},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="startTime != null">
+                startTime = #{startTime},
+            </if>
+            <if test="endTime != null">
+                endTime = #{endTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="extend1 != null">
+                extend1 = #{extend1},
+            </if>
+            <if test="extend2 != null">
+                extend2 = #{extend2},
+            </if>
+            <if test="extend3 != null">
+                extend3 = #{extend3},
+            </if>
+            <if test="extend4 != null">
+                extend4 = #{extend4},
+            </if>
+            <if test="extend5 != null">
+                extend5 = #{extend5},
+            </if>
+            <if test="extend6 != null">
+                extend6 = #{extend6}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--限制当前查询生效的考核主题只存在一个-->
+    <select id="qryEffectiveAssessTopic" resultType="AssessTopic">
+        SELECT
+        <include refid="assessTopicColumn"/>
+        FROM T_ASSESS_TOPIC
+        WHERE status = '0'
+        AND
+        <![CDATA[
+              DATE_FORMAT(NOW(), '%Y%m%d %H:%i:%s') >= startTime
+            ]]>
+        AND
+        <![CDATA[
+              DATE_FORMAT(NOW(), '%Y%m%d %H:%i:%s') <= endTime LIMIT 0, 1
+            ]]>
+    </select>
+
+    <select id="qryAssessContentByTopicId" resultType="AssessContent" parameterType="String">
+        SELECT
+        <include refid="assessContentColumn"/>
+        FROM T_ASSESS_CONTENT WHERE topic = #{topicId}
+    </select>
+
+    <!--只能删除未发布的考核主题-->
+    <delete id="deleteAssessTopic" parameterType="String">
+        DELETE FROM T_ASSESS_TOPIC WHERE id=#{topicId} AND status=1
+    </delete>
+
+    <delete id="deleteAssessContent" parameterType="String">
+        DELETE FROM T_ASSESS_CONTENT WHERE topic=#{topicId}
+    </delete>
+
+    <select id="qryAssessTopicByCondition" parameterType="Map" resultType="AssessTopic">
+        SELECT
+        <include refid="assessTopicColumn"/>
+        FROM T_ASSESS_TOPIC WHERE 1=1
+        <if test="startTime != null">
+            AND <![CDATA[ startTime >= #{startTime} ]]>
+        </if>
+        <if test="endTime != null">
+            AND <![CDATA[ endTime <= #{endTime} ]]>
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="qryAssessTopicCountByCondition" parameterType="Map" resultType="Integer">
+        SELECT COUNT(1) FROM T_ASSESS_TOPIC WHERE 1=1
+        <if test="startTime != null">
+            AND <![CDATA[ startTime >= #{startTime} ]]>
+        </if>
+        <if test="endTime != null">
+            AND <![CDATA[ endTime <= #{endTime} ]]>
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+    </select>
+
+</mapper>

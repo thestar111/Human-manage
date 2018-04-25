@@ -11,11 +11,20 @@
 package com.civil.aviation.human.provider.impl.permsion;
 
 import com.civil.aviation.human.api.permsion.PermsionApi;
-import com.civil.aviation.human.api.permsion.request.*;
+import com.civil.aviation.human.api.permsion.domain.PermsionVo;
+import com.civil.aviation.human.api.permsion.request.CreatePermsionRequest;
+import com.civil.aviation.human.api.permsion.request.DelPermsionRequest;
+import com.civil.aviation.human.api.permsion.request.ModifyPermsionRequest;
+import com.civil.aviation.human.api.permsion.request.QryPermsionByIdRequest;
 import com.civil.aviation.human.api.permsion.response.QryPermsionByIdResponse;
-import com.civil.aviation.human.api.permsion.response.QryPermsionConditionResponse;
 import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.domain.Result;
+import com.civil.aviation.human.database.entity.Permsion;
+import com.civil.aviation.human.database.mapper.PermsionMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +39,15 @@ import javax.servlet.http.HttpServletRequest;
 @Api
 public class PermsionApiImpl implements PermsionApi
 {
+
+	/**
+	 * 日志记录器
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger (PermsionApiImpl.class);
+
+	@Autowired
+	private PermsionMapper permsionMapper;
+
 	/**
 	 * 添加
 	 *
@@ -38,9 +56,27 @@ public class PermsionApiImpl implements PermsionApi
 	 * @return
 	 */
 	@Override
-	public Result add (HttpServletRequest request, CreatePermsionRequest createPermsionRequest)
+	public Result add (HttpServletRequest request, CreatePermsionRequest createPermsionRequest) throws Exception
 	{
-		return null;
+		if (null == createPermsionRequest)
+		{
+			return Result.fail ("illega params.");
+		}
+
+		PermsionVo permsionVo = createPermsionRequest.getPermsion ();
+		Permsion permsion = new Permsion ();
+		BeanUtils.copyProperties (permsionVo, permsion);
+
+		int flag = permsionMapper.add (permsion);
+
+		if (flag > 0)
+		{
+			return new Result ();
+		}
+		else
+		{
+			return Result.fail ("insert failed");
+		}
 	}
 
 	/**
@@ -51,9 +87,26 @@ public class PermsionApiImpl implements PermsionApi
 	 * @return
 	 */
 	@Override
-	public Result update (HttpServletRequest request, ModifyPermsionRequest modifyPermsionRequest)
+	public Result update (HttpServletRequest request, ModifyPermsionRequest modifyPermsionRequest) throws Exception
 	{
-		return null;
+		if (null == modifyPermsionRequest)
+		{
+			return Result.fail ("illega params");
+		}
+
+		Permsion permsion = new Permsion ();
+		BeanUtils.copyProperties (modifyPermsionRequest.getPermsion (), permsion);
+
+		int flag = permsionMapper.modify (permsion);
+
+		if (flag > 0)
+		{
+			return new Result ();
+		}
+		else
+		{
+			return Result.fail ("modify failed");
+		}
 	}
 
 	/**
@@ -64,9 +117,23 @@ public class PermsionApiImpl implements PermsionApi
 	 * @return
 	 */
 	@Override
-	public Result delete (HttpServletRequest request, DelPermsionRequest delPermsionRequest)
+	public Result delete (HttpServletRequest request, DelPermsionRequest delPermsionRequest) throws Exception
 	{
-		return null;
+		if (null == delPermsionRequest.getPermsionId ())
+		{
+			Result.fail ("permsion id is null");
+		}
+
+		int flag = permsionMapper.delete (delPermsionRequest.getPermsionId ());
+
+		if (flag > 0)
+		{
+			return new Result ();
+		}
+		else
+		{
+			return Result.fail ("delete permsion failed.");
+		}
 	}
 
 	/**
@@ -78,21 +145,28 @@ public class PermsionApiImpl implements PermsionApi
 	 */
 	@Override
 	public QryPermsionByIdResponse findById (HttpServletRequest request, QryPermsionByIdRequest qryPermsionByIdRequest)
+			throws Exception
 	{
-		return null;
-	}
+		QryPermsionByIdResponse qryPermsionByIdResponse = null;
 
-	/**
-	 * 查询列表
-	 *
-	 * @param request
-	 * @param qryPermsionConditionRequest
-	 * @return
-	 */
-	@Override
-	public QryPermsionConditionResponse queryConditionPage (HttpServletRequest request,
-			QryPermsionConditionRequest qryPermsionConditionRequest)
-	{
-		return null;
+		if (null == qryPermsionByIdRequest.getPermsionId ())
+		{
+			return (QryPermsionByIdResponse) Result.fail ("permsion id is null");
+		}
+
+		Permsion permsion = permsionMapper.find (qryPermsionByIdRequest.getPermsionId ());
+
+		if (null != permsion)
+		{
+			PermsionVo permsionVo = new PermsionVo ();
+			BeanUtils.copyProperties (permsion, permsionVo);
+			qryPermsionByIdResponse = new QryPermsionByIdResponse ();
+			qryPermsionByIdResponse.setPermsion (permsionVo);
+			return qryPermsionByIdResponse;
+		}
+		else
+		{
+			return (QryPermsionByIdResponse) Result.fail ("permsion not exist");
+		}
 	}
 }
