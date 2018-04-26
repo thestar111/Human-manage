@@ -36,7 +36,7 @@
     </div>
     <div class="x-body" id="x-body">
         <form class="layui-form" id="assessFrom">
-			
+
 			<div class="layui-row">
 				<div class="layui-form-item">
 					<div class="layui-col-xs3">
@@ -61,7 +61,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="layui-row">
 				<div class="layui-form-item">
 					<div class="layui-col-xs3">
@@ -90,19 +90,11 @@
 							<select name="departmentId" id="departmentId" lay-search="" lay-verify="checkDepartmentId">
 								  <option v-for="(item,index) in department"  :value="item.id">{{ item.name }}</option>
 							</select>
-							<!--
-							<select name="departmentId" v-model="assessTopic.departmentId" lay-verify="required" lay-search="">
-							  <option value="">选择部门</option>
-							  <option value="1">技术部</option>
-							  <option value="2">人事部</option>
-							  <option value="3">事业部</option>
-							</select>
-							-->
 						</div>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="layui-row">
 				<div class="layui-form-item">
 					<div class="layui-col-xs3">
@@ -125,7 +117,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="layui-row">
 				<div class="layui-form-item">
 					<div class="layui-col-xs3">
@@ -143,7 +135,7 @@
 				<!--<h1>考核内容</h1>-->
 				<a class="layui-btn" lay-filter="addEvent" lay-submit="" @click="addContentEvent"><i class="layui-icon"></i>添加</a>
 			</xblock>
-			
+
 			<table class="layui-table">
 				<thead>
 				  <tr><!--
@@ -175,7 +167,7 @@
 				  </tr>
 				</tbody>
 			  </table>
-			  
+
 			  <div class="layui-form-item">
 				  <label for="L_repass" class="layui-form-label"></label>
 				  <a  class="layui-btn layui-btn-normal" lay-filter="addContent" @click="saveTopic" lay-submit="">
@@ -190,17 +182,8 @@ var app = new Vue({
 	el: '#x-body',
 	data: {
 		assessTopic: {},
-		rank:[
-			{name:'选择职级',id:''},
-			{name:'科级',id:'1'},
-			{name:'部级',id:'2'}
-		],
-		department:[
-			{name:'选择部门',id:''},
-			{name:'技术部',id:'1'},
-			{name:'人事部',id:'2'},
-			{name:'事业部',id:'3'}
-		],
+		rank:[],
+		department:[],
 		status: '1',
 		assessYear: '',
 		addDetail: {},
@@ -219,7 +202,7 @@ var app = new Vue({
 		  laydate.render({
 			elem: '#time'
 		  });
-		  
+
 		  laydate.render({
 			elem: '#startTime',
 			done: function(value, date){
@@ -230,7 +213,7 @@ var app = new Vue({
 		layui.use(['form','layer'], function(){
 			$ = layui.jquery;
 			var form = layui.form;
-	  
+
 		  //监听指定开关
 		  form.on('switch(switchStatus)', function(data){
 			if(this.checked) {
@@ -240,11 +223,55 @@ var app = new Vue({
 			}
 		  });
 		});
+		this.querydptList();
+		this.queryrankList();
 	},
 	mounted() {
 
 	},
 	methods: {
+        queryrankList() {
+            let that = this;
+            $.ajax({
+                async : false,
+                cache : false,
+                url : "/human/rank/query",
+                contentType : "application/json",
+                type : "POST",
+                data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '100' }),
+                dataType : "json",
+                success : function(data) {
+                    if(data.resultCode=='0') {
+                        that.rank = data.ranks;
+                    } else {
+                        layer.msg(data.resultMessage);
+                    }
+                },error : function(request) {
+                    layer.msg('网络错误');
+                }
+            });
+        },
+        querydptList(){
+            let that = this;
+            $.ajax({
+                async : false,
+                cache : false,
+                url : "/human/department/query",
+                contentType : "application/json",
+                type : "POST",
+                data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '1000' }),
+                dataType : "json",
+                success : function(data) {
+                    if(data.resultCode=='0') {
+                        that.department = data.departments;
+                    } else {
+                        layer.msg(data.resultMessage);
+                    }
+                },error : function(request) {
+                    layer.msg('网络错误');
+                }
+            });
+        },
 		//新增考核内容
 		addContentEvent() {
 			var that = this;
@@ -261,8 +288,8 @@ var app = new Vue({
 				$ = layui.jquery;
 				var form = layui.form;
 				var layer = layui.layer;
-			
-			  //自定义验证规则 
+
+			  	//自定义验证规则
 				form.verify({
 					checkTopicId: function(value){
 						if(value == ''){
@@ -341,7 +368,7 @@ var app = new Vue({
 									layer.msg(data.resultMessage);
 								}
 							},error : function(request) {
-								layer.msg('网络错误'); 
+								layer.msg('网络错误');
 					        }
 						});
 					}
@@ -395,7 +422,7 @@ $.fn.serializeObject = function() {
 				isPush = true;
 			}
 		}
-		
+
 		if(isPush) {
 			if (o[this.name]) {
 				if (!o[this.name].push) {
