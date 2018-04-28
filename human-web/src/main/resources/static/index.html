@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>人事考核管理系统</title>
+	<title></title><!--人事考核管理系统-->
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -26,7 +26,7 @@
 <body>
     <!-- 顶部开始 -->
     <div class="container">
-        <div class="logo"><a href="./index.html">人事考核管理系统</a></div>
+        <div class="logo"><a href="./index.html"><!-- 人事考核管理系统 --></a></div>
         <div class="left_open">
             <i title="展开左侧栏" class="iconfont">&#xe699;</i>
         </div>
@@ -125,7 +125,7 @@
 		for (var i = 0; i < o.length; i++) {
 			try {
 				if(o[i].parentMenuId == "0") {
-					str += "<li><a href='javascript:;'><i class='iconfont'>"+o[i].memo+"</i><cite>"+o[i].menuName+"</cite><i class='iconfont nav_right'>&#xe697;</i></a>"
+					str += "<li><a href='javascript:"+o[i].menuUrl+";'><i class='iconfont'>"+o[i].memo+"</i><cite>"+o[i].menuName+"</cite><i class='iconfont nav_right'>&#xe697;</i></a>"
 					if(isChildMenu(o[i].menuId,o)) {
 						str += childMenu(o[i].menuId,o);
 					}

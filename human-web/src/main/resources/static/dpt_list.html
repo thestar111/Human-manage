@@ -72,7 +72,7 @@
 					<input type="text" id="search_name" name="search_name"
 						placeholder="请输入部门名称" autocomplete="off" class="layui-input">
 					<input type="text" id="search_manager" name="search_manager"
-						placeholder="请输入部门经理" autocomplete="off" class="layui-input">
+						placeholder="请输入部门负责人" autocomplete="off" class="layui-input">
 					<a class="layui-btn" v-on:click="dptSearch">
 						<i class="layui-icon">&#xe615;</i>
 					</a>
@@ -99,7 +99,7 @@
 					<th>部门名称</th>
 					<th>部门描述</th>
 					<th>部门电话</th>
-					<th>部门经理</th>
+					<th>负责人</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -169,7 +169,7 @@
 						</div>
 						<div class="layui-form-item">
 							<label for="L_manager" class="layui-form-label"> <span
-								class="x-red">*</span>部门经理
+								class="x-red">*</span>负责人
 							</label>
 							<div class="layui-input-inline">
 								<input type="text" id="L_manager" name="manager" v-model="department.manager" required=""
