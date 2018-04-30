@@ -9,7 +9,7 @@ spring:
     username: human
     password: hjOhYv6++ByjV7q4gnfKrds+SdMT2iEfoNCsFwHV0jjHuAL/LxWZ3UOXeAyExce0oITtW/Fr401o9LKstSaFkg==
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.0.11:21000/human?autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/human?autoReconnect=true&useSSL=false&characterEncoding=utf-8
     initial-size: 1
     min-idle: 1
     max-active: 50

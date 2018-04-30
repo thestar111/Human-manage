@@ -1,401 +1,326 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>人事考核管理系统</title>
-<meta name="renderer" content="webkit|ie-comp|ie-stand">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport"
-	content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta charset="UTF-8">
+    <title>人事考核管理系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="./css/xadmin.css">
-<link rel="stylesheet" href="./css/font.css">
-<link rel="stylesheet"
-	href="./lib/layui/css/modules/layer/default/layer.css">
-<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="./js/vue.min.js"></script>
-<script type="text/javascript" src="./lib/layui/layui.js"></script>
-<script src="./lib/layui/layui.js" charset="utf-8"></script>
-<script type="text/javascript" src="./js/xadmin.js"></script>
-<style type="text/css">
-	#mask {
-		background: rgba(0, 0, 0, .5);
-		width: 100%;
-		height: 100%;
-		position: fixed;
-		z-index: 999;
-		top: 0;
-		left: 0;
-	}
-	
-	.mask {
-		width: 500px;
-		height: 500px;
-		background: rgba(255, 255, 255, 1);
-		position: absolute;
-		left: 0;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		margin: auto;
-		z-index: 47;
-		border-radius: 5px;
-	}
-	
-	.title {
-		padding: 10px;
-		border-bottom: 1px solid #eee;
-	}
-	
-	.title span {
-		float: right;
-		cursor: pointer;
-	}
-</style>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet"
+          href="./lib/layui/css/modules/layer/default/layer.css">
+    <script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="./js/vue.min.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/xadmin.js"></script>
 </head>
 <body>
-	<div class="x-nav">
-		<span class="layui-breadcrumb"> <a href="javascript:;">首页</a>
-			<a href="javascript:;">员工管理</a> <a> <cite>员工列表</cite></a>
-		</span> 
-		<a class="layui-btn layui-btn-small" style="line-height: 1.6em; margin-top: 3px; float: right"
-			href="javascript:location.replace(location.href);" title="刷新">
-			<i class="layui-icon" style="line-height: 30px">ဂ</i>
-		</a>
-	</div>
-	<div class="x-body" id="emp-list">
-		<div class="layui-row">
-			<form class="layui-form layui-col-md12 x-so">
-				<input type="text" name="name" v-model="name"
-					placeholder="请输入员工姓名" autocomplete="off" class="layui-input">
-				<button class="layui-btn" lay-submit="" lay-filter="sreach" v-on:click="empEdit">
-					<i class="layui-icon">&#xe615;</i>
-				</button>
-			</form>
-		</div>
-		<xblock>
-		<!-- <button class="layui-btn layui-btn-danger" onclick="delAll()">
-			<i class="layui-icon"></i>批量删除
-		</button> -->
-		<!-- <a class="layui-btn" v-on:click="empEdit">
-			<i class="layui-icon"></i>添加
-		</a> -->
-		<span class="x-right" style="line-height: 40px">共有数据：{{totalNum}} 条</span> </xblock>
-		<table class="layui-table">
-			<thead>
-				<tr>
-					<th>
-						<div class="layui-unselect header layui-form-checkbox"
-							lay-skin="primary">
-							<i class="layui-icon">&#xe605;</i>
-						</div>
-					</th>
-					<th>员工编号</th>
-					<th>姓名</th>
-					<th>性别</th>
-					<th>家庭住址</th>
-					<th>出生日期</th>
-					<th>电话号码</th>
-					<th>民族</th>
-					<th>部门</th>
-					<th>职位称呼</th>
-					<th>职级</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="item in empdata">
-					<td>
-						<div class="layui-unselect layui-form-checkbox" lay-skin="primary">
-							<i class="layui-icon">&#xe605;</i>
-						</div>
-					</td>
-					<td>{{item.employeeId}}</td>
-					<td>{{item.name}}</td>
-					<td>{{item.sex}}</td>
-					<td>{{item.homeAddr}}</td>
-					<td>{{item.birthday}}</td>
-					<td>{{item.tel}}</td>
-					<td>{{item.nation}}</td>
-					<td>{{item.departName}}</td>
-					<td>{{item.jobName}}</td>
-					<td>{{item.rankName}}</td>
-					<td class="td-manage">
-						<a title="编辑" v-on:click="empEdit(item)" href="javascript:;"> 
-							<i class="layui-icon">&#xe642;</i>
-						</a> 
-						<a title="删除" v-on:click="empDel(item.employeeId)" href="javascript:;"> 
-							<i class="layui-icon">&#xe640;</i>
-						</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<!-- <div class="page">
-			<div>
-				<a class="prev" href="">&lt;&lt;</a> 
-				<a class="num" href="">1</a> 
-				<span class="current">2</span> 
-				<a class="num" href="">3</a> 
-				<a class="num" href="">489</a> 
-				<a class="next" href="">&gt;&gt;</a>
-			</div>
-		</div> -->
 
-		<div id="mask" v-if="editcontent">
-			<div class="mask">
-				<div class="title">
-					员工编辑 <span @click="editcontent=false"> X </span>
-				</div>
-				<div id="emp_eidt" class="x-body">
-					<form class="layui-form1" id="editfrom">
-						<div class="layui-form-item">
-							<label for="L_email" class="layui-form-label"> <span class="x-red"></span>员工编号</label>
-							<div class="layui-input-inline">
-								<input type="text" id="L_employeeId" name="employeeId" v-model="employee.employeeId" readonly="readonly" 
-									autocomplete="off" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item">
-							<label for="L_email" class="layui-form-label"> <span class="x-red"></span>姓名</label>
-							<div class="layui-input-inline">
-								<input type="text" id="L_name" name="name" v-model="employee.name" readonly="readonly" lay-verify="name" autocomplete="off" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item">
-							<label for="L_repass" class="layui-form-label"> <span
-								class="x-red">*</span>职级
-							</label>
-							<div class="layui-input-inline">
-								<select id="rankId" name="rank" v-model="employee.rank" >
-									<option value="">请选择职级</option>
-									<option v-for="(item,index) in rankdata" :value="item.rankId" >{{ item.name }}</option>
-								</select>
-							</div>
-						</div>
-						<div class="layui-form-item">
-							<label for="L_repass" class="layui-form-label"> <span
-								class="x-red">*</span>电话号码
-							</label>
-							<div class="layui-input-inline">
-								<input type="hidden" id="L_password" name="password" v-model="employee.password">
-								<input type="hidden" id="L_englishName" name="englishName" v-model="employee.englishName">
-								<input type="hidden" id="L_nation" name="nation" v-model="employee.nation">
-								<input type="hidden" id="L_email" name="email" v-model="employee.email">
-								<input type="hidden" id="L_salary" name="salary" v-model="employee.salary">
-								<input type="hidden" id="L_job" name="job" v-model="employee.job">
-								<input type="hidden" id="L_tel" name="tel" v-model="employee.tel">
-								<select id="departmentId" name="department" v-model="employee.department">
-									<option value="">请选择部门</option>
-									<option v-for="(item,index) in dptdata" :value="item.departmentId">{{ item.name }}</option>
-								</select>
-							</div>
-						</div>
-						<div class="layui-form-item">
-							<label for="L_repass" class="layui-form-label"> </label>
-							<button class="layui-btn" lay-filter="saveEmp" v-on:click="saveEmp" lay-submit="">保存</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</body>
-<script>
+<div class="x-body" id="x-body">
+    <form class="layui-form layui-form-pane" id="editfrom">
+        <div class="layui-row">
+            <div class="layui-form-item">
+                <div class="layui-col-xs6">
+                    <label for="name" class="layui-form-label">
+                        员工姓名
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="name" name="name" required="" v-model="sname"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <label for="job" class="layui-form-label">
+                        职级称呼
+                    </label>
+                    <div class="layui-input-inline">
+                        <select name="job" id="job" v-model="sjob">
+                            <option value="">请选择职级称呼</option>
+                            <option v-for="(item,index) in job" :value="item.jobId">{{ item.name }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs6">
+                    <label for="department" class="layui-form-label">
+                       所属部门
+                    </label>
+                    <div class="layui-input-inline">
+                        <select name="department" id="department" lay-verify="checkDepartmentId"
+                                v-model="sdepartment">
+                            <option value="">请选择部门</option>
+                            <option v-for="(item,index) in department" :value="item.departmentId">{{ item.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <label for="rank" class="layui-form-label">
+                        职级
+                    </label>
+                    <div class="layui-input-inline">
+                        <select name="rank" id="rank" lay-verify="checkRankId" v-model="srank">
+                            <option value="">请选择职级</option>
+                            <option v-for="(item,index) in rank" :value="item.rankId">{{ item.name }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="demoTable"  style="text-align:right">
+        <button class="layui-btn layui-btn-normal" data-type="reload">查询</button>
+        <button class="layui-btn layui-btn-normal" data-type="add">新增</button>
+    </div>
+    <table class="layui-table" id="demo" lay-filter="demo"></table>
 
-
-var vm = new Vue({
-	el: '#emp-list',
-	data: {
-		empdata: [],
-		totalNum: "",
-		rankId:"",
-		employee: {},
-		rankdata:[],
-		dptdata:[],
-		editcontent: false
-		
-	},
-	created(){
-		this.queryEmpList();
-		this.queryrankList();
-		this.querydptList();
-	},
-	methods: {
-		queryEmpList(){
-			let that = this;
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/user/department",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.empdata = data.employees;
-						if(data.employees) {
-							that.totalNum = data.employees.length;
-						} else {
-							that.totalNum = 0;
-						}
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		queryrankList() {
-			let that = this;
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/rank/query",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.rankdata = data.ranks;
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		querydptList(){
-			let that = this;
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/department/query",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '10' }),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.dptdata = data.departments;
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		empDel: function (id) //删除 
-		{
-			let that = this;
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/user/delete",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({ 'employeeId': id}),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.queryEmpList();
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		empEdit: function (item) //更新 
-		{
-			var that = this;
-			that.employee = {
-				employeeId: item.employeeId,
-				name: item.name,
-				sex: item.sex,
-				homeAddr: item.homeAddr,
-				birthday: item.birthday,
-				tel: item.tel,
-				nation: item.nation,
-				department: item.department,
-				job: item.job,
-				rank: item.rank
-			}
-			that.editcontent = true;
-		},
-		saveEmp: function() {
-			var that = this;
-			layui.use(['form','layer'], function(){
-			    $ = layui.jquery;
-			  var form = layui.form;
-			  var layer = layui.layer;
-			  var subFlag = true;
-			  //监听提交
-			 form.on('submit(saveEmp)', function(data){
-				 var jsonStr = $('#editfrom').serializeObject("employee");
-				 console.info(JSON.stringify(jsonStr));
-				 if($("#departmentId").val() == "") {
-					 layer.msg('请选择部门'); 
-					 var subFlag = false;
-				 }else if($("#rankId").val() == "") {
-					 layer.msg('请选择职级'); 
-					 var subFlag = false;
-				 } else {
-					 var subFlag = true;
-				 }
-				 if(subFlag) {
-				   $.ajax({
-						async : false,
-						cache : false,
-						url : "/human/user/modify",
-						contentType : "application/json",
-						type : "POST",
-						data : JSON.stringify(jsonStr),
-						dataType : "json",
-						success : function(data) {
-							if(data.resultCode=='0') {
-								layer.msg("修改成功");
-								that.queryEmpList();
-							    that.editcontent = false;
-							} else {
-								layer.msg(data.resultMessage);
-							}
-						},error : function(request) {
-							layer.msg('网络错误'); 
-				        }
-					});
-				 }
-				 subFlag = false;
-			    return false;
-			  });
-			});
-		}
-	}  
-}); 
-
-$.fn.serializeObject = function() {
-    var o = {};
-    var emp = {"employee":o};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name]) {
-            if (!o[this.name].push) {
-                o[this.name] = [ o[this.name] ];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return emp;
-}
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
+<script>
+    layui.config({
+        version: '1522709297490' //为了更新 js 缓存，可忽略
+    });
+    layui.use(['laypage', 'layer', 'table'], function () {
+        var laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table;//表格
+
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            , url: '/human/user/department' //数据接口
+            , page: true //开启分页
+            , limit: 10 //默认采用60
+            , method: 'get'
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , id: 'idEmp'
+            , cols: [[ //表头
+                /* {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}*/
+                {field: 'employeeId', title: '员工编号', width: 120, sort: true}
+                , {field: 'name', title: '姓名', width: 100}/*
+                , {field: 'sex', title: '性别', width: 60}*/
+                , {field: 'homeAddr', title: '家庭住址', width: 150}
+                , {field: 'birthday', title: '出生日期', width: 80}
+                , {field: 'tel', title: '电话号码', width: 130}
+                , {field: 'nation', title: '民族', width: 100}
+                , {field: 'departName', title: '部门', width: 100}
+                , {field: 'jobName', title: '职位称呼', width: 80}
+                , {field: 'rankName', title: '职级', width: 135, sort: true}
+                , {fixed: 'right', width: 165, align: 'center', toolbar: '#barDemo', title: '操作'}
+            ]]
+            , response: {
+                statusName: 'resultCode' //数据状态的字段名称，默认：code
+                , statusCode: 0 //成功的状态码，默认：0
+                , msgName: 'resultMessage' //状态信息的字段名称，默认：msg
+                , countName: 'count' //数据总数的字段名称，默认：count
+                , dataName: 'employees' //数据列表的字段名称，默认：data
+            },/*
+            where:{
+                name:app.sname,
+                job:app.sjob,
+                rank:app.srank,
+                department:app.sdepartment
+            }*/
+        });
+        /*table.reload('demo', {
+            url: '/human/user/department' //数据接口
+        });*/
+        //监听工具条
+        table.on('tool(demo)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'detail') {
+                active.editMark(obj.data.employeeId, 'view');
+            } else if (layEvent === 'del') {
+                layer.confirm('真的删除员工吗？', function (index) {
+                    obj.del(); //删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    //向服务端发送删除指令
+                    active.empDel(obj.data.employeeId);
+                });
+            } else if (layEvent === 'edit') {
+                active.editMark(obj.data.employeeId, 'edit');
+            }
+        });
+
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo' //分页容器的id
+            , count: 100 //总页数
+            , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+            //,skip: true //开启跳页
+            , jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第' + obj.curr + '页');
+                }
+            }
+        });
+
+
+        //触发事件
+        var active = {
+            editMark: function (employeeId, flag) {
+                //示范一个层
+                layer.open({
+                    type: 2 //此处以iframe举例
+                    , title: '编辑员工信息'
+                    , area: ['800px', '550px']
+                    , shade: 0
+                    , content: 'emp_edit.html?id=' + employeeId + "&flag=" + flag
+
+                });
+            },
+            empDel: function (id) //删除
+            {
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    url: "/human/user/delete",
+                    contentType: "application/json",
+                    type: "POST",
+                    data: JSON.stringify({'employeeId': id}),
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.resultCode == '0') {
+                            table.reload();
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    }, error: function (request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            reload: function(){
+                table.reload('idEmp', {
+                    where:{
+                        name:app.sname,
+                        job:$('#job').val(),
+                        rank:$('#rank').val(),
+                        department:$('#department').val()
+                    }
+                });
+            },
+            add: function(){
+                //示范一个层
+                layer.open({
+                     type: 2 //此处以iframe举例
+                    , title: '新增员工信息'
+                    , area: ['800px', '550px']
+                    , shade: 0
+                    , content: 'emp_edit.html?flag=add'
+
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+
+    var app = new Vue({
+        el: '#x-body',
+        data: {
+            job: [],
+            rank:[],
+            department:[],
+            sjob:'',
+            srank:'',
+            sdepartment:'',
+            sname:''
+
+        },
+        created(){
+            this.queryrankList();
+            this.querydptList();
+            this.queryjobList();
+        },
+        methods: {
+            queryrankList() {
+                let that = this;
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/rank/query",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.rank = data.ranks;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            querydptList(){
+                let that = this;
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/department/query",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.department = data.departments;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            queryjobList(){
+                let that = this;
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/job/query",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.job = data.jobs;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            }
+        }
+    })
+
+
+</script>
+</body>
 </html>

@@ -16,6 +16,7 @@ import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
 import com.civil.aviation.human.api.department.domain.DepartmentVo;
 import com.civil.aviation.human.api.job.domain.JobVo;
 import com.civil.aviation.human.api.menu.domain.MenuVo;
+import com.civil.aviation.human.api.office.domain.OfficeVo;
 import com.civil.aviation.human.api.rank.domain.RankVo;
 import com.civil.aviation.human.api.user.domain.EmployeeVo;
 import com.civil.aviation.human.database.entity.*;
@@ -184,4 +185,22 @@ public interface EntityMapperHandler
 	@Mapping (target = "assessResultId", source = "id")
 	@Mapping (target = "employeeId", source = "employee")
 	AssessResultVo assessResultToVo (AssessResult assessResult);
+
+	/**
+	 * 实体转VO对象
+	 *
+	 * @param officeVo
+	 * @return
+	 */
+	@Mapping (target = "id", source = "officeId")
+	Office officeToEntity (OfficeVo officeVo);
+
+	/**
+	 * 实体转VO对象
+	 *
+	 * @param office
+	 * @return
+	 */
+	@Mapping (target = "officeId", source = "id")
+	OfficeVo officeToVo (Office office);
 }

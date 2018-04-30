@@ -1,370 +1,462 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>人事考核管理系统</title>
-		<meta name="renderer" content="webkit|ie-comp|ie-stand">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta name="viewport"
-			content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
-		<meta http-equiv="Cache-Control" content="no-siteapp" />
+<head>
+	<meta charset="UTF-8">
+	<title>人事考核管理系统</title>
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport"
+		  content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-		<link rel="stylesheet" href="./css/xadmin.css">
-		<link rel="stylesheet" href="./css/font.css">
-		<link rel="stylesheet"
-			href="./lib/layui/css/modules/layer/default/layer.css">
-		<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
-		<script type="text/javascript" src="./js/jquery.cookie.js"></script>
-		<script type="text/javascript" src="./js/vue.min.js"></script>
-		<script type="text/javascript" src="./lib/layui/layui.js"></script>
-		<script type="text/javascript" src="./js/xadmin.js"></script>
-    </head>
-  
-  <body>
-    <div class="x-body" id="x-body">
-        <form class="layui-form" id="editfrom">
-			<div class="layui-row">
-				<div class="layui-form-item">
-					<div class="layui-col-xs6">
-						<label for="employeeId" class="layui-form-label">
-							<span class="x-red"></span>员工编号
-						</label>
-						<div class="layui-input-inline">
-							<input type="text" id="employeeId" name="employeeId" readonly="readonly" v-model="employee.employeeId"
-								autocomplete="off" class="layui-input">
-						</div>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="./css/xadmin.css">
+	<link rel="stylesheet" href="./css/font.css">
+	<link rel="stylesheet"
+		  href="./lib/layui/css/modules/layer/default/layer.css">
+	<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="./js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="./js/vue.min.js"></script>
+	<script type="text/javascript" src="./lib/layui/layui.js"></script>
+	<script type="text/javascript" src="./js/xadmin.js"></script>
+	<script type="text/javascript" src="./js/common.js"></script>
+</head>
+
+<body>
+<div class="x-body" id="x-body"  v-cloak>
+	<form class="layui-form layui-form-pane" id="editfrom">
+		<div class="layui-row">
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="employeeId" class="layui-form-label">
+						<span class="x-red"></span>员工编号
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="employeeId" name="employeeId" v-bind:readonly="flag=='edit'" v-model="employee.employeeId"
+							   autocomplete="off" class="layui-input">
 					</div>
-					<div class="layui-col-xs6">
-						<label for="englishName" class="layui-form-label"> 
-							<span class="x-red"></span>员工昵称
-						</label>
-						<div class="layui-input-inline">
-							<input type="text" id="englishName" name="englishName" required="" v-model="employee.englishName"
-								autocomplete="off" class="layui-input">
-						</div>
-					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.employeeId" style="background-color:#fff;width:170px"></label>
 				</div>
-				<div class="layui-form-item">
-					<div class="layui-col-xs6">
-						<label for="name" class="layui-form-label"> 
-							<span class="x-red">*</span>员工姓名
-						</label>
-						<div class="layui-input-inline">
-							<input type="text" id="name" name="name" required="" v-model="employee.name"
-								autocomplete="off" class="layui-input">
-						</div>
+				<div class="layui-col-xs6">
+					<label for="englishName" class="layui-form-label">
+						<span class="x-red"></span>员工昵称
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="englishName" name="englishName" required="" v-model="employee.englishName"
+							   autocomplete="off" class="layui-input" >
 					</div>
-					<div class="layui-col-xs6">
-						<label for="nation" class="layui-form-label"> 
-							<span class="x-red"></span>民族
-						</label>
-						<div class="layui-input-inline">
-							<input type="text" id="nation" name="nation" v-model="employee.nation"
-								autocomplete="off" class="layui-input">
-						</div>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<div class="layui-col-xs6">
-						<label for="sex" class="layui-form-label"> 
-							<span class="x-red">*</span>性别
-						</label>
-						<div class="layui-input-block">
-							<input type="radio" name="sex" value="0" title="男" v-model="employee.sex" checked="">
-							<input type="radio" name="sex" value="1" title="女" v-model="employee.sex">
-						</div>
-					</div>
-					<div class="layui-col-xs6">
-						<label for="birthday" class="layui-form-label"> 
-							<span class="x-red"></span>出生日期
-						</label>
-						<div class="layui-input-inline">
-							<input type="text" name="birthday" id="birthday" v-model="employee.birthday" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<div class="layui-col-xs12">
-						<label for="homeAddr" class="layui-form-label"> 
-							<span class="x-red"></span>家庭住址
-						</label>
-						<div class="layui-input-block">
-							<input type="text" id="homeAddr" name="homeAddr" v-model="employee.homeAddr"
-								autocomplete="off" class="layui-input">
-						</div>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<div class="layui-col-xs6">
-						<label for="tel" class="layui-form-label"> 
-							<span class="x-red">*</span>电话号码
-						</label>
-						<div class="layui-input-inline">
-							<input type="text" id="tel" name="tel" required="" v-model="employee.tel" lay-verify="phone"
-								autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-col-xs6">
-						<label for="email" class="layui-form-label"> 
-							<span class="x-red">*</span>邮箱
-						</label>
-						<div class="layui-input-inline">
-							<input type="text" id="email" name="email" v-model="employee.email" lay-verify="email"
-								autocomplete="off" class="layui-input">
-						</div>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<div class="layui-col-xs6">
-						<label for="department" class="layui-form-label"> 
-							<span class="x-red">*</span>所属部门
-						</label>
-						<div class="layui-input-inline">
-							<select name="department" id="department" lay-verify="checkDepartmentId" v-model="employee.department">
-								<option value="">请选择部门</option>
-								<option v-for="(item,index) in department"  :value="item.departmentId">{{ item.name }}</option>
-							</select>
-						</div>
-					</div>
-					<div class="layui-col-xs6">
-						<label for="rank" class="layui-form-label"> 
-							<span class="x-red">*</span>职级
-						</label>
-						<div class="layui-input-inline">
-							<select name="rank" id="rank" lay-verify="checkRankId" v-model="employee.rank">
-								<option value="">请选择职级</option>
-								<option v-for="(item,index) in rank"  :value="item.rankId">{{ item.name }}</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<div class="layui-col-xs6">
-						<label for="salary" class="layui-form-label"> 
-							<span class="x-red"></span>基本工资
-						</label>
-						<div class="layui-input-inline">
-							<input type="hidden" id="supplement" name="supplement"  v-model="employee.supplement"  class="layui-input">
-							<input type="text" id="salary" name="salary" required="" v-model="employee.salary"
-								autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-col-xs6">
-						<label for="job" class="layui-form-label"> 
-							<span class="x-red"></span>职级称呼
-						</label>
-						<div class="layui-input-inline">
-							<select name="job" id="job" v-model="employee.job">
-								<option value="">请选择职级称呼</option>
-								<option v-for="(item,index) in job"  :value="item.jobId">{{ item.name }}</option>
-							</select>
-						</div>
-					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.englishName" style="background-color:#fff;width:170px"></label>
 				</div>
 			</div>
-          <div class="layui-form-item" style="text-align:right;margin-top: 35px;">
-              <a class="layui-btn layui-btn-normal" style="width: 216px;" lay-filter="addEvent" @click="updateEvent" lay-submit="">
-                  	修改
-              </a>
-          </div>
-      </form>
-    </div>
-  </body>
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="name" class="layui-form-label">
+						<span class="x-red">*</span>员工姓名
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="name" name="name" required="" v-model="employee.name"
+							   autocomplete="off" class="layui-input" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.name" style="background-color:#fff;width:170px"></label>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="nation" class="layui-form-label">
+						<span class="x-red"></span>民族
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="nation" name="nation" v-model="employee.nation"
+							   autocomplete="off" class="layui-input" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.nation" style="background-color:#fff;width:170px"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="sex" class="layui-form-label">
+						<span class="x-red">*</span>性别
+					</label>
+					<div class="layui-input-block"v-show="flag=='edit'||flag=='add'">
+						<input type="radio" name="sex" value="0" title="男" v-model="employee.sex" checked="" >
+						<input type="radio" name="sex" value="1" title="女" v-model="employee.sex" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.sex" style="background-color:#fff;width:170px"></label>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="birthday" class="layui-form-label">
+						<span class="x-red"></span>出生日期
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" name="birthday" id="birthday" v-model="employee.birthday" autocomplete="off" class="layui-input" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.birthday" style="background-color:#fff;width:170px"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs12">
+					<label for="homeAddr" class="layui-form-label">
+						<span class="x-red"></span>家庭住址
+					</label>
+					<div class="layui-input-block"v-show="flag=='edit'||flag=='add'" style="width:570px">
+						<input type="text" id="homeAddr" name="homeAddr" v-model="employee.homeAddr"
+							   autocomplete="off" class="layui-input" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.homeAddr" style="background-color:#fff;width:550px"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="tel" class="layui-form-label">
+						<span class="x-red">*</span>电话号码
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="tel" name="tel" required="" v-model="employee.tel" lay-verify="phone"
+							   autocomplete="off" class="layui-input" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.tel" style="background-color:#fff;width:170px"></label>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="email" class="layui-form-label">
+						<span class="x-red">*</span>邮箱
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="email" name="email" v-model="employee.email" lay-verify="email"
+							   autocomplete="off" class="layui-input" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.email" style="background-color:#fff;width:170px"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="department" class="layui-form-label">
+						<span class="x-red">*</span>所属部门
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<select name="department" id="department" lay-verify="checkDepartmentId" v-model="employee.department"  >
+							<option value="">请选择部门</option>
+							<option v-for="(item,index) in department"  :value="item.departmentId">{{ item.name }}</option>
+						</select>
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.department" style="background-color:#fff;width:170px"></label>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="rank" class="layui-form-label">
+						<span class="x-red">*</span>职级
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<select name="rank" id="rank" lay-verify="checkRankId" v-model="employee.rank" >
+							<option value="">请选择职级</option>
+							<option v-for="(item,index) in rank"  :value="item.rankId">{{ item.name }}</option>
+						</select>
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.rank" style="background-color:#fff;width:170px"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="salary" class="layui-form-label">
+						<span class="x-red"></span>基本工资
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="hidden" id="supplement" name="supplement"  v-model="employee.supplement"  class="layui-input">
+						<input type="text" id="salary" name="salary" required="" v-model="employee.salary"
+							   autocomplete="off" class="layui-input" >
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.salary" style="background-color:#fff;width:170px"></label>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="job" class="layui-form-label">
+						<span class="x-red"></span>职级称呼
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<select name="job" id="job" v-model="employee.job" >
+							<option value="">请选择职级称呼</option>
+							<option v-for="(item,index) in job"  :value="item.jobId">{{ item.name }}</option>
+						</select>
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="employee.job" style="background-color:#fff;width:170px"></label>
+				</div>
+			</div>
+		</div>
+        <div class="layui-form-item" style="text-align:right;margin-top: 35px;"v-show="flag=='edit'">
+            <a class="layui-btn layui-btn-normal" style="width: 216px;" lay-filter="addEvent" @click="updateEvent" lay-submit="">
+                修改
+            </a>
+        </div>
+        <div class="layui-form-item" style="text-align:right;margin-top: 35px;" v-show="flag=='add'">
+            <a class="layui-btn layui-btn-normal" style="width: 216px;" lay-filter="addEvent" @click="addEvent" lay-submit="">
+                新增
+            </a>
+        </div>
+	</form>
+</div>
+</body>
 <script>
-var app = new Vue({
-	el: '#x-body',
-	data: {
-		assessTopic: {},
-		rank:[
-			{name:'科级',id:'1'}
-		],
-		department:[
-			{name:'技术部',id:'1'}
-		],
-		employee: {},
-		editlist: false,
-		editDetail: {},
-		newsList: [],
-		verifyEmpForm: true
-	},
-	created(){
-		layui.use('laydate', function(){
-		  var laydate = layui.laydate;
-		  laydate.render({
-			elem: '#birthday'
-			});
-		});
-		this.queryEmployee();
-		this.queryrankList();
-		this.querydptList();
-		this.queryjobList();
-	},
-	methods: {
-		queryEmployee() {
-			var that = this; 
-			var employeeId = sessionStorage.getItem("employeeId");
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/user/findById",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({"employeeId":employeeId}),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.employee = data.employee;
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		queryrankList() {
-			let that = this;
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/rank/query",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.rank = data.ranks;
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		querydptList(){
-			let that = this;
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/department/query",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.department = data.departments;
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		queryjobList(){
-			let that = this;
-			$.ajax({
-				async : false,
-				cache : false,
-				url : "/human/job/query",
-				contentType : "application/json",
-				type : "POST",
-				data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
-				dataType : "json",
-				success : function(data) {
-					if(data.resultCode=='0') {
-						that.job = data.jobs;
-					} else {
-						layer.msg(data.resultMessage);
-					}
-				},error : function(request) {
-					layer.msg('网络错误'); 
-		        }
-			});
-		},
-		updateEvent() {
-			var that = this;
-			that.verifyEmp();
-		},
-		verifyEmp() {
-			var that = this;
-			layui.use(['form','layer'], function(){
-				$ = layui.jquery;
-				var form = layui.form;
-				var layer = layui.layer;
-			
-			  //自定义验证规则 
-				form.verify({
-					checkRankId: function(value) {
-						if(value == '' || value == null){
-							that.verifyEmpForm = false;
-							return '请选择职级';
-						}
-					},
-					checkDepartmentId: function(value) {
-						if(value == '' || value == null){
-							that.verifyEmpForm = false;
-							return '请选择部门';
-						}
-					}
-				});
-				var subFlag = true;
-			  //监听提交
-			  form.on('submit(addEvent)', function(data){
-					console.info("执行提交");
-					var jsonStr = $('#editfrom').serializeObject("employee");
-					jsonStr.employee.supplement = "1";
-					console.info(JSON.stringify(jsonStr));
-					if(subFlag) {
-						$.ajax({
-							async : false,
-							cache : false,
-							url : "/human/user/modify",
-							contentType : "application/json",
-							type : "POST",
-							data : JSON.stringify(jsonStr),
-							dataType : "json",
-							success : function(data) {
-								if(data.resultCode=='0') {
-									layer.msg("修改成功");
-                                    $.cookie('supplement', "1");
-                                    parent.location.href="/human/system/exit";
-									//parent.location.href="index.html";
-								} else {
-									layer.msg(data.resultMessage);
-								}
-							},error : function(request) {
-								layer.msg('网络错误'); 
-					        }
-						});
-					}
-					subFlag = false;
-					return false;
-				 });
-			});
-		}
-	}
-})
+    var app = new Vue({
+        el: '#x-body',
+        data: {
+            assessTopic: {},
+            rank:[
+                {name:'科级',id:'1'}
+            ],
+            department:[
+                {name:'技术部',id:'1'}
+            ],
+            employee: {},
+            editlist: false,
+            editDetail: {},
+            newsList: [],
+            verifyEmpForm: true,
+            flag:''
+        },
+        created(){
+            layui.use('laydate', function(){
+                var laydate = layui.laydate;
+                laydate.render({
+                    elem: '#birthday'
+                });
+            });
+            this.queryrankList();
+            this.querydptList();
+            this.queryjobList();
+            this.queryEmployee();
+        },
+        methods: {
+            queryEmployee() {
+                var that = this;
+                var employeeId = getParamFormURL("id");
+                this.flag = getParamFormURL("flag");
+                if (this.flag=='add')
+                {
+                    this.employee={};
+                    return
+                }
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/user/findById",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({"employeeId":employeeId}),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.employee = data.employee;
+                            if (that.flag=='view'){
+                                that.employee.sex==0?that.employee.sex='男':that.employee.sex==1?that.employee.sex='女':that.employee.sex='';
+                                that.employee.rank=getListValue(that.employee.rank,that.rank,'rankId','name');
+                                that.employee.department=getListValue(that.employee.department,that.department,'departmentId','name');
+                                that.employee.job=getListValue(that.employee.job,that.job,'jobId','name');
+							}
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            queryrankList() {
+                let that = this;
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/rank/query",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.rank = data.ranks;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            querydptList(){
+                let that = this;
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/department/query",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.department = data.departments;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            queryjobList(){
+                let that = this;
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/job/query",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.job = data.jobs;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            updateEvent() {
+                var that = this;
+                that.verifyEmp();
+            },
+            addEvent() {
+                var that = this;
+                that.verifyAddEmp();
+            },
+            verifyEmp() {
+                var that = this;
+                layui.use(['form','layer'], function(){
+                    $ = layui.jquery;
+                    var form = layui.form;
+                    var layer = layui.layer;
 
-$.fn.serializeObject = function(flag) {
-    var o = {};
-    var rank = {"employee":o};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name]) {
-            if (!o[this.name].push) {
-                o[this.name] = [ o[this.name] ];
+                    //自定义验证规则
+                    form.verify({
+                        checkRankId: function(value) {
+                            if(value == '' || value == null){
+                                that.verifyEmpForm = false;
+                                return '请选择职级';
+                            }
+                        },
+                        checkDepartmentId: function(value) {
+                            if(value == '' || value == null){
+                                that.verifyEmpForm = false;
+                                return '请选择部门';
+                            }
+                        }
+                    });
+                    var subFlag = true;
+                    //监听提交
+                    form.on('submit(addEvent)', function(data){
+                        console.info("执行提交");
+                        var jsonStr = $('#editfrom').serializeObject("employee");
+                        jsonStr.employee.supplement = "1";
+                        console.info(JSON.stringify(jsonStr));
+                        if(subFlag) {
+                            $.ajax({
+                                async : false,
+                                cache : false,
+                                url : "/human/user/modify",
+                                contentType : "application/json",
+                                type : "POST",
+                                data : JSON.stringify(jsonStr),
+                                dataType : "json",
+                                success : function(data) {
+                                    if(data.resultCode=='0') {
+                                        layer.msg("修改成功");
+                                        $.cookie('supplement', "1");
+                                        parent.location.href="employee_list.html";
+                                        //parent.location.href="index.html";
+                                    } else {
+                                        layer.msg(data.resultMessage);
+                                    }
+                                },error : function(request) {
+                                    layer.msg('网络错误');
+                                }
+                            });
+                        }
+                        subFlag = false;
+                        return false;
+                    });
+                });
+            },
+            verifyAddEmp() {
+                var that = this;
+                layui.use(['form','layer'], function(){
+                    $ = layui.jquery;
+                    var form = layui.form;
+                    var layer = layui.layer;
+
+                    //自定义验证规则
+                    form.verify({
+                        checkRankId: function(value) {
+                            if(value == '' || value == null){
+                                that.verifyEmpForm = false;
+                                return '请选择职级';
+                            }
+                        },
+                        checkDepartmentId: function(value) {
+                            if(value == '' || value == null){
+                                that.verifyEmpForm = false;
+                                return '请选择部门';
+                            }
+                        }
+                    });
+                    var subFlag = true;
+                    //监听提交
+                    form.on('submit(addEvent)', function(data){
+                        console.info("执行提交");
+                        var jsonStr = $('#editfrom').serializeObject("employee");
+                        jsonStr.employee.supplement = "1";
+                        console.info(JSON.stringify(jsonStr));
+                        if(subFlag) {
+                            $.ajax({
+                                async : false,
+                                cache : false,
+                                url : "/human/user/regist",
+                                contentType : "application/json",
+                                type : "POST",
+                                data : JSON.stringify(jsonStr),
+                                dataType : "json",
+                                success : function(data) {
+                                    if(data.resultCode=='0') {
+                                        layer.msg("新增成功");
+                                        $.cookie('supplement', "1");
+                                        parent.location.href="employee_list.html";
+                                    } else {
+                                        layer.msg(data.resultMessage);
+                                    }
+                                },error : function(request) {
+                                    layer.msg('网络错误');
+                                }
+                            });
+                        }
+                        subFlag = false;
+                        return false;
+                    });
+                });
             }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
         }
-    });
-    return rank;
-}
+    })
+
+    $.fn.serializeObject = function(flag) {
+        var o = {};
+        var rank = {"employee":o};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [ o[this.name] ];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return rank;
+    }
 </script>
 </html>

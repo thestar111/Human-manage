@@ -33,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,11 @@ public class UserApiImpl implements UserApi
 	@Autowired
 	private AdminRoleMapper adminRoleMapper;
 
+	/**
+	 * 普通员工默认角色
+	 */
+	private String NORMAL_ROLE_DEFAULT = "2";
+
 	@Value ("password.default")
 	private String DEFAULT_PASSWORD;
 
@@ -79,6 +85,11 @@ public class UserApiImpl implements UserApi
 		int flag = employeeMappper.add (employee);
 		if (flag > 0)
 		{
+			//员工自注册绑定普通员工角色
+			Map<String, String> params = Maps.newHashMap ();
+			params.put ("admin", employee.getId ());
+			params.put ("role", NORMAL_ROLE_DEFAULT);
+			adminRoleMapper.bindRole (params);
 			return Result.success ("user regist success.");
 		}
 		else
@@ -245,18 +256,28 @@ public class UserApiImpl implements UserApi
 	 * 查询部门下的员工信息
 	 *
 	 * @param request
-	 * @param qryEmployeeConditionRequest
+	 * @param response
 	 * @return
 	 */
 	@Override
 	public QryEmployeeConditionResponse queryByDepartment (HttpServletRequest request,
-			QryEmployeeConditionRequest qryEmployeeConditionRequest) throws Exception
+			HttpServletResponse response) throws Exception
 	{
+
 		QryEmployeeConditionResponse qryEmployeeConditionResponse = new QryEmployeeConditionResponse ();
 		Map<String, Object> params = Maps.newHashMap ();
 
 		Employee employee = (Employee) SessionUtils.getValue (SessionUtils.EMPLOYEE_SESSION_KEY);
 		params.put ("department", employee.getDepartment ());
+		QryEmployeeConditionRequest qryEmployeeConditionRequest=new QryEmployeeConditionRequest();
+		qryEmployeeConditionRequest.setPageIndex (Integer.parseInt(request.getParameter ("pageIndex")));
+		qryEmployeeConditionRequest.setPageSize (Integer.parseInt(request.getParameter ("pageSize")));
+		/*
+		qryEmployeeConditionRequest.setJob (Integer.parseInt(request.getParameter ("job")));
+		qryEmployeeConditionRequest.setName (request.getParameter ("name"));
+		qryEmployeeConditionRequest.setRank (Integer.parseInt(request.getParameter ("rank")));
+		qryEmployeeConditionRequest.setDepartment (Integer.parseInt(request.getParameter ("department")));
+		*/
 
 		if (null != qryEmployeeConditionRequest.getJob ())
 		{
@@ -276,6 +297,7 @@ public class UserApiImpl implements UserApi
 		params.put ("pageIndex", qryEmployeeConditionRequest.getPageIndex ());
 		params.put ("pageSize", qryEmployeeConditionRequest.getPageSize ());
 
+		LOGGER.debug (String.format ("qryEmployeeConditionRequest : %s", qryEmployeeConditionRequest.getPageIndex()));
 		List<Employee> employees = employeeMappper.queryEmploy (params);
 		List<EmployeeVo> employeeVos = null;
 

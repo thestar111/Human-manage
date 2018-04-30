@@ -38,7 +38,7 @@ public interface AdminRoleMapper
 	 *
 	 * @param adminRoleRlat
 	 */
-	void add (AdminRoleRlat adminRoleRlat);
+	int add (AdminRoleRlat adminRoleRlat);
 
 	/**
 	 * 删除角色关系信息
@@ -46,7 +46,7 @@ public interface AdminRoleMapper
 	 * @param adminId
 	 * @param roleId
 	 */
-	void delete (String adminId, int roleId);
+	int delete (String adminId, int roleId);
 
 	/**
 	 * 绑定管理员角色关系信息
