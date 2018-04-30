@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.OfficeMapper">
+
+    <!--定义数据表列字段-->
+    <sql id="sqlColumn">
+        id, name, createTime, department, memo
+    </sql>
+
+    <!--添加科室-->
+    <insert id="add" parameterType="Office">
+        INSERT INTO
+        T_OFFICE(<include refid="sqlColumn"/>)
+        VALUES
+        (#{id}, #{name}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')}, #{department}, #{memo})
+    </insert>
+
+    <!--修改科室-->
+    <update id="modify" parameterType="Office">
+        UPDATE T_OFFICE
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="department != null">
+                department = #{department}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--删除科室-->
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM T_OFFICE WHERE id=#{officId}
+    </delete>
+
+    <!--查询科室信息-->
+    <select id="findById" parameterType="Integer" resultType="Office">
+        SELECT <include refid="sqlColumn"/> FROM T_OFFICE WHERE id = #{officeId};
+    </select>
+
+    <!--查询科室信息-->
+    <select id="findByCondition" parameterType="Map" resultType="Office">
+        SELECT
+        <include refid="sqlColumn"/>
+        FROM T_OFFICE WHERE 1=1
+        <if test="name != NULL">
+            AND name = #{name}
+        </if>
+        <if test="department != NULL">
+            AND department = #{department}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <!--查询科室信息-->
+    <select id="findCountByCondition" parameterType="Map" resultType="Integer">
+        SELECT COUNT(1) FROM T_OFFICE WHERE 1=1
+        <if test="name != NULL">
+            AND name = #{name}
+        </if>
+        <if test="department != NULL">
+            AND department = #{department}
+        </if>
+    </select>
+
+</mapper>
