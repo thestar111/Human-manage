@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -176,19 +177,19 @@ public class RankApiImpl implements RankApi
 	 * 查询列表
 	 *
 	 * @param request
-	 * @param qryRankConditionRequest
+	 * @param response
 	 * @return
 	 */
 	@Override
-	public QryRankConditionResponse queryConditionPage (HttpServletRequest request,
-			QryRankConditionRequest qryRankConditionRequest) throws Exception
+	public QryRankConditionResponse queryConditionPage (HttpServletRequest request, HttpServletResponse response)
+			throws Exception
 	{
 		QryRankConditionResponse qryRankConditionResponse = new QryRankConditionResponse ();
 		Map<String, Object> params = Maps.newHashMap ();
 
 		if (! StringUtils.isEmpty (request.getParameter ("rankName")))
 		{
-			params.put ("name", qryRankConditionRequest.getRankName ());
+			params.put ("name", request.getParameter ("rankName"));
 		}
 
 		String pageIndex = request.getParameter ("pageIndex");

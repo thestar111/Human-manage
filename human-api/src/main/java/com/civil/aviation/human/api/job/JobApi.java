@@ -17,6 +17,7 @@ import com.civil.aviation.human.common.core.domain.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -90,7 +91,7 @@ public interface JobApi
 	 * @param response
 	 * @return
 	 */
-	@POST
+	@GET
 	@Path ("/query")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryJobConditionResponse queryConditionPage (@Context HttpServletRequest request,

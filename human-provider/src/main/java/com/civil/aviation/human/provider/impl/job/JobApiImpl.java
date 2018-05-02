@@ -175,7 +175,7 @@ public class JobApiImpl implements JobApi
 	 * 查询列表
 	 *
 	 * @param request
-	 * @param qryJobConditionRequest
+	 * @param response
 	 * @return
 	 */
 	@Override

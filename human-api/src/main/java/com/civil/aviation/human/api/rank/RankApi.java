@@ -16,6 +16,8 @@ import com.civil.aviation.human.api.rank.response.QryRankConditionResponse;
 import com.civil.aviation.human.common.core.domain.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -86,12 +88,12 @@ public interface RankApi
 	 * 查询列表
 	 *
 	 * @param request
-	 * @param qryRankConditionRequest
+	 * @param response
 	 * @return
 	 */
-	@POST
+	@GET
 	@Path ("/query")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryRankConditionResponse queryConditionPage (@Context HttpServletRequest request,
-			QryRankConditionRequest qryRankConditionRequest) throws Exception;
+			@Context HttpServletResponse response) throws Exception;
 }
