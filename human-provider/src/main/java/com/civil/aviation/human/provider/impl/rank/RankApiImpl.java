@@ -186,13 +186,20 @@ public class RankApiImpl implements RankApi
 		QryRankConditionResponse qryRankConditionResponse = new QryRankConditionResponse ();
 		Map<String, Object> params = Maps.newHashMap ();
 
-		if (! StringUtils.isEmpty (qryRankConditionRequest.getRankName ()))
+		if (! StringUtils.isEmpty (request.getParameter ("rankName")))
 		{
 			params.put ("name", qryRankConditionRequest.getRankName ());
 		}
 
-		params.put ("pageIndex", qryRankConditionRequest.getPageIndex ());
-		params.put ("pageSize", qryRankConditionRequest.getPageSize ());
+		String pageIndex = request.getParameter ("pageIndex");
+
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+
+		params.put ("pageIndex", Integer.valueOf (pageIndex) - 1);
+		params.put ("pageSize", request.getParameter ("pageSize"));
 
 		List<Rank> ranks = rankMapper.findByCondition (params);
 		List<RankVo> rankVos = null;

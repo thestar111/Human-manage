@@ -17,6 +17,7 @@ import com.civil.aviation.human.common.core.domain.Result;
 import org.springframework.validation.annotation.Validated;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -45,7 +46,7 @@ public interface OfficeApi
 	@POST
 	@Path ("/add")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result add(@Context HttpServletRequest request, CreateOfficeRequest createOfficeRequest) throws Exception;
+	Result add (@Context HttpServletRequest request, CreateOfficeRequest createOfficeRequest) throws Exception;
 
 	/**
 	 * 修改
@@ -57,8 +58,7 @@ public interface OfficeApi
 	@POST
 	@Path ("/modify")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result update(@Context HttpServletRequest request, ModifyOfficeRequest modifyOfficeRequest)
-			throws Exception;
+	Result update (@Context HttpServletRequest request, ModifyOfficeRequest modifyOfficeRequest) throws Exception;
 
 	/**
 	 * 删除
@@ -70,7 +70,7 @@ public interface OfficeApi
 	@POST
 	@Path ("/delete")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result delete(@Context HttpServletRequest request, DelOfficeRequest delOfficeRequest) throws Exception;
+	Result delete (@Context HttpServletRequest request, DelOfficeRequest delOfficeRequest) throws Exception;
 
 	/**
 	 * 查询
@@ -82,8 +82,8 @@ public interface OfficeApi
 	@POST
 	@Path ("/findById")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryOfficeByIdResponse findById(@Context HttpServletRequest request,
-								   QryOfficeByIdRequest qryOfficeByIdRequest) throws Exception;
+	QryOfficeByIdResponse findById (@Context HttpServletRequest request, QryOfficeByIdRequest qryOfficeByIdRequest)
+			throws Exception;
 
 	/**
 	 * 查询列表
@@ -95,6 +95,6 @@ public interface OfficeApi
 	@POST
 	@Path ("/query")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryOfficeResponse queryConditionPage(@Context HttpServletRequest request,
-										 QryOfficeRequest qryOfficeRequest) throws Exception;
+	QryOfficeResponse queryConditionPage (@Context HttpServletRequest request, @Context HttpServletResponse response)
+			throws Exception;
 }

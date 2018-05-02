@@ -12,7 +12,10 @@ package com.civil.aviation.human.provider.impl.department;
 
 import com.civil.aviation.human.api.department.DepartmentApi;
 import com.civil.aviation.human.api.department.domain.DepartmentVo;
-import com.civil.aviation.human.api.department.request.*;
+import com.civil.aviation.human.api.department.request.CreateDepartmentRequest;
+import com.civil.aviation.human.api.department.request.DelPartmentRequest;
+import com.civil.aviation.human.api.department.request.ModifyDepartmentRequest;
+import com.civil.aviation.human.api.department.request.QryDepartmentByIdRequest;
 import com.civil.aviation.human.api.department.response.QryDepartmentByIdResponse;
 import com.civil.aviation.human.api.department.response.QryDepartmentResponse;
 import com.civil.aviation.human.common.core.annotation.Api;
@@ -28,6 +31,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -172,28 +176,32 @@ public class DepartmentApiImpl implements DepartmentApi
 	 * 查询列表
 	 *
 	 * @param request
-	 * @param qryDepartmentRequest
+	 * @param response
 	 * @return
 	 */
 	@Override
-	public QryDepartmentResponse queryConditionPage (HttpServletRequest request,
-			QryDepartmentRequest qryDepartmentRequest) throws Exception
+	public QryDepartmentResponse queryConditionPage (HttpServletRequest request, HttpServletResponse response)
+			throws Exception
 	{
 		QryDepartmentResponse qryDepartmentResponse = new QryDepartmentResponse ();
 		Map<String, Object> params = Maps.newHashMap ();
 
-		if (! StringUtils.isEmpty (qryDepartmentRequest.getDepartmentName ()))
+		if (! StringUtils.isEmpty (request.getParameter ("departmentName")))
 		{
-			params.put ("name", qryDepartmentRequest.getDepartmentName ());
+			params.put ("name", request.getParameter ("departmentName"));
 		}
 
-		if (null != qryDepartmentRequest.getDepartmentName ())
+		if (! StringUtils.isEmpty (request.getParameter ("manager")))
 		{
-			params.put ("id", qryDepartmentRequest.getManager ());
+			params.put ("id", request.getParameter ("manager"));
 		}
-
-		params.put ("pageIndex", qryDepartmentRequest.getPageIndex ());
-		params.put ("pageSize", qryDepartmentRequest.getPageSize ());
+		String pageIndex = request.getParameter ("pageIndex");
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+		params.put ("pageIndex", Integer.valueOf (pageIndex) - 1);
+		params.put ("pageSize", request.getParameter ("pageSize"));
 
 		List<Department> departments = departmentMapper.findByCondition (params);
 		List<DepartmentVo> departmentVos = null;

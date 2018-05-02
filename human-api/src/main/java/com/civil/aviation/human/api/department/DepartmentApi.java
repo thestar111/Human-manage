@@ -10,13 +10,18 @@
  */
 package com.civil.aviation.human.api.department;
 
-import com.civil.aviation.human.api.department.request.*;
+import com.civil.aviation.human.api.department.request.CreateDepartmentRequest;
+import com.civil.aviation.human.api.department.request.DelPartmentRequest;
+import com.civil.aviation.human.api.department.request.ModifyDepartmentRequest;
+import com.civil.aviation.human.api.department.request.QryDepartmentByIdRequest;
 import com.civil.aviation.human.api.department.response.QryDepartmentByIdResponse;
 import com.civil.aviation.human.api.department.response.QryDepartmentResponse;
 import com.civil.aviation.human.common.core.domain.Result;
 import org.springframework.validation.annotation.Validated;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -89,12 +94,12 @@ public interface DepartmentApi
 	 * 查询列表
 	 *
 	 * @param request
-	 * @param qryDepartmentRequest
+	 * @param response
 	 * @return
 	 */
-	@POST
+	@GET
 	@Path ("/query")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryDepartmentResponse queryConditionPage (@Context HttpServletRequest request,
-			QryDepartmentRequest qryDepartmentRequest) throws Exception;
+			@Context HttpServletResponse response) throws Exception;
 }

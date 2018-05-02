@@ -16,6 +16,7 @@ import com.civil.aviation.human.api.job.response.QryJobConditionResponse;
 import com.civil.aviation.human.common.core.domain.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -86,12 +87,12 @@ public interface JobApi
 	 * 查询列表
 	 *
 	 * @param request
-	 * @param qryJobConditionRequest
+	 * @param response
 	 * @return
 	 */
 	@POST
 	@Path ("/query")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryJobConditionResponse queryConditionPage (@Context HttpServletRequest request,
-			QryJobConditionRequest qryJobConditionRequest) throws Exception;
+			@Context HttpServletResponse response) throws Exception;
 }

@@ -232,6 +232,7 @@ public class UserApiImpl implements UserApi
 
 		List<Employee> employees = employeeMappper.queryEmploy (params);
 		List<EmployeeVo> employeeVos = null;
+
 		if (! CollectionUtils.isEmpty (employees))
 		{
 			employeeVos = Lists.newArrayList ();
@@ -260,8 +261,8 @@ public class UserApiImpl implements UserApi
 	 * @return
 	 */
 	@Override
-	public QryEmployeeConditionResponse queryByDepartment (HttpServletRequest request,
-			HttpServletResponse response) throws Exception
+	public QryEmployeeConditionResponse queryByDepartment (HttpServletRequest request, HttpServletResponse response)
+			throws Exception
 	{
 
 		QryEmployeeConditionResponse qryEmployeeConditionResponse = new QryEmployeeConditionResponse ();
@@ -269,35 +270,31 @@ public class UserApiImpl implements UserApi
 
 		Employee employee = (Employee) SessionUtils.getValue (SessionUtils.EMPLOYEE_SESSION_KEY);
 		params.put ("department", employee.getDepartment ());
-		QryEmployeeConditionRequest qryEmployeeConditionRequest=new QryEmployeeConditionRequest();
-		qryEmployeeConditionRequest.setPageIndex (Integer.parseInt(request.getParameter ("pageIndex")));
-		qryEmployeeConditionRequest.setPageSize (Integer.parseInt(request.getParameter ("pageSize")));
-		/*
-		qryEmployeeConditionRequest.setJob (Integer.parseInt(request.getParameter ("job")));
-		qryEmployeeConditionRequest.setName (request.getParameter ("name"));
-		qryEmployeeConditionRequest.setRank (Integer.parseInt(request.getParameter ("rank")));
-		qryEmployeeConditionRequest.setDepartment (Integer.parseInt(request.getParameter ("department")));
-		*/
 
-		if (null != qryEmployeeConditionRequest.getJob ())
+		if (! StringUtils.isEmpty (request.getParameter ("job")))
 		{
-			params.put ("job", qryEmployeeConditionRequest.getJob ());
+			params.put ("job", request.getParameter ("job"));
 		}
 
-		if (! StringUtils.isEmpty (qryEmployeeConditionRequest.getName ()))
+		if (! StringUtils.isEmpty (request.getParameter ("name")))
 		{
-			params.put ("name", qryEmployeeConditionRequest.getName ());
+			params.put ("name", request.getParameter ("name"));
 		}
 
-		if (null != qryEmployeeConditionRequest.getRank ())
+		if (! StringUtils.isEmpty (request.getParameter ("rank")))
 		{
-			params.put ("rank", qryEmployeeConditionRequest.getRank ());
+			params.put ("rank", request.getParameter ("rank"));
 		}
 
-		params.put ("pageIndex", qryEmployeeConditionRequest.getPageIndex ());
-		params.put ("pageSize", qryEmployeeConditionRequest.getPageSize ());
+		String pageIndex = request.getParameter ("pageIndex");
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
 
-		LOGGER.debug (String.format ("qryEmployeeConditionRequest : %s", qryEmployeeConditionRequest.getPageIndex()));
+		params.put ("pageIndex", Integer.parseInt (pageIndex) - 1);
+		params.put ("pageSize", request.getParameter ("pageSize"));
+
 		List<Employee> employees = employeeMappper.queryEmploy (params);
 		List<EmployeeVo> employeeVos = null;
 

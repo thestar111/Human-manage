@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -178,19 +179,26 @@ public class JobApiImpl implements JobApi
 	 * @return
 	 */
 	@Override
-	public QryJobConditionResponse queryConditionPage (HttpServletRequest request,
-			QryJobConditionRequest qryJobConditionRequest) throws Exception
+	public QryJobConditionResponse queryConditionPage (HttpServletRequest request, HttpServletResponse response)
+			throws Exception
 	{
 		QryJobConditionResponse qryJobConditionResponse = new QryJobConditionResponse ();
 		Map<String, Object> params = Maps.newHashMap ();
 
-		if (! StringUtils.isEmpty (qryJobConditionRequest.getJobName ()))
+		if (! StringUtils.isEmpty (request.getParameter ("jobName")))
 		{
-			params.put ("name", qryJobConditionRequest.getJobName ());
+			params.put ("name", request.getParameter ("jobName"));
 		}
 
-		params.put ("pageIndex", qryJobConditionRequest.getPageIndex ());
-		params.put ("pageSize", qryJobConditionRequest.getPageSize ());
+		String pageIndex = request.getParameter ("pageIndex");
+
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+
+		params.put ("pageIndex", Integer.valueOf (pageIndex) - 1);
+		params.put ("pageSize", request.getParameter ("pageSize"));
 
 		List<Job> jobs = jobMapper.findByCondition (params);
 		List<JobVo> jobVos = null;
