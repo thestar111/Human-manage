@@ -287,13 +287,17 @@ public class UserApiImpl implements UserApi
 		}
 
 		String pageIndex = request.getParameter ("pageIndex");
+		String pageSize = request.getParameter ("pageSize");
 		if (StringUtils.isEmpty (pageIndex))
 		{
 			pageIndex = "1";
 		}
-
-		params.put ("pageIndex", Integer.parseInt (pageIndex) - 1);
-		params.put ("pageSize", request.getParameter ("pageSize"));
+		if (StringUtils.isEmpty (pageSize))
+		{
+			pageSize = "10";
+		}
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
+		params.put ("pageSize", pageSize);
 
 		List<Employee> employees = employeeMappper.queryEmploy (params);
 		List<EmployeeVo> employeeVos = null;
