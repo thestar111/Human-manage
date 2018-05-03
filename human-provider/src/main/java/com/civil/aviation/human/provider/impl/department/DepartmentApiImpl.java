@@ -193,7 +193,7 @@ public class DepartmentApiImpl implements DepartmentApi
 
 		if (! StringUtils.isEmpty (request.getParameter ("manager")))
 		{
-			params.put ("id", request.getParameter ("manager"));
+			params.put ("manager", request.getParameter ("manager"));
 		}
 		String pageIndex = request.getParameter ("pageIndex");
 		String pageSize = request.getParameter ("pageSize");

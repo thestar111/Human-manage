@@ -54,7 +54,7 @@
             AND name = #{name}
         </if>
         <if test="manager != NULL">
-            AND id = #{manager}
+            AND manager = #{manager}
         </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
@@ -67,7 +67,7 @@
             AND name = #{name}
         </if>
         <if test="manager != NULL">
-            AND id = #{manager}
+            AND manager = #{manager}
         </if>
     </select>
 
