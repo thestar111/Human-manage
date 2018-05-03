@@ -80,24 +80,24 @@
         FROM T_EMPLOYEE WHERE id = #{employeeId}
     </select>
 
-    <!--查询列表-->
+    <!--查询员工列表-->
     <select id="queryEmploy" parameterType="Map" resultType="Employee">
         SELECT E.*, D.`name` AS departName, R.`name` AS rankName , J.`name` AS jobName
         FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id
         <if test="name != NULL">
-            AND name = #{name}
+            AND E.name = #{name}
         </if>
         <if test="nation != NULL">
-            AND nation = #{nation}
+            AND E.nation = #{nation}
         </if>
         <if test="department != NULL">
-            AND department = #{department}
+            AND E.department = #{department}
         </if>
         <if test="job != NULL">
-            AND job = #{job}
+            AND E.job = #{job}
         </if>
         <if test="rank != NULL">
-            AND rank = #{rank}
+            AND E.rank = #{rank}
         </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
@@ -114,11 +114,11 @@
     </select>
 
     <select id="queryCountByCondition" parameterType="Map" resultType="Integer">
-        SELECT
-        COUNT(1)
-        FROM T_EMPLOYEE WHERE 1=1
+        SELECT COUNT(1)
+        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id
+        WHERE 1=1
         <if test="name != NULL">
-            AND name = #{name}
+            AND E.name = #{name}
         </if>
         <if test="nation != NULL">
             AND nation = #{nation}
