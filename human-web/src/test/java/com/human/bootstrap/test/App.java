@@ -12,6 +12,7 @@ package com.human.bootstrap.test;
 
 import com.civil.aviation.human.api.user.domain.EmployeeVo;
 import com.civil.aviation.human.boot.HumanBootstrap;
+import com.civil.aviation.human.common.core.utils.SessionUtils;
 import com.civil.aviation.human.database.entity.AssessResult;
 import com.civil.aviation.human.database.entity.Employee;
 import com.civil.aviation.human.database.entity.Permsion;
@@ -25,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.StringUtils;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -137,5 +139,21 @@ public class App
 		assessResult.setScore (90.00);
 		assessResult.setTopic ("20180413");
 		assessmentMapper.addAssessResult (assessResult);*/
+	}
+
+	@Test
+	public void queryEmployee() throws Exception
+	{
+		Map<String, Object> params = Maps.newHashMap ();
+		params.put ("department", 1);
+		//params.put ("job", request.getParameter ("job"));
+		params.put ("name", "周平");
+		//params.put ("rank", request.getParameter ("rank"));
+		params.put ("pageIndex", 0);
+		params.put ("pageSize", 10);
+
+		List<Employee> employees = employeeMappper.queryEmploy (params);
+
+		System.out.println (employees);
 	}
 }
