@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -46,6 +47,7 @@ import java.util.Map;
  * @since [产品/模块版本]
  */
 @Api
+@Component
 public class UserApiImpl implements UserApi
 {
 	/**
