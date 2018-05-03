@@ -81,6 +81,10 @@ public class UserApiImpl implements UserApi
 			return Result.fail ("illega Parameters.");
 		}
 		Employee employee = EntityMapperHandler.INSTANCE.employeeToEntity (createEmployeeRequest.getEmployee ());
+		if (StringUtils.isEmpty (employee.getPassword ()))
+		{
+			employee.setPassword (DEFAULT_PASSWORD);
+		}
 		employee.setPassword (Coder.encryptBASE64 (Coder.encryptMD5 (employee.getPassword ().getBytes ())));
 		int flag = employeeMappper.add (employee);
 		if (flag > 0)
