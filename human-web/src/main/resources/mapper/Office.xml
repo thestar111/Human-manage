@@ -12,7 +12,7 @@
         INSERT INTO
         T_OFFICE(<include refid="sqlColumn"/>)
         VALUES
-        (#{id}, #{name}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')}, #{department}, #{memo})
+        (#{id}, #{name}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{department}, #{memo})
     </insert>
 
     <!--修改科室-->
