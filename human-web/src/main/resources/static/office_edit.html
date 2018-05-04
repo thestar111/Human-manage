@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>人事考核管理系统</title>
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport"
+		  content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="./css/xadmin.css">
+	<link rel="stylesheet" href="./css/font.css">
+	<link rel="stylesheet"
+		  href="./lib/layui/css/modules/layer/default/layer.css">
+	<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="./js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="./js/vue.min.js"></script>
+	<script type="text/javascript" src="./lib/layui/layui.js"></script>
+	<script type="text/javascript" src="./js/xadmin.js"></script>
+	<script type="text/javascript" src="./js/common.js"></script>
+</head>
+
+<body>
+<div class="x-body" id="x-body"  v-cloak>
+	<form class="layui-form layui-form-pane" id="editfrom">
+		<div class="layui-row">
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="officeId" class="layui-form-label" v-show="flag=='edit'||flag=='view'">
+						<span class="x-red"></span>科室编号
+					</label>
+					<div class="layui-input-inline" v-show="flag=='edit'">
+						<input type="text" id="officeId" name="officeId" v-bind:readonly="flag=='edit'" v-model="office.officeId"
+							   class="layui-input">
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="office.officeId" style="background-color:#fff;width:170px"></label>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="name" class="layui-form-label">
+						<span class="x-red">*</span>科室名称
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="name" name="name" required="" v-model="office.name"
+							   class="layui-input" lay-verify="required">
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="office.name" style="background-color:#fff;width:170px"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="memo" class="layui-form-label">
+						<span class="x-red"></span>科室描述
+					</label>
+					<div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+						<input type="text" id="memo" name="memo"  v-model="office.memo"
+							   class="layui-input">
+					</div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="office.memo" style="background-color:#fff;width:170px"></label>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="tel" class="layui-form-label">
+						<span class="x-red">*</span>部门
+					</label>
+                    <div class="layui-input-inline"v-show="flag=='edit'||flag=='add'">
+                        <select name="departmentId" id="departmentId" lay-verify="checkDepartmentId" v-model="office.departmentId"  >
+                            <option value="">请选择部门</option>
+                            <option v-for="(item,index) in department"  :value="item.departmentId">{{ item.name }}</option>
+                        </select>
+                    </div>
+					<label class="layui-form-label" v-show="flag=='view'"  v-text="office.departmentId" style="background-color:#fff;width:170px"></label>
+				</div>
+			</div>
+		</div>
+        <div class="layui-form-item" style="text-align:right;margin-top: 35px;"v-show="flag=='edit'">
+            <a class="layui-btn layui-btn-normal" style="width: 216px;" lay-filter="updateEvent" lay-submit="">
+                修改
+            </a>
+        </div>
+        <div class="layui-form-item" style="text-align:right;margin-top: 35px;" v-show="flag=='add'">
+            <a class="layui-btn layui-btn-normal" style="width: 216px;" lay-filter="addEvent" lay-submit="">
+                新增
+            </a>
+        </div>
+	</form>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#x-body',
+        data: {
+            office: {},
+            flag:'',
+            department:[]
+        },
+        created(){
+            this.querydptList();
+            this.query();
+        },
+        methods: {
+            query() {
+                var that = this;
+                var id = getParamFormURL("id");
+                this.flag = getParamFormURL("flag");
+                if (this.flag=='add')
+                {
+                    this.office={};
+                    return
+                }
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/office/findById",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify({"officeId":id}),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.office = data.officeVo;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+            querydptList(){
+                let that = this;
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/department/query?pageIndex=1&pageSize=30",
+                    contentType : "application/json",
+                    type : "GET",/*
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),*/
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            that.department = data.departments;
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            },
+        }
+    })
+
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            checkDepartmentId: function(value) {
+                if(!!!value){
+                    return '请选择部门';
+                }
+            },
+        });
+        //监听提交
+        form.on('submit(updateEvent)', function(data){
+            var subFlag = true;
+            console.info("执行提交");
+            var jsonStr = $('#editfrom').serializeObject("office");
+            console.info(JSON.stringify(jsonStr));
+            if(subFlag) {
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/office/modify",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify(jsonStr),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            layer.msg("修改成功");
+                            $.cookie('supplement', "1");
+                            parent.location.href="office_list.html";
+                            //parent.location.href="index.html";
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            }
+            subFlag = false;
+            return false;
+        });
+        //监听提交
+        form.on('submit(addEvent)', function(data){
+            var subFlag = true;
+            console.info("执行提交");
+            var jsonStr = $('#editfrom').serializeObject("office");
+            console.info(JSON.stringify(jsonStr));
+            if(subFlag) {
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    url : "/human/office/add",
+                    contentType : "application/json",
+                    type : "POST",
+                    data : JSON.stringify(jsonStr),
+                    dataType : "json",
+                    success : function(data) {
+                        if(data.resultCode=='0') {
+                            layer.msg("新增成功");
+                            parent.location.href="office_list.html";
+                        } else {
+                            layer.msg(data.resultMessage);
+                        }
+                    },error : function(request) {
+                        layer.msg('网络错误');
+                    }
+                });
+            }
+            subFlag = false;
+            return false;
+        });
+    });
+    $.fn.serializeObject = function(flag) {
+        var o = {};
+        var rank = {"officeVo":o};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [ o[this.name] ];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return rank;
+    }
+</script>
+</html>

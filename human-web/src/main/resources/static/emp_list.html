@@ -1,100 +1,107 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>人事考核管理系统</title>
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
-    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+	<meta charset="UTF-8">
+	<title>人事考核管理系统</title>
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport"
+		  content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+	<meta http-equiv="Cache-Control" content="no-siteapp"/>
 
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" href="./css/xadmin.css">
-    <link rel="stylesheet" href="./css/font.css">
-    <link rel="stylesheet"
-          href="./lib/layui/css/modules/layer/default/layer.css">
-    <script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="./js/vue.min.js"></script>
-    <script type="text/javascript" src="./lib/layui/layui.js"></script>
-    <script src="./lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="./js/xadmin.js"></script>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+	<link rel="stylesheet" href="./css/xadmin.css">
+	<link rel="stylesheet" href="./css/font.css">
+	<link rel="stylesheet"
+		  href="./lib/layui/css/modules/layer/default/layer.css">
+	<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="./js/vue.min.js"></script>
+	<script type="text/javascript" src="./lib/layui/layui.js"></script>
+	<script src="./lib/layui/layui.js" charset="utf-8"></script>
+	<script type="text/javascript" src="./js/xadmin.js"></script>
 </head>
-<body>
+<body style="overflow-y: scroll;">
 
 <div class="x-body" id="x-body">
-    <form class="layui-form layui-form-pane" id="editfrom">
-        <div class="layui-row">
-            <div class="layui-form-item">
-                <div class="layui-col-xs6">
-                    <label for="name" class="layui-form-label">
-                        员工姓名
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="name" name="name" required="" v-model="sname"
-                               autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-col-xs6">
-                    <label for="job" class="layui-form-label">
-                        职级称呼
-                    </label>
-                    <div class="layui-input-inline">
-                        <select name="job" id="job" v-model="sjob">
-                            <option value="">请选择职级称呼</option>
-                            <option v-for="(item,index) in job" :value="item.jobId">{{ item.name }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-col-xs6">
-                    <label for="department" class="layui-form-label">
-                       所属部门
-                    </label>
-                    <div class="layui-input-inline">
-                        <select name="department" id="department" lay-verify="checkDepartmentId"
-                                v-model="sdepartment">
-                            <option value="">请选择部门</option>
-                            <option v-for="(item,index) in department" :value="item.departmentId">{{ item.name }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-col-xs6">
-                    <label for="rank" class="layui-form-label">
-                        职级
-                    </label>
-                    <div class="layui-input-inline">
-                        <select name="rank" id="rank" lay-verify="checkRankId" v-model="srank">
-                            <option value="">请选择职级</option>
-                            <option v-for="(item,index) in rank" :value="item.rankId">{{ item.name }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-    <div class="demoTable"  style="text-align:right">
-        <button class="layui-btn layui-btn-normal" data-type="reload">查询</button>
-        <button class="layui-btn layui-btn-normal" data-type="add">新增</button>
-    </div>
-    <table class="layui-table" id="demo" lay-filter="demo"></table>
+<span class="layui-breadcrumb">
+  <a href="/">首页</a>
+  <a href="emp_list.html">员工管理</a>
+  <a><cite>员工列表</cite></a>
+</span>
+<hr>
+	<form class="layui-form layui-form-pane" id="editfrom">
+		<div class="layui-row">
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="name2" class="layui-form-label">
+						员工姓名
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" id="name1" name="name" v-model="sname"
+							   autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="job" class="layui-form-label">
+						职位
+					</label>
+					<div class="layui-input-inline">
+						<select name="job" id="job" v-model="sjob"  lay-filter="sjob">
+							<option value="">请选择职位</option>
+							<option v-for="(item,index) in job" :value="item.jobId">{{ item.name }}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs6">
+					<label for="department" class="layui-form-label">
+						所属部门
+					</label>
+					<div class="layui-input-inline">
+						<select name="department" id="department"
+								v-model="sdepartment"   lay-filter="sdepartment">
+							<option value="">请选择部门</option>
+							<option v-for="(item,index) in department" :value="item.departmentId">{{ item.name }}
+							</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label for="rank" class="layui-form-label">
+						职级
+					</label>
+					<div class="layui-input-inline">
+						<select name="rank" id="rank" v-model="srank" lay-filter="srank">
+							<option value="">请选择职级</option>
+							<option v-for="(item,index) in rank" :value="item.rankId">{{ item.name }}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="demoTable"  style="text-align:right">
+		<button class="layui-btn layui-btn-normal" data-type="reload">查询</button>
+		<button class="layui-btn layui-btn-normal" data-type="add">新增</button>
+	</div>
+	<table class="layui-table" id="demo" lay-filter="demo"></table>
 
 </div>
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script>
     layui.config({
         version: '1522709297490' //为了更新 js 缓存，可忽略
     });
-    layui.use(['laypage', 'layer', 'table'], function () {
+    layui.use(['laypage', 'layer', 'table','form'], function () {
         var laypage = layui.laypage //分页
             , layer = layui.layer //弹层
-            , table = layui.table;//表格
+            , table = layui.table //表格
+            , form = layui.form;
 
 
         //执行一个 table 实例
@@ -112,16 +119,16 @@
             , cols: [[ //表头
                 /* {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}*/
                 {field: 'employeeId', title: '员工编号', width: 120, sort: true}
-                , {field: 'name', title: '姓名', width: 100}/*
-                , {field: 'sex', title: '性别', width: 60}*/
-                , {field: 'homeAddr', title: '家庭住址', width: 150}
-                , {field: 'birthday', title: '出生日期', width: 80}
+                , {field: 'name', title: '姓名', width: 120}/*
+                , {field: 'sex', title: '性别', width: 60}*//*
+                , {field: 'homeAddr', title: '家庭住址', width: 150}*/
+                , {field: 'birthday', title: '出生日期', width: 120}
                 , {field: 'tel', title: '电话号码', width: 130}
                 , {field: 'nation', title: '民族', width: 100}
-                , {field: 'departName', title: '部门', width: 100}
-                , {field: 'jobName', title: '职位称呼', width: 80}
-                , {field: 'rankName', title: '职级', width: 135, sort: true}
-                , {fixed: 'right', width: 165, align: 'center', toolbar: '#barDemo', title: '操作'}
+                , {field: 'departName', title: '部门', width: 130}
+                , {field: 'jobName', title: '职位称呼', width: 130}
+                , {field: 'rankName', title: '职级', width: 140, sort: true}
+                , {fixed: 'right',width: 240, align: 'center', toolbar: '#barDemo', title: '操作'}
             ]]
             , response: {
                 statusName: 'resultCode' //数据状态的字段名称，默认：code
@@ -198,7 +205,7 @@
                     dataType: "json",
                     success: function (data) {
                         if (data.resultCode == '0') {
-                            table.reload();
+                            active.reload();
                         } else {
                             layer.msg(data.resultMessage);
                         }
@@ -211,16 +218,16 @@
                 table.reload('idEmp', {
                     where:{
                         name:app.sname,
-                        job:$('#job').val(),
-                        rank:$('#rank').val(),
-                        department:$('#department').val()
+                        job:app.sjob,
+                        rank:app.srank,
+                        department:app.sdepartment
                     }
                 });
             },
             add: function(){
                 //示范一个层
                 layer.open({
-                     type: 2 //此处以iframe举例
+                    type: 2 //此处以iframe举例
                     , title: '新增员工信息'
                     , area: ['800px', '550px']
                     , shade: 0
@@ -229,6 +236,18 @@
                 });
             }
         };
+        form.on('select(sjob)', function (data) {
+            app.sjob=data.value;
+            form.render('select');
+        });
+        form.on('select(sdepartment)', function (data) {
+            app.sdepartment=data.value;
+            form.render('select');
+        });
+        form.on('select(srank)', function (data) {
+            app.srank=data.value;
+            form.render('select');
+        });
         $('.demoTable .layui-btn').on('click', function(){
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
@@ -259,10 +278,10 @@
                 $.ajax({
                     async : false,
                     cache : false,
-                    url : "/human/rank/query",
+                    url : "/human/rank/query?pageIndex=1&pageSize=30",
                     contentType : "application/json",
-                    type : "POST",
-                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    type : "GET",/*
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),*/
                     dataType : "json",
                     success : function(data) {
                         if(data.resultCode=='0') {
@@ -280,10 +299,10 @@
                 $.ajax({
                     async : false,
                     cache : false,
-                    url : "/human/department/query",
+                    url : "/human/department/query?pageIndex=1&pageSize=30",
                     contentType : "application/json",
-                    type : "POST",
-                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    type : "GET",/*
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),*/
                     dataType : "json",
                     success : function(data) {
                         if(data.resultCode=='0') {
@@ -301,10 +320,10 @@
                 $.ajax({
                     async : false,
                     cache : false,
-                    url : "/human/job/query",
+                    url : "/human/job/query?pageIndex=1&pageSize=30",
                     contentType : "application/json",
-                    type : "POST",
-                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),
+                    type : "GET",/*
+                    data : JSON.stringify({ 'pageIndex': '0', 'pageSize': '30' }),*/
                     dataType : "json",
                     success : function(data) {
                         if(data.resultCode=='0') {
