@@ -193,6 +193,7 @@ public interface EntityMapperHandler
 	 * @return
 	 */
 	@Mapping (target = "id", source = "officeId")
+	@Mapping (target = "department", source = "departmentId")
 	Office officeToEntity (OfficeVo officeVo);
 
 	/**
@@ -202,5 +203,6 @@ public interface EntityMapperHandler
 	 * @return
 	 */
 	@Mapping (target = "officeId", source = "id")
+	@Mapping (target = "departmentId", source = "department")
 	OfficeVo officeToVo (Office office);
 }
