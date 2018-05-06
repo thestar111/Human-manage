@@ -11,13 +11,13 @@
 package com.civil.aviation.human.api.assess;
 
 import com.civil.aviation.human.api.assess.request.*;
-import com.civil.aviation.human.api.assess.response.AssessmentTopicResponse;
-import com.civil.aviation.human.api.assess.response.QryAssessResultByEmployResponse;
-import com.civil.aviation.human.api.assess.response.QryAssessTopicResponse;
+import com.civil.aviation.human.api.assess.response.*;
 import com.civil.aviation.human.common.core.domain.Result;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -131,5 +131,72 @@ public interface AssessmentApi
 	@Path ("/delete")
 	@Produces (MediaType.APPLICATION_JSON)
 	Result deleteAssessTopic (@Context HttpServletRequest request, DeleteAssessTopicRequest deleteAssessTopicRequest)
+			throws Exception;
+
+	/**
+	 * 添加考核分类
+	 *
+	 * @param request
+	 * @param createAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path("/assessCatalog/add")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result addAssessCatalog (@Context HttpServletRequest request, CreateAssessCatalogRequest createAssessCatalogRequest)
+			throws Exception;
+
+	/**
+	 * 修改考核分类
+	 *
+	 * @param request
+	 * @param modifyAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path("/assessCatalog/modify")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result modifyAssessCatalog (@Context HttpServletRequest request, ModifyAssessCatalogRequest modifyAssessCatalogRequest)
+			throws Exception;
+
+	/**
+	 * 删除考核分类
+	 *
+	 * @param request
+	 * @param deleteAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path("/assessCatalog/delete")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result deleteAssessCatalog (@Context HttpServletRequest request, DeleteAssessCatalogRequest deleteAssessCatalogRequest)
+			throws Exception;
+
+	/**查询考核分类信息
+	 *
+	 * @param queryAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path("/assessCatalog/queryById")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryAssessCatalogByIdResponse queryAssessCatalogList (@Context HttpServletRequest request, QueryAssessCatalogRequest queryAssessCatalogRequest)
+			throws Exception;
+
+	/**查询考核分类信息
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+	@Path("/assessCatalog/queryList")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryAssessCatalogResponse queryAssessCatalogList (@Context HttpServletRequest request, @Context HttpServletResponse response)
 			throws Exception;
 }

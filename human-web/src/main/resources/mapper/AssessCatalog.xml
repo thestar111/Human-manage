@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.civil.aviation.human.database.mapper.AssessCatalogMapper">
+
+    <!-- 全部字段-->
+    <sql id="assessCatalogColumn">
+        id, namne, createTime, memo
+    </sql>
+
+    <insert id="add" parameterType="AssessCatalog">
+        INSERT INTO T_ASSESS_CATALOG(<include refid="assessCatalogColumn"/>)
+        VALUES
+        (#{id}, #{name},DATE_FORMAT(NOW(),'%Y-01-01 00:00:00'), #{memo})
+    </insert>
+
+    <update id="modify" parameterType="AssessCatalog">
+        UPDATE T_ASSESS_CATALOG
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="memo != null">
+                memo = #{memo}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--只能删除未发布的考核主题-->
+    <delete id="delete" parameterType="String">
+        DELETE FROM T_ASSESS_CATALOG WHERE id=#{catalogId}
+    </delete>
+
+    <!--根据编号查询-->
+    <select id="queryCatalogById" parameterType="String" resultType="AssessCatalog">
+        SELECT
+        <include refid="assessCatalogColumn"/>
+        FROM T_ASSESS_CATALOG WHERE id=#{assessCatalogId}
+    </select>
+
+    <!--查询列表-->
+    <select id="queryList" parameterType="Map" resultType="AssessCatalog">
+        SELECT
+        <include refid="assessCatalogColumn"/>
+        FROM T_ASSESS_CATALOG WHERE 1=1
+        <if test="name != null">
+            AND name=#{name}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="queryCount" parameterType="Map" resultType="Integer">
+        SELECT COUNT(1) FROM T_ASSESS_CATALOG WHERE 1=1
+        <if test="name != null">
+            AND name=#{name}
+        </if>
+    </select>
+
+</mapper>
