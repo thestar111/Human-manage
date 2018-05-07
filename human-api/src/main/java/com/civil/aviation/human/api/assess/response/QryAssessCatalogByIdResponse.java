@@ -11,6 +11,7 @@
 package com.civil.aviation.human.api.assess.response;
 
 import com.civil.aviation.human.api.assess.domain.AssessCatalogVo;
+import com.civil.aviation.human.common.core.domain.Result;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +28,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class QryAssessCatalogByIdResponse implements Serializable
+public class QryAssessCatalogByIdResponse extends Result
 {
 	/**
 	 * 考核主题信息

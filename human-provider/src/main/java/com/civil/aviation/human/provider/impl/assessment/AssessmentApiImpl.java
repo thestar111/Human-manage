@@ -11,33 +11,38 @@
 package com.civil.aviation.human.provider.impl.assessment;
 
 import com.civil.aviation.human.api.assess.AssessmentApi;
+import com.civil.aviation.human.api.assess.domain.AssessCatalogVo;
 import com.civil.aviation.human.api.assess.domain.AssessContentVo;
 import com.civil.aviation.human.api.assess.domain.AssessGradeVo;
 import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
 import com.civil.aviation.human.api.assess.request.*;
-import com.civil.aviation.human.api.assess.response.AssessmentTopicResponse;
-import com.civil.aviation.human.api.assess.response.QryAssessResultByEmployResponse;
-import com.civil.aviation.human.api.assess.response.QryAssessTopicResponse;
+import com.civil.aviation.human.api.assess.response.*;
 import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.cons.Constants;
 import com.civil.aviation.human.common.core.domain.Result;
 import com.civil.aviation.human.common.core.utils.SessionUtils;
+import com.civil.aviation.human.database.entity.AssessCatalog;
 import com.civil.aviation.human.database.entity.AssessContent;
 import com.civil.aviation.human.database.entity.AssessResult;
 import com.civil.aviation.human.database.entity.AssessTopic;
+import com.civil.aviation.human.database.mapper.AssessCatalogMapper;
 import com.civil.aviation.human.database.mapper.AssessmentMapper;
 import com.civil.aviation.human.database.mapper.EmployeeMappper;
 import com.civil.aviation.human.provider.mapper.EntityMapperHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sun.corba.se.spi.orbutil.threadpool.NoSuchWorkQueueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.chrono.IsoEra;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +68,9 @@ public class AssessmentApiImpl implements AssessmentApi
 
 	@Autowired
 	private EmployeeMappper employeeMappper;
+
+	@Autowired
+	private AssessCatalogMapper assessCatalogMapper;
 
 	/**
 	 * 添加考核主题
@@ -439,5 +447,179 @@ public class AssessmentApiImpl implements AssessmentApi
 		{
 			return Result.fail ("delete assess result failed.");
 		}
+	}
+
+	/**
+	 * 添加考核分类
+	 *
+	 * @param request
+	 * @param createAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Result addAssessCatalog (HttpServletRequest request, CreateAssessCatalogRequest createAssessCatalogRequest)
+			throws Exception
+	{
+		if (null == createAssessCatalogRequest || null == createAssessCatalogRequest.getAssessCatalog ())
+		{
+			return Result.fail ("illega params.");
+		}
+
+		AssessCatalogVo assessCatalogVo = createAssessCatalogRequest.getAssessCatalog ();
+		AssessCatalog assessCatalog = new AssessCatalog ();
+		BeanUtils.copyProperties (assessCatalogVo, assessCatalog);
+		int flag = assessCatalogMapper.add (assessCatalog);
+		if (0 < flag)
+		{
+			return Result.success ("add assess catalog success");
+		}
+		else
+		{
+			return Result.fail ("add assess catalog failed.");
+		}
+	}
+
+	/**
+	 * 修改考核分类
+	 *
+	 * @param request
+	 * @param modifyAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Result modifyAssessCatalog (HttpServletRequest request,
+			ModifyAssessCatalogRequest modifyAssessCatalogRequest) throws Exception
+	{
+		if (null == modifyAssessCatalogRequest || null == modifyAssessCatalogRequest.getAssessCatalog ())
+		{
+			return Result.fail ("illega params.");
+		}
+
+		AssessCatalogVo assessCatalogVo = modifyAssessCatalogRequest.getAssessCatalog ();
+		AssessCatalog assessCatalog = new AssessCatalog ();
+		BeanUtils.copyProperties (assessCatalogVo, assessCatalog);
+		int flag = assessCatalogMapper.modify (assessCatalog);
+		if (0 < flag)
+		{
+			return Result.success ("add assess catalog success");
+		}
+		else
+		{
+			return Result.fail ("add assess catalog failed.");
+		}
+	}
+
+	/**
+	 * 删除考核分类
+	 *
+	 * @param request
+	 * @param deleteAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Result deleteAssessCatalog (HttpServletRequest request,
+			DeleteAssessCatalogRequest deleteAssessCatalogRequest) throws Exception
+	{
+		if (null == deleteAssessCatalogRequest || StringUtils
+				.isEmpty (deleteAssessCatalogRequest.getAssessCatalogId ()))
+		{
+			return Result.fail ("illega params.");
+		}
+
+		int flag = assessCatalogMapper.delete (deleteAssessCatalogRequest.getAssessCatalogId ());
+
+		if (0 < flag)
+		{
+			return Result.success ("delete assess catalog success");
+		}
+		else
+		{
+			return Result.fail ("delete assess catalog failed.");
+		}
+	}
+
+	/**
+	 * 查询考核分类信息
+	 *
+	 * @param request
+	 * @param queryAssessCatalogRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public QryAssessCatalogByIdResponse queryAssessCatalogList (HttpServletRequest request,
+			QueryAssessCatalogRequest queryAssessCatalogRequest) throws Exception
+	{
+		if (null == queryAssessCatalogRequest || StringUtils.isEmpty (queryAssessCatalogRequest.getAssessCatalogId ()))
+		{
+			return (QryAssessCatalogByIdResponse) Result.fail ("illega params.");
+		}
+		QryAssessCatalogByIdResponse qryAssessCatalogByIdResponse = new QryAssessCatalogByIdResponse ();
+		AssessCatalog assessCatalog = assessCatalogMapper
+				.queryCatalogById (queryAssessCatalogRequest.getAssessCatalogId ());
+		AssessCatalogVo assessCatalogVo = null;
+		if (null != assessCatalog)
+		{
+			assessCatalogVo = new AssessCatalogVo ();
+			BeanUtils.copyProperties (assessCatalog, assessCatalogVo);
+		}
+		qryAssessCatalogByIdResponse.setAssessCatalog (assessCatalogVo);
+		return qryAssessCatalogByIdResponse;
+	}
+
+	/**
+	 * 查询考核分类信息
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public QryAssessCatalogResponse queryAssessCatalogList (HttpServletRequest request, HttpServletResponse response)
+			throws Exception
+	{
+		QryAssessCatalogResponse qryAssessCatalogResponse = new QryAssessCatalogResponse ();
+		Map<String, Object> params = Maps.newHashMap ();
+		String catalogName = request.getParameter ("name");
+		if (! StringUtils.isEmpty (catalogName))
+		{
+			params.put ("name", catalogName);
+		}
+
+		String pageIndex = request.getParameter ("pageIndex");
+		String pageSize = request.getParameter ("pageSize");
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+		if (StringUtils.isEmpty (pageSize))
+		{
+			pageSize = "10";
+		}
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
+		params.put ("pageSize", pageSize);
+
+		List<AssessCatalog> assessCatalogs = assessCatalogMapper.queryList (params);
+		List<AssessCatalogVo> assessCatalogVos = null;
+
+		if (! CollectionUtils.isEmpty (assessCatalogs))
+		{
+			assessCatalogVos = Lists.newArrayList ();
+
+			AssessCatalogVo assessCatalogVo = null;
+			for (AssessCatalog assessCatalog : assessCatalogs)
+			{
+				assessCatalogVo = new AssessCatalogVo ();
+				BeanUtils.copyProperties (assessCatalog, assessCatalogVo);
+				assessCatalogVos.add (assessCatalogVo);
+			}
+			qryAssessCatalogResponse.setCount (assessCatalogMapper.queryCount (params));
+		}
+		qryAssessCatalogResponse.setAssessCatalogs (assessCatalogVos);
+		return qryAssessCatalogResponse;
 	}
 }
