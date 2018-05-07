@@ -363,24 +363,40 @@ public class UserApiImpl implements UserApi
 	public Result modifyPassword (HttpServletRequest request, ResetPasswordRequest resetPasswordRequest)
 			throws Exception
 	{
-		if (StringUtils.isEmpty (resetPasswordRequest.getEmployeeId ()))
+		String employeeId = (String) SessionUtils.getValue (SessionUtils.EMPLOYEE_ID_SESSION_KEY);
+
+		if (StringUtils.isEmpty (employeeId))
 		{
-			return Result.fail ("illega params.");
+			return Result.fail ("user not login.");
 		}
+
 		if (StringUtils.isEmpty (resetPasswordRequest.getPassword ()))
 		{
 			return Result.fail ("illega params.");
 		}
+
+		if (StringUtils.isEmpty (resetPasswordRequest.getOldPassword ()))
+		{
+			return Result.fail ("illega params.");
+		}
+
+		//新密码
 		String encrytPassword = Coder
 				.encryptBASE64 (Coder.encryptMD5 (resetPasswordRequest.getPassword ().getBytes ()));
-		int flag = employeeMappper.resetPassword (resetPasswordRequest.getEmployeeId (), encrytPassword);
+
+		//旧密码
+		String oldPassword = Coder
+				.encryptBASE64 (Coder.encryptMD5 (resetPasswordRequest.getOldPassword ().getBytes ()));
+
+		int flag = employeeMappper.resetPassword (employeeId, encrytPassword);
+
 		if (flag > 0)
 		{
 			return Result.success ("user password modify success.");
 		}
 		else
 		{
-			return Result.fail ("user password modify failed.");
+			return Result.fail ("user old password not right.");
 		}
 	}
 

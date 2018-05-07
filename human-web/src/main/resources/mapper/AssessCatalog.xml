@@ -7,12 +7,36 @@
         id, namne, createTime, memo
     </sql>
 
+    <!-- 考核主题分类关系字段-->
+    <sql id="assessCatalogRelaColumn">
+        id, topicId, assessCatalogId
+    </sql>
+
     <!--添加考核分类-->
     <insert id="add" parameterType="AssessCatalog">
         INSERT INTO T_ASSESS_CATALOG(<include refid="assessCatalogColumn"/>)
         VALUES
         (#{id}, #{name},DATE_FORMAT(NOW(),'%Y-01-01 00:00:00'), #{memo})
     </insert>
+
+    <!--添加考核主题分类关系-->
+    <insert id="addCatalogRela" parameterType="AssessCatalogRela">
+        INSERT INTO T_ASSESS_CATALOG_RELA(<include refid="assessCatalogRelaColumn"/>)
+        VALUES
+        <foreach collection="assessCatalogRelas" separator="," item="assessCatalogRela">
+            (#{assessCatalogRela.id}, #{assessCatalogRela.topicId}, #{assessCatalogRela.assessCatalogId})
+        </foreach>
+    </insert>
+
+    <!--删除考核主题分类关系-->
+    <delete id="deleteCatalogRelas">
+        DELETE FROM T_ASSESS_CATALOG_RELA WHERE topicId = #{topicId}
+    </delete>
+
+    <!--删除考核主题分类关系-->
+    <delete id="deleteCatalogRela">
+        DELETE FROM T_ASSESS_CATALOG_RELA WHERE topicId = #{topicId} AND assessCatalogId = #{catalogId}
+    </delete>
 
     <!--修改考核分类-->
     <update id="modify" parameterType="AssessCatalog">

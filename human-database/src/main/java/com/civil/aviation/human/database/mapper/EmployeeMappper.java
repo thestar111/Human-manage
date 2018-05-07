@@ -67,7 +67,7 @@ public interface EmployeeMappper
 	 *
 	 * @param departmentId
 	 * @param rankId
-	 * @param discussant    评论人
+	 * @param discussant   评论人
 	 * @return
 	 * @throws SQLException
 	 */
@@ -98,4 +98,14 @@ public interface EmployeeMappper
 	 * @throws SQLException
 	 */
 	int resetPassword (String employeeId, String password) throws SQLException;
+
+	/**
+	 * 修改密码
+	 *
+	 * @param employeeId
+	 * @param password
+	 * @return
+	 * @throws SQLException
+	 */
+	int modifyPassword (String employeeId, String password, String oldPassword) throws SQLException;
 }

@@ -64,8 +64,14 @@
         WHERE id = #{id}
     </update>
 
+    <!--重置密码-->
     <update id="resetPassword" parameterType="String">
        UPDATE T_EMPLOYEE SET password = #{1} WHERE employeeId=#{0}
+    </update>
+
+    <!--修改密码-->
+    <update id="modifyPassword" parameterType="String">
+       UPDATE T_EMPLOYEE SET password = #{1} WHERE employeeId=#{0} AND password=#{2}
     </update>
 
     <!--删除-->
