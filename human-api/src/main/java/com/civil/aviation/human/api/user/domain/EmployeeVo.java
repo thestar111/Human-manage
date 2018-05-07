@@ -58,6 +58,10 @@ public class EmployeeVo implements Serializable
 	private String job;
 
 	private String rank;
+	/**
+	 * 科室
+	 */
+	private String office;
 
 	/**
 	 * 部门名称
@@ -78,6 +82,10 @@ public class EmployeeVo implements Serializable
 	 * 用户是否需要补充信息(0：补充  1：已补充)
 	 */
 	private Integer supplement = 0;
+	/**
+	 * 科室名称
+	 */
+	private String officeName;
 
 	@Override
 	public String toString ()

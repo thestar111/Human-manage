@@ -59,6 +59,8 @@ public class Employee implements Serializable
 
 	private String rank;
 
+	private String office;
+
 	/**
 	 * 部门名称
 	 */
@@ -73,6 +75,10 @@ public class Employee implements Serializable
 	 * 职位称呼
 	 */
 	private String jobName;
+	/**
+	 * 科室
+	 */
+	private String officeName;
 
 	/**
 	 * 是否需要补充信息（0：要补充  1：已补充）

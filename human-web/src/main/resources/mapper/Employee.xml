@@ -4,7 +4,7 @@
 
     <!--定义数据表列字段-->
     <sql id="sqlColumn">
-        id, name, password, englishName, sex, homeAddr, birthday, tel, nation, email, lastUpdateTime, createTime, department, salary, job, rank, supplement
+        id, name, password, englishName, sex, homeAddr, birthday, tel, nation, email, lastUpdateTime, createTime, department, salary, job, rank, supplement, office
     </sql>
 
     <!--添加员工-->
@@ -13,7 +13,7 @@
         T_EMPLOYEE(<include refid="sqlColumn"/>)
         VALUES
         (#{id}, #{name}, #{password}, #{englishName}, #{sex}, #{homeAddr}, #{birthday}, #{tel}, #{nation}, #{email},
-        NOW(), NOW(), #{department}, #{salary}, #{job}, #{rank}, 0)
+        NOW(), NOW(), #{department}, #{salary}, #{job}, #{rank}, 0, #{office})
     </insert>
 
     <!--修改-->
@@ -59,6 +59,9 @@
             <if test="supplement != null">
                 supplement = #{supplement},
             </if>
+            <if test="office != null">
+                office = #{office},
+            </if>
             lastUpdateTime = NOW()
         </set>
         WHERE id = #{id}
@@ -88,8 +91,8 @@
 
     <!--查询员工列表-->
     <select id="queryEmploy" parameterType="Map" resultType="Employee">
-        SELECT E.*, D.`name` AS departName, R.`name` AS rankName , J.`name` AS jobName
-        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id
+        SELECT E.*, D.`name` AS departName, R.`name` AS rankName , J.`name` AS jobName, O.name AS officeName
+        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R, T_OFFICE O WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id AND E.office=O.office
         <if test="name != NULL">
             AND E.name LIKE concat(#{name},'%')
         </if>
@@ -104,6 +107,9 @@
         </if>
         <if test="rank != NULL">
             AND E.rank = #{rank}
+        </if>
+        <if test="office != NULL">
+            AND E.office = #{office}
         </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
@@ -136,6 +142,9 @@
         </if>
         <if test="rank != NULL">
             AND rank = #{rank}
+        </if>
+        <if test="office != NULL">
+            AND office = #{office}
         </if>
     </select>
 
