@@ -34,7 +34,8 @@
           <li class="layui-nav-item">
             <a href="javascript:;" id="admin">admin</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
-              <dd><a onclick="x_admin_show('个人信息','./emp_modify.html')">个人信息</a></dd>
+                <dd><a onclick="x_admin_show('个人信息','./emp_modify.html',800,550)">个人信息</a></dd>
+              <dd><a onclick="x_admin_show('修改密码','./modifypw.html',800,250)">修改密码</a></dd>
               <dd><a id="logout" >退出</a></dd>
             </dl>
           </li>
@@ -59,7 +60,7 @@
           </ul>
           <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <iframe src='./welcome.html' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                <iframe src='./welcome.html' frameborder="0" scrolling="yes" class="x-iframe" name="mainIframe"></iframe>
             </div>
           </div>
         </div>
@@ -75,10 +76,10 @@
 </body>
 <script type="text/javascript">
 	//获取浏览器中的Cookie
-	var supplement = $.cookie('supplement');
+	var supplement = $.cookie('supplement');/*
 	if(supplement != 1 && supplement != undefined) {
 		x_admin_show('个人信息','./emp_modify.html');
-	}
+	}*/
 	$(function(){
 		var employeeName = sessionStorage.getItem("employeeName");
 		$("#admin").html(employeeName);

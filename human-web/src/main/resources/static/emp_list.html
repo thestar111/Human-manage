@@ -118,17 +118,17 @@
             , id: 'idEmp'
             , cols: [[ //表头
                 /* {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}*/
-                {field: 'employeeId', title: '员工编号', width: 120, sort: true}
-                , {field: 'name', title: '姓名', width: 120}/*
-                , {field: 'sex', title: '性别', width: 60}*//*
+                {field: 'employeeId', title: '员工编号', width: 110, sort: true}
+                , {field: 'name', title: '姓名', width: 100}
+                , {field: 'sex', title: '性别', width: 60}/*
                 , {field: 'homeAddr', title: '家庭住址', width: 150}*/
-                , {field: 'birthday', title: '出生日期', width: 120}
-                , {field: 'tel', title: '电话号码', width: 130}
-                , {field: 'nation', title: '民族', width: 100}
-                , {field: 'departName', title: '部门', width: 130}
-                , {field: 'jobName', title: '职位称呼', width: 130}
-                , {field: 'rankName', title: '职级', width: 140, sort: true}
-                , {fixed: 'right',width: 240, align: 'center', toolbar: '#barDemo', title: '操作'}
+                , {field: 'birthday', title: '出生日期', width: 130}
+                , {field: 'tel', title: '电话号码', width: 120}
+                , {field: 'nation', title: '民族', width: 120}
+                , {field: 'departName', title: '部门', width: 120}
+                , {field: 'jobName', title: '职位称呼', width: 120}
+                , {field: 'rankName', title: '职级', width: 120, sort: true}
+                , {fixed: 'right',width: 230, align: 'center', toolbar: '#barDemo', title: '操作'}
             ]]
             , response: {
                 statusName: 'resultCode' //数据状态的字段名称，默认：code
@@ -136,7 +136,31 @@
                 , msgName: 'resultMessage' //状态信息的字段名称，默认：msg
                 , countName: 'count' //数据总数的字段名称，默认：count
                 , dataName: 'employees' //数据列表的字段名称，默认：data
-            },/*
+            },
+            done: function(res, curr, count){
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                //console.log(res);			//分类显示中文名称
+                $("[data-field='sex']").children().each(function(){
+                    if ($(this).text()=='0')
+					{
+                        $(this).text('男');
+					}else if($(this).text()=='1'){
+                        $(this).text('女');
+					}else
+					{
+					}
+
+
+                })
+
+                //得到当前页码
+                // console.log(curr);
+
+                //得到数据总量
+                //console.log(count);
+            }
+            /*
             where:{
                 name:app.sname,
                 job:app.sjob,
@@ -181,17 +205,18 @@
 
 
         //触发事件
-        var active = {
+        window.active = {
             editMark: function (employeeId, flag) {
                 //示范一个层
-                layer.open({
+                parent.x_admin_show('编辑员工信息','emp_edit.html?id='+ employeeId + "&flag=" + flag,800,550);
+                /*layer.open({
                     type: 2 //此处以iframe举例
                     , title: '编辑员工信息'
                     , area: ['800px', '550px']
                     , shade: 0
                     , content: 'emp_edit.html?id=' + employeeId + "&flag=" + flag
 
-                });
+                });*/
             },
             empDel: function (id) //删除
             {
