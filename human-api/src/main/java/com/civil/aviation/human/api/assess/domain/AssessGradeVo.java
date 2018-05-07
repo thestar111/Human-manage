@@ -63,7 +63,7 @@ public class AssessGradeVo implements Serializable
 	private double vis_a_vis_score;
 
 	/**
-	 * 时间
+	 * 考核时间
 	 */
 	private String time;
 

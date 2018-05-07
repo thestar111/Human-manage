@@ -106,11 +106,11 @@ public interface AssessmentMapper
 	/**
 	 * 删除考核主题
 	 *
-	 * @param topicId
+	 * @param catalogId
 	 * @return
 	 * @throws SQLException
 	 */
-	int deleteAssessContent (String topicId) throws SQLException;
+	int deleteAssessContent (String catalogId) throws SQLException;
 
 	/**
 	 * 查询当前生效的已发布的考核主题
@@ -123,11 +123,11 @@ public interface AssessmentMapper
 	/**
 	 * 根据考核主题编号查询考核标准
 	 *
-	 * @param topicId
+	 * @param catalogId
 	 * @return
 	 * @throws SQLException
 	 */
-	List<AssessContent> qryAssessContentByTopicId (String topicId) throws SQLException;
+	List<AssessContent> qryAssessContentByCatalogId (String catalogId) throws SQLException;
 
 	/**
 	 * 根据查询条件查询考核主题

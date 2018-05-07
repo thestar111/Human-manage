@@ -200,6 +200,45 @@ public class AssessmentApiImpl implements AssessmentApi
 	}
 
 	/**
+	 * 添加考核内容信息
+	 *
+	 * @param request
+	 * @param createAssessContentRequest
+	 * @return
+	 */
+	@Override
+	public Result addAssessContent (HttpServletRequest request, CreateAssessContentRequest createAssessContentRequest)
+			throws Exception
+	{
+		if (null == createAssessContentRequest || CollectionUtils
+				.isEmpty (createAssessContentRequest.getAssessContents ()))
+		{
+			return Result.fail ("illega params");
+		}
+
+		List<AssessContentVo> assessContentVos = createAssessContentRequest.getAssessContents ();
+		List<AssessContent> assessContents = Lists.newArrayList ();
+		AssessContent assessContent = null;
+
+		for (AssessContentVo assessContentVo : assessContentVos)
+		{
+			assessContent = new AssessContent ();
+			BeanUtils.copyProperties (assessContentVo, assessContent);
+			assessContents.add (assessContent);
+		}
+
+		int flag = assessmentMapper.addAssessContent (assessContents);
+		if (flag > 0)
+		{
+			return Result.success ("add assess content success.");
+		}
+		else
+		{
+			return Result.fail ("add assess content failed.");
+		}
+	}
+
+	/**
 	 * 添加考核成绩
 	 *
 	 * @param request
@@ -263,7 +302,7 @@ public class AssessmentApiImpl implements AssessmentApi
 			return result;
 		}
 		//查询考核标准
-		List<AssessContent> assessContents = assessmentMapper.qryAssessContentByTopicId (assessTopic.getId ());
+		List<AssessContent> assessContents = assessmentMapper.qryAssessContentByCatalogId (assessTopic.getId ());
 		List<AssessContentVo> assessContentVos = null;
 		AssessContentVo assessContentVo = null;
 		if (! CollectionUtils.isEmpty (assessContents))

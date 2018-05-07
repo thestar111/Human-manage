@@ -65,6 +65,19 @@ public interface AssessmentApi
 			throws Exception;
 
 	/**
+	 * 添加考核内容信息
+	 *
+	 * @param request
+	 * @param createAssessContentRequest
+	 * @return
+	 */
+	@POST
+	@Path ("/addAssessContent")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result addAssessContent (@Context HttpServletRequest request, CreateAssessContentRequest createAssessContentRequest)
+			throws Exception;
+
+	/**
 	 * 添加考核成绩
 	 *
 	 * @param request
@@ -142,7 +155,7 @@ public interface AssessmentApi
 	 * @throws Exception
 	 */
 	@POST
-	@Path("/assessCatalog/add")
+	@Path ("/assessCatalog/add")
 	@Produces (MediaType.APPLICATION_JSON)
 	Result addAssessCatalog (@Context HttpServletRequest request, CreateAssessCatalogRequest createAssessCatalogRequest)
 			throws Exception;
@@ -156,10 +169,10 @@ public interface AssessmentApi
 	 * @throws Exception
 	 */
 	@POST
-	@Path("/assessCatalog/modify")
+	@Path ("/assessCatalog/modify")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result modifyAssessCatalog (@Context HttpServletRequest request, ModifyAssessCatalogRequest modifyAssessCatalogRequest)
-			throws Exception;
+	Result modifyAssessCatalog (@Context HttpServletRequest request,
+			ModifyAssessCatalogRequest modifyAssessCatalogRequest) throws Exception;
 
 	/**
 	 * 删除考核分类
@@ -170,24 +183,26 @@ public interface AssessmentApi
 	 * @throws Exception
 	 */
 	@POST
-	@Path("/assessCatalog/delete")
+	@Path ("/assessCatalog/delete")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result deleteAssessCatalog (@Context HttpServletRequest request, DeleteAssessCatalogRequest deleteAssessCatalogRequest)
-			throws Exception;
+	Result deleteAssessCatalog (@Context HttpServletRequest request,
+			DeleteAssessCatalogRequest deleteAssessCatalogRequest) throws Exception;
 
-	/**查询考核分类信息
+	/**
+	 * 查询考核分类信息
 	 *
 	 * @param queryAssessCatalogRequest
 	 * @return
 	 * @throws Exception
 	 */
 	@POST
-	@Path("/assessCatalog/queryById")
+	@Path ("/assessCatalog/queryById")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryAssessCatalogByIdResponse queryAssessCatalogList (@Context HttpServletRequest request, QueryAssessCatalogRequest queryAssessCatalogRequest)
-			throws Exception;
+	QryAssessCatalogByIdResponse queryAssessCatalogList (@Context HttpServletRequest request,
+			QueryAssessCatalogRequest queryAssessCatalogRequest) throws Exception;
 
-	/**查询考核分类信息
+	/**
+	 * 查询考核分类信息
 	 *
 	 * @param request
 	 * @param response
@@ -195,8 +210,8 @@ public interface AssessmentApi
 	 * @throws Exception
 	 */
 	@GET
-	@Path("/assessCatalog/queryList")
+	@Path ("/assessCatalog/queryList")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryAssessCatalogResponse queryAssessCatalogList (@Context HttpServletRequest request, @Context HttpServletResponse response)
-			throws Exception;
+	QryAssessCatalogResponse queryAssessCatalogList (@Context HttpServletRequest request,
+			@Context HttpServletResponse response) throws Exception;
 }

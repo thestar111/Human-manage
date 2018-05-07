@@ -4,7 +4,7 @@
 
     <!-- 全部字段-->
     <sql id="assessContentColumn">
-        id, content, grade, topic, time
+        id, content, grade, catalog, time
     </sql>
 
     <sql id="assessResultColumn">
@@ -19,7 +19,7 @@
         INSERT INTO T_ASSESS_CONTENT(<include refid="assessContentColumn"/>)
         VALUES
         <foreach collection="list" item="assessContent" separator=",">
-            (#{assessContent.id}, #{assessContent.content}, #{assessContent.grade}, #{assessContent.topic}, NOW())
+            (#{assessContent.id}, #{assessContent.content}, #{assessContent.grade}, #{assessContent.catalog}, NOW())
         </foreach>
     </insert>
 
@@ -27,8 +27,7 @@
         INSERT INTO T_ASSESS_TOPIC(<include refid="assessTopicColumn"/>)
         VALUES
         (#{id}, #{rank}, #{department}, #{title}, #{startTime}, #{endTime}, #{status}, #{extend1}, #{extend2},
-        #{extend3},
-        #{extend4}, #{extend5}, #{extend6})
+        #{extend3}, #{extend4}, #{extend5}, #{extend6})
     </insert>
 
     <insert id="addAssessResult" parameterType="AssessResult">
@@ -115,10 +114,10 @@
             ]]>
     </select>
 
-    <select id="qryAssessContentByTopicId" resultType="AssessContent" parameterType="String">
+    <select id="qryAssessContentByCatalogId" resultType="AssessContent" parameterType="String">
         SELECT
         <include refid="assessContentColumn"/>
-        FROM T_ASSESS_CONTENT WHERE topic = #{topicId}
+        FROM T_ASSESS_CONTENT WHERE catalog = #{catalogId}
     </select>
 
     <!--只能删除未发布的考核主题-->
@@ -127,7 +126,7 @@
     </delete>
 
     <delete id="deleteAssessContent" parameterType="String">
-        DELETE FROM T_ASSESS_CONTENT WHERE topic=#{topicId}
+        DELETE FROM T_ASSESS_CONTENT WHERE catalog=#{catalogId}
     </delete>
 
     <select id="qryAssessTopicByCondition" parameterType="Map" resultType="AssessTopic">

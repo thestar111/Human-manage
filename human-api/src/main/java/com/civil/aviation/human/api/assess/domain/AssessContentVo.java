@@ -45,7 +45,7 @@ public class AssessContentVo implements Serializable
 	/**
 	 * 考核主题编号
 	 */
-	private String topic;
+	private String catalog;
 
 	/**
 	 * 考核时间
@@ -59,7 +59,7 @@ public class AssessContentVo implements Serializable
 		sb.append ("assessContentId=").append (assessContentId);
 		sb.append (", content='").append (content).append ('\'');
 		sb.append (", grade=").append (grade);
-		sb.append (", topic='").append (topic).append ('\'');
+		sb.append (", catalog='").append (catalog).append ('\'');
 		sb.append (", time='").append (time).append ('\'');
 		sb.append ('}');
 		return sb.toString ();
