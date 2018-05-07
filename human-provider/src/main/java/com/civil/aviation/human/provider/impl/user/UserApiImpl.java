@@ -82,6 +82,14 @@ public class UserApiImpl implements UserApi
 		{
 			return Result.fail ("illega Parameters.");
 		}
+
+		//查询是否已存在该员工
+		Employee employee1 = employeeMappper.queryEmployById (createEmployeeRequest.getEmployee ().getEmployeeId ());
+		if (null != employee1)
+		{
+			return Result.fail ("employee is exist.");
+		}
+
 		Employee employee = EntityMapperHandler.INSTANCE.employeeToEntity (createEmployeeRequest.getEmployee ());
 		if (StringUtils.isEmpty (employee.getPassword ()))
 		{
