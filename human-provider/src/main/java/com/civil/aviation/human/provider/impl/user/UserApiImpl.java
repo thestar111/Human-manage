@@ -300,6 +300,11 @@ public class UserApiImpl implements UserApi
 			params.put ("rank", request.getParameter ("rank"));
 		}
 
+		if (! StringUtils.isEmpty (request.getParameter ("office")))
+		{
+			params.put ("office", request.getParameter ("office"));
+		}
+
 		String pageIndex = request.getParameter ("pageIndex");
 		String pageSize = request.getParameter ("pageSize");
 		if (StringUtils.isEmpty (pageIndex))

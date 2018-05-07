@@ -29,15 +29,25 @@ public class Office implements Serializable
 {
 
 	private int id;
-
+	/**
+	 * 名称
+	 */
 	private String name;
-
+	/**
+	 * 创建时间
+	 */
 	private String createTime;
 	/**
 	 * 部门
 	 */
 	private String department;
-
+	/**
+	 * 科室负责人
+	 */
+	private String manager;
+	/**
+	 * 备注
+	 */
 	private String memo;
 
 	@Override

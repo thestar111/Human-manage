@@ -17,7 +17,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * <科室实体VO信息>
  *
  * @author zping
  * @version 2018/3/22 0022
@@ -40,6 +40,8 @@ public class OfficeVo implements Serializable
 	private String memo;
 	/** 部门编号 */
 	private String departmentId;
+	/** 科室负责人*/
+	private String manager;
 
 	@Override
 	public String toString ()

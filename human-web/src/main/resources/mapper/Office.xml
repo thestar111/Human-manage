@@ -4,7 +4,7 @@
 
     <!--定义数据表列字段-->
     <sql id="sqlColumn">
-        id, name, createTime, department, memo
+        id, name, createTime, department, memo, manager
     </sql>
 
     <!--添加科室-->
@@ -12,7 +12,7 @@
         INSERT INTO
         T_OFFICE(<include refid="sqlColumn"/>)
         VALUES
-        (#{id}, #{name}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{department}, #{memo})
+        (#{id}, #{name}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{department}, #{memo}, #{manager})
     </insert>
 
     <!--修改科室-->
@@ -24,6 +24,9 @@
             </if>
             <if test="memo != null">
                 memo = #{memo},
+            </if>
+            <if test="manager != null">
+                manager = #{manager},
             </if>
             <if test="department != null">
                 department = #{department}
