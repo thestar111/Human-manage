@@ -87,7 +87,7 @@ public class UserApiImpl implements UserApi
 		Employee employee1 = employeeMappper.queryEmployById (createEmployeeRequest.getEmployee ().getEmployeeId ());
 		if (null != employee1)
 		{
-			return Result.fail ("employee is exist.");
+			return Result.fail ("员工已存在.");
 		}
 
 		Employee employee = EntityMapperHandler.INSTANCE.employeeToEntity (createEmployeeRequest.getEmployee ());
