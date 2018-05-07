@@ -21,17 +21,13 @@ import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.cons.Constants;
 import com.civil.aviation.human.common.core.domain.Result;
 import com.civil.aviation.human.common.core.utils.SessionUtils;
-import com.civil.aviation.human.database.entity.AssessCatalog;
-import com.civil.aviation.human.database.entity.AssessContent;
-import com.civil.aviation.human.database.entity.AssessResult;
-import com.civil.aviation.human.database.entity.AssessTopic;
+import com.civil.aviation.human.database.entity.*;
 import com.civil.aviation.human.database.mapper.AssessCatalogMapper;
 import com.civil.aviation.human.database.mapper.AssessmentMapper;
 import com.civil.aviation.human.database.mapper.EmployeeMappper;
 import com.civil.aviation.human.provider.mapper.EntityMapperHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sun.corba.se.spi.orbutil.threadpool.NoSuchWorkQueueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -41,8 +37,6 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.chrono.IsoEra;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -95,8 +89,7 @@ public class AssessmentApiImpl implements AssessmentApi
 			return Result.fail ("illega params is null.");
 		}
 
-		if (null == createAssessmentTopicRequest.getAssessContents () || CollectionUtils
-				.isEmpty (createAssessmentTopicRequest.getAssessContents ()))
+		if (CollectionUtils.isEmpty (createAssessmentTopicRequest.getAssessCatalogIds ()))
 		{
 			return Result.fail ("illega params is null.");
 		}
@@ -105,19 +98,21 @@ public class AssessmentApiImpl implements AssessmentApi
 				.voTOAssessTopic (createAssessmentTopicRequest.getAssessTopic ());
 
 		//考核标准
-		List<AssessContent> assessContents = Lists.newArrayList ();
-		AssessContent assessContent = null;
-		for (AssessContentVo assessContentVo : createAssessmentTopicRequest.getAssessContents ())
+		List<AssessCatalogRela> assessCatalogRelas = Lists.newArrayList ();
+		AssessCatalogRela assessCatalogRela = null;
+		for (String assessCatalogId : createAssessmentTopicRequest.getAssessCatalogIds ())
 		{
-			assessContent = EntityMapperHandler.INSTANCE.voToAssessContent (assessContentVo);
-			assessContents.add (assessContent);
+			assessCatalogRela = new AssessCatalogRela ();
+			assessCatalogRela.setAssessCatalogId (assessCatalogId);
+			assessCatalogRela.setTopicId (assessTopic.getId ());
+			assessCatalogRelas.add (assessCatalogRela);
 		}
 
 		int flag = assessmentMapper.addAssessTopic (assessTopic);
 
 		if (flag > 0)
 		{
-			if (assessmentMapper.addAssessContent (assessContents) > 0)
+			if (assessCatalogMapper.addCatalogRela (assessCatalogRelas) > 0)
 			{
 				return Result.success ("add assess topic success.");
 			}
@@ -154,8 +149,7 @@ public class AssessmentApiImpl implements AssessmentApi
 			return Result.fail ("illega params is null.");
 		}
 
-		if (null == modifyAssessmentRequest.getAssessContents () || CollectionUtils
-				.isEmpty (modifyAssessmentRequest.getAssessContents ()))
+		if (CollectionUtils.isEmpty (modifyAssessmentRequest.getAssessCatalogIds ()))
 		{
 			return Result.fail ("illega params is null.");
 		}
@@ -164,22 +158,24 @@ public class AssessmentApiImpl implements AssessmentApi
 				.voTOAssessTopic (modifyAssessmentRequest.getAssessTopic ());
 
 		//考核标准
-		List<AssessContent> assessContents = Lists.newArrayList ();
-		AssessContent assessContent = null;
-		for (AssessContentVo assessContentVo : modifyAssessmentRequest.getAssessContents ())
+		List<AssessCatalogRela> assessCatalogRelas = Lists.newArrayList ();
+		AssessCatalogRela assessCatalogRela = null;
+		for (String assessCatalogId : modifyAssessmentRequest.getAssessCatalogIds ())
 		{
-			assessContent = EntityMapperHandler.INSTANCE.voToAssessContent (assessContentVo);
-			assessContents.add (assessContent);
+			assessCatalogRela = new AssessCatalogRela ();
+			assessCatalogRela.setAssessCatalogId (assessCatalogId);
+			assessCatalogRela.setTopicId (assessTopic.getId ());
+			assessCatalogRelas.add (assessCatalogRela);
 		}
 
 		//先删除考核标准
-		int flag = assessmentMapper.deleteAssessContent (assessTopic.getId ());
+		int flag = assessCatalogMapper.deleteCatalogRelas (assessTopic.getId ());
 
 		if (flag > 0)
 		{
 			if (assessmentMapper.modifyAssessTopic (assessTopic) > 0)
 			{
-				if (assessmentMapper.addAssessContent (assessContents) > 0)
+				if (assessCatalogMapper.addCatalogRela (assessCatalogRelas) > 0)
 				{
 					return Result.success ("modify assess topic success.");
 				}

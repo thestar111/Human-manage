@@ -10,7 +10,6 @@
  */
 package com.civil.aviation.human.api.assess.request;
 
-import com.civil.aviation.human.api.assess.domain.AssessContentVo;
 import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,16 +35,16 @@ public class CreateAssessmentTopicRequest implements Serializable
 	private AssessTopicVo assessTopic;
 
 	/**
-	 * 考核内容
+	 * 考核分类编号
 	 */
-	private List<AssessContentVo> assessContents;
+	private List<String> assessCatalogIds;
 
 	@Override
 	public String toString ()
 	{
 		final StringBuilder sb = new StringBuilder ("CreateAssessmentTopicRequest{");
 		sb.append ("assessTopic=").append (assessTopic);
-		sb.append (", assessContent=").append (assessContents);
+		sb.append (", assessCatalogIds=").append (assessCatalogIds);
 		sb.append ('}');
 		return sb.toString ();
 	}
