@@ -127,7 +127,7 @@
 
     <select id="queryCountByCondition" parameterType="Map" resultType="Integer">
         SELECT COUNT(1)
-        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id
+        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R, T_OFFICE O WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id AND E.office=O.id
         <if test="name != NULL">
             AND E.name LIKE concat(#{name},'%')
         </if>
