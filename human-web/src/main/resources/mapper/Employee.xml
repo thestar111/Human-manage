@@ -116,6 +116,7 @@
         </if>
     </select>
 
+    <!--查询考核员工信息-->
     <select id="queryAssessEmploy" resultType="Employee">
         SELECT
         <include refid="sqlColumn"/>
@@ -125,6 +126,7 @@
         AND department = #{0} AND rank = #{1};
     </select>
 
+    <!--查询员工列表总数-->
     <select id="queryCountByCondition" parameterType="Map" resultType="Integer">
         SELECT COUNT(1)
         FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R, T_OFFICE O WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id AND E.office=O.id
@@ -132,19 +134,19 @@
             AND E.name LIKE concat(#{name},'%')
         </if>
         <if test="nation != NULL">
-            AND nation = #{nation}
+            AND E.nation = #{nation}
         </if>
         <if test="department != NULL">
-            AND department = #{department}
+            AND E.department = #{department}
         </if>
         <if test="job != NULL">
-            AND job = #{job}
+            AND E.job = #{job}
         </if>
         <if test="rank != NULL">
-            AND rank = #{rank}
+            AND E.rank = #{rank}
         </if>
         <if test="office != NULL">
-            AND office = #{office}
+            AND E.office = #{office}
         </if>
     </select>
 
