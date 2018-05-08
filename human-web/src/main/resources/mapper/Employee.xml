@@ -92,7 +92,7 @@
     <!--查询员工列表-->
     <select id="queryEmploy" parameterType="Map" resultType="Employee">
         SELECT E.*, D.`name` AS departName, R.`name` AS rankName , J.`name` AS jobName, O.name AS officeName
-        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R, T_OFFICE O WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id AND E.office=O.office
+        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R, T_OFFICE O WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id AND E.office=O.id
         <if test="name != NULL">
             AND E.name LIKE concat(#{name},'%')
         </if>
