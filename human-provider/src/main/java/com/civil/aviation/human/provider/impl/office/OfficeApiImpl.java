@@ -156,7 +156,7 @@ public class OfficeApiImpl implements OfficeApi
 		{
 			pageSize = "10";
 		}
-		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize) + 1 );
 		params.put ("pageSize", pageSize);
 
 		List<Office> offices = officeMapper.findByCondition (params);

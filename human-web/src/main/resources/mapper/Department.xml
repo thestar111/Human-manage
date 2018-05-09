@@ -40,12 +40,12 @@
         DELETE FROM T_DEPARTMENT WHERE id=#{departmentId}
     </delete>
 
-    <!--查询员工信息-->
+    <!--查询部门信息-->
     <select id="findById" parameterType="Integer" resultType="Department">
         SELECT <include refid="sqlColumn"/> FROM T_DEPARTMENT WHERE id = #{departmentId};
     </select>
 
-    <!--查询员工信息-->
+    <!--查询部门信息-->
     <select id="findByCondition" parameterType="Map" resultType="Department">
         SELECT
         <include refid="sqlColumn"/>
@@ -56,6 +56,7 @@
         <if test="manager != NULL">
             AND manager = #{manager}
         </if>
+        ORDER BY id
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
         </if>
