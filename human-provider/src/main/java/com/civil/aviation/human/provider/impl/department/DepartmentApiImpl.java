@@ -205,7 +205,7 @@ public class DepartmentApiImpl implements DepartmentApi
 		{
 			pageSize = "10";
 		}
-		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize) + 1);
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
 		params.put ("pageSize", pageSize);
 
 		List<Department> departments = departmentMapper.findByCondition (params);
