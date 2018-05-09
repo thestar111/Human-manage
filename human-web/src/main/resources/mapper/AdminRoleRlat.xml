@@ -19,7 +19,7 @@
     </insert>
 
     <!--根据管理员查询角色信息-->
-    <select id="findRoleById" parameterType="String" resultMap="AdminRoleRlat">
+    <select id="findRoleById" parameterType="String" resultType="AdminRoleRlat">
         SELECT <include refid="ROLE_ADMIN_COLUMN"/> FROM T_ADMINROLERLAT T INNER JOIN T_ROLE R ON T.roleId=R.roleId WHERE T.adminId = #{adminId}
     </select>
 
