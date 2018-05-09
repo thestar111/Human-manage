@@ -49,6 +49,10 @@ public class Office implements Serializable
 	 * 备注
 	 */
 	private String memo;
+	/**
+	 * 电话号码
+	 */
+	private String tel;
 
 	@Override
 	public String toString ()

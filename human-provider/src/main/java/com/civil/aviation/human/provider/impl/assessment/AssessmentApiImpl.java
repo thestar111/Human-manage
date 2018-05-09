@@ -235,6 +235,149 @@ public class AssessmentApiImpl implements AssessmentApi
 	}
 
 	/**
+	 * 修改考核内容信息
+	 *
+	 * @param request
+	 * @param modifyAssessContentRequest
+	 * @return
+	 */
+	@Override
+	public Result modifyAssessContent (HttpServletRequest request,
+			ModifyAssessContentRequest modifyAssessContentRequest) throws Exception
+	{
+
+		if (null == modifyAssessContentRequest || null == modifyAssessContentRequest.getAssessContent ())
+		{
+			return Result.fail ("illega params");
+		}
+
+		AssessContentVo assessContentVo = modifyAssessContentRequest.getAssessContent ();
+		AssessContent assessContent = new AssessContent ();
+		BeanUtils.copyProperties (assessContentVo, assessContent);
+
+		int flag = assessmentMapper.modifyAssessContent (assessContent);
+		if (flag > 0)
+		{
+			return Result.success ("modify assess content success.");
+		}
+		else
+		{
+			return Result.fail ("modify assess content failed.");
+		}
+	}
+
+	/**
+	 * 删除考核内容信息
+	 *
+	 * @param request
+	 * @param deleteAssessContentRequest
+	 * @return
+	 */
+	@Override
+	public Result deleteAssessContent (HttpServletRequest request,
+			DeleteAssessContentRequest deleteAssessContentRequest) throws Exception
+	{
+		if (null == deleteAssessContentRequest || StringUtils
+				.isEmpty (deleteAssessContentRequest.getAssessContentId ()))
+		{
+			return Result.fail ("illega params");
+		}
+
+		int flag = assessmentMapper.deleteAssessContent (deleteAssessContentRequest.getAssessContentId ());
+		if (flag > 0)
+		{
+			return Result.success ("delete assess content success.");
+		}
+		else
+		{
+			return Result.fail ("delete assess content failed.");
+		}
+	}
+
+	/**
+	 * 查询考核内容列表信息
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@Override
+	public QryAssessContentListResponse queryAssessContentList (HttpServletRequest request,
+			HttpServletResponse response) throws Exception
+	{
+		QryAssessContentListResponse qryAssessContentListResponse = new QryAssessContentListResponse ();
+		Map<String, Object> params = Maps.newHashMap ();
+
+		if (! StringUtils.isEmpty (request.getParameter ("catalog")))
+		{
+			params.put ("catalog", request.getParameter ("catalog"));
+		}
+
+		String pageIndex = request.getParameter ("pageIndex");
+		String pageSize = request.getParameter ("pageSize");
+
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+		if (StringUtils.isEmpty (pageSize))
+		{
+			pageSize = "10";
+		}
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
+		params.put ("pageSize", pageSize);
+
+		List<AssessContent> assessContents = assessmentMapper.queryAssessContents (params);
+		List<AssessContentVo> assessContentVos = null;
+		if (! CollectionUtils.isEmpty (assessContents))
+		{
+			assessContentVos = Lists.newArrayList ();
+			AssessContentVo assessContentVo = null;
+			for (AssessContent assessContent : assessContents)
+			{
+				assessContentVo = new AssessContentVo ();
+				BeanUtils.copyProperties (assessContent, assessContentVo);
+				assessContentVos.add (assessContentVo);
+			}
+			qryAssessContentListResponse.setCount (assessmentMapper.queryAssessContentCount (params));
+		}
+		qryAssessContentListResponse.setAssessContents (assessContentVos);
+		return qryAssessContentListResponse;
+	}
+
+	/**
+	 * 查询考核内容列表信息
+	 *
+	 * @param request
+	 * @param queryAssessContentRequest
+	 * @return
+	 */
+	@Override
+	public QryAssessContentResponse queryAssessContentById (HttpServletRequest request,
+			QueryAssessContentRequest queryAssessContentRequest) throws Exception
+	{
+		if (null == queryAssessContentRequest || StringUtils.isEmpty (queryAssessContentRequest.getAssessContentId ()))
+		{
+			return (QryAssessContentResponse) Result.fail ("illega params");
+		}
+		QryAssessContentResponse qryAssessContentResponse = new QryAssessContentResponse ();
+		AssessContent assessContent = assessmentMapper
+				.queryAssessContentById (queryAssessContentRequest.getAssessContentId ());
+
+		if (null != assessContent)
+		{
+			AssessContentVo assessContentVo = new AssessContentVo ();
+			BeanUtils.copyProperties (assessContent, assessContentVo);
+			qryAssessContentResponse.setAssessContent (assessContentVo);
+		}
+		else
+		{
+			qryAssessContentResponse.setResultMessage ("Content not exist");
+		}
+		return qryAssessContentResponse;
+	}
+
+	/**
 	 * 添加考核成绩
 	 *
 	 * @param request

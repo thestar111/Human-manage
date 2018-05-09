@@ -78,6 +78,58 @@ public interface AssessmentApi
 			throws Exception;
 
 	/**
+	 * 修改考核内容信息
+	 *
+	 * @param request
+	 * @param modifyAssessContentRequest
+	 * @return
+	 */
+	@POST
+	@Path ("/modifyAssessContent")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result modifyAssessContent (@Context HttpServletRequest request,
+			ModifyAssessContentRequest modifyAssessContentRequest) throws Exception;
+
+	/**
+	 * 删除考核内容信息
+	 *
+	 * @param request
+	 * @param deleteAssessContentRequest
+	 * @return
+	 */
+	@POST
+	@Path ("/deleteAssessContent")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result deleteAssessContent (@Context HttpServletRequest request,
+			DeleteAssessContentRequest deleteAssessContentRequest) throws Exception;
+
+	/**
+	 * 查询考核内容列表信息
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GET
+	@Path ("/queryAssessContentList")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryAssessContentListResponse queryAssessContentList (@Context HttpServletRequest request,
+			@Context HttpServletResponse response) throws Exception;
+
+	/**
+	 * 查询考核内容列表信息
+	 *
+	 * @param request
+	 * @param queryAssessContentRequest
+	 * @return
+	 */
+	@POST
+	@Path ("/queryAssessContentById")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryAssessContentResponse queryAssessContentById (@Context HttpServletRequest request,
+			QueryAssessContentRequest queryAssessContentRequest) throws Exception;
+
+	/**
 	 * 添加考核成绩
 	 *
 	 * @param request

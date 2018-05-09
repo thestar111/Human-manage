@@ -10,7 +10,7 @@
  */
 package com.civil.aviation.human.api.assess.response;
 
-import com.civil.aviation.human.api.assess.domain.AssessCatalogVo;
+import com.civil.aviation.human.api.assess.domain.AssessContentVo;
 import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
 import com.civil.aviation.human.common.core.domain.Result;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * <查询考核主题返回对象>
+ * <查询考核内容返回对象>
  *
  * @author zping
  * @version 2018/4/2 0002
@@ -29,23 +29,18 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class QryAssessCatalogResponse extends Result
+public class QryAssessContentResponse extends Result
 {
 	/**
 	 * 考核主题信息
 	 */
-	private List<AssessCatalogVo> assessCatalogs;
-
-	/**
-	 * 总数
-	 */
-	private int count = 0;
+	private AssessContentVo assessContent;
 
 	@Override
 	public String toString ()
 	{
-		final StringBuilder sb = new StringBuilder ("QryAssessCatalogResponse{");
-		sb.append ("assessCatalogs=").append (assessCatalogs);
+		final StringBuilder sb = new StringBuilder ("QryAssessContentResponse{");
+		sb.append ("assessContent=").append (assessContent);
 		sb.append ('}');
 		return sb.toString ();
 	}

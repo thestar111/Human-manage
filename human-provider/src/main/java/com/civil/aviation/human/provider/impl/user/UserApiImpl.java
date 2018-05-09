@@ -64,7 +64,7 @@ public class UserApiImpl implements UserApi
 	/**
 	 * 普通员工默认角色
 	 */
-	private String NORMAL_ROLE_DEFAULT = "2";
+	private String NORMAL_ROLE_DEFAULT = "1";
 
 	@Value ("password.default")
 	private String DEFAULT_PASSWORD;
@@ -401,7 +401,7 @@ public class UserApiImpl implements UserApi
 		String oldPassword = Coder
 				.encryptBASE64 (Coder.encryptMD5 (resetPasswordRequest.getOldPassword ().getBytes ()));
 
-		int flag = employeeMappper.resetPassword (employeeId, encrytPassword);
+		int flag = employeeMappper.modifyPassword (employeeId, encrytPassword, oldPassword);
 
 		if (flag > 0)
 		{

@@ -4,7 +4,7 @@
 
     <!-- 全部字段-->
     <sql id="assessCatalogColumn">
-        id, namne, createTime, memo
+        id, name, createTime, memo
     </sql>
 
     <!-- 考核主题分类关系字段-->

@@ -43,9 +43,14 @@ public class AssessContent implements Serializable
 	private int grade;
 
 	/**
-	 * 考核主题编号
+	 * 考核分类编号
 	 */
 	private String catalog;
+
+	/**
+	 * 考核分类名称
+	 */
+	private String catalogName;
 
 	/**
 	 * 考核时间

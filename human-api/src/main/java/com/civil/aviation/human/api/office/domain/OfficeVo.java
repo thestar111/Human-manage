@@ -42,6 +42,8 @@ public class OfficeVo implements Serializable
 	private String departmentId;
 	/** 科室负责人*/
 	private String manager;
+	/** 电话号码*/
+	private String tel;
 
 	@Override
 	public String toString ()

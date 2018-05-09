@@ -39,6 +39,42 @@ public interface AssessmentMapper
 	int addAssessContent (List<AssessContent> assessContents) throws SQLException;
 
 	/**
+	 * 修改考核内容
+	 *
+	 * @param assessContent
+	 * @return
+	 * @throws SQLException
+	 */
+	int modifyAssessContent (AssessContent assessContent) throws SQLException;
+
+	/**
+	 * 修改考核内容
+	 *
+	 * @param assessContentId
+	 * @return
+	 * @throws SQLException
+	 */
+	AssessContent queryAssessContentById (String assessContentId) throws SQLException;
+
+	/**
+	 * 查询考核列表内容
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AssessContent> queryAssessContents (Map<String, Object> params) throws SQLException;
+
+	/**
+	 * 查询考核列表内容总数
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	int queryAssessContentCount (Map<String, Object> params) throws SQLException;
+
+	/**
 	 * 添加考核主题
 	 *
 	 * @param assessTopic
@@ -104,13 +140,13 @@ public interface AssessmentMapper
 	int deleteAssessTopic (String topicId) throws SQLException;
 
 	/**
-	 * 删除考核主题
+	 * 删除考核内容
 	 *
-	 * @param catalogId
+	 * @param assessContentId
 	 * @return
 	 * @throws SQLException
 	 */
-	int deleteAssessContent (String catalogId) throws SQLException;
+	int deleteAssessContent (String assessContentId) throws SQLException;
 
 	/**
 	 * 查询当前生效的已发布的考核主题

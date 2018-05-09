@@ -7,6 +7,10 @@
         id, content, grade, catalog, time
     </sql>
 
+    <sql id="assessContentColumnAndCatalog">
+        TC.id, TC.content, TC.grade, TC.catalog, TC.time, TAC.name AS catalogName
+    </sql>
+
     <sql id="assessResultColumn">
         id, employee, topic, weight, score, time, discussant
     </sql>
@@ -125,9 +129,41 @@
         DELETE FROM T_ASSESS_TOPIC WHERE id=#{topicId} AND status=1
     </delete>
 
+    <!--删除考核内容-->
     <delete id="deleteAssessContent" parameterType="String">
-        DELETE FROM T_ASSESS_CONTENT WHERE catalog=#{catalogId}
+        DELETE FROM T_ASSESS_CONTENT WHERE id=#{assessContentId}
     </delete>
+
+    <!--修改考核内容-->
+    <update id="modifyAssessContent" parameterType="AssessContent">
+        UPDATE T_ASSESS_CONTENT 
+        <set>
+            <if test="content != null">
+                content = #{content}
+            </if>
+            <if test="catalog != null">
+                catalog = #{catalog}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--查询考核内容-->
+    <select id="queryAssessContentById" parameterType="String" resultType="AssessContent">
+        SELECT <include refid="assessContentColumn"/> FROM T_ASSESS_CONTENT WHERE id = #{assessContentId}
+    </select>
+
+    <!--查询考核列表内容-->
+    <select id="queryAssessContents" parameterType="Map" resultType="AssessContent">
+        SELECT <include refid="assessContentColumnAndCatalog"/> FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.catalog
+        WHERE 1 = 1
+        <if test="catalog != null">
+            TC.catalog=#{catalog}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
 
     <select id="qryAssessTopicByCondition" parameterType="Map" resultType="AssessTopic">
         SELECT
