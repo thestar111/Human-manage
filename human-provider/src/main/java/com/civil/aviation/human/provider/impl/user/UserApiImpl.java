@@ -19,6 +19,7 @@ import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.domain.Result;
 import com.civil.aviation.human.common.core.encryt.Coder;
 import com.civil.aviation.human.common.core.utils.SessionUtils;
+import com.civil.aviation.human.database.entity.AdminRoleRlat;
 import com.civil.aviation.human.database.entity.Employee;
 import com.civil.aviation.human.database.mapper.AdminRoleMapper;
 import com.civil.aviation.human.database.mapper.EmployeeMappper;
@@ -281,28 +282,49 @@ public class UserApiImpl implements UserApi
 
 		QryEmployeeConditionResponse qryEmployeeConditionResponse = new QryEmployeeConditionResponse ();
 		Map<String, Object> params = Maps.newHashMap ();
-
 		Employee employee = (Employee) SessionUtils.getValue (SessionUtils.EMPLOYEE_SESSION_KEY);
-		params.put ("department", employee.getDepartment ());
-
-		if (! StringUtils.isEmpty (request.getParameter ("job")))
+		if (null == employee)
 		{
-			params.put ("job", request.getParameter ("job"));
+			return (QryEmployeeConditionResponse) Result.fail ("User not login.");
 		}
 
-		if (! StringUtils.isEmpty (request.getParameter ("name")))
+		AdminRoleRlat adminRoleRlat = adminRoleMapper.findRoleById (employee.getId ());
+		if (null == adminRoleRlat)
 		{
-			params.put ("name", request.getParameter ("name"));
+			return (QryEmployeeConditionResponse) Result.fail ("User invalid.");
 		}
 
-		if (! StringUtils.isEmpty (request.getParameter ("rank")))
+		/** 非管理员只能查看自己信息的员工*/
+		if ("1".equals (adminRoleRlat.getRoleType ()))
 		{
-			params.put ("rank", request.getParameter ("rank"));
+			params.put ("employeeId", employee.getId ());
 		}
-
-		if (! StringUtils.isEmpty (request.getParameter ("office")))
+		else
 		{
-			params.put ("office", request.getParameter ("office"));
+			if (! StringUtils.isEmpty (request.getParameter ("job")))
+			{
+				params.put ("job", request.getParameter ("job"));
+			}
+
+			if (! StringUtils.isEmpty (request.getParameter ("name")))
+			{
+				params.put ("name", request.getParameter ("name"));
+			}
+
+			if (! StringUtils.isEmpty (request.getParameter ("rank")))
+			{
+				params.put ("rank", request.getParameter ("rank"));
+			}
+
+			if (! StringUtils.isEmpty (request.getParameter ("office")))
+			{
+				params.put ("office", request.getParameter ("office"));
+			}
+
+			if (! StringUtils.isEmpty (request.getParameter ("department")))
+			{
+				params.put ("department", request.getParameter ("department"));
+			}
 		}
 
 		String pageIndex = request.getParameter ("pageIndex");

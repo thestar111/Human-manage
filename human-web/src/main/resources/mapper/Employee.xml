@@ -111,6 +111,9 @@
         <if test="office != NULL">
             AND E.office = #{office}
         </if>
+        <if test="employeeId != NULL">
+            AND E.id = #{employeeId}
+        </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
         </if>

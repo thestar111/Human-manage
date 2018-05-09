@@ -27,9 +27,11 @@ import java.io.Serializable;
 @Setter
 public class AdminRoleRlat implements Serializable
 {
-	private int id;
+	private Integer id;
 	private String adminId;
-	private int roleId;
+	private Integer roleId;
+	private Integer roleType;
+	private String roleName;
 	private String memo;
 
 	@Override

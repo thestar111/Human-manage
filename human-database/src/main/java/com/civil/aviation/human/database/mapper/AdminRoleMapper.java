@@ -34,6 +34,14 @@ public interface AdminRoleMapper
 	List<AdminRoleRlat> findById (String adminId);
 
 	/**
+	 * 根据管理员编号查询角色信息
+	 *
+	 * @param adminId
+	 * @return
+	 */
+	AdminRoleRlat findRoleById (String adminId);
+
+	/**
 	 * 添加员工角色关系信息
 	 *
 	 * @param adminRoleRlat

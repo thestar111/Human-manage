@@ -9,10 +9,19 @@
         <result column="memo" property="memo"/>
     </resultMap>
 
+    <sql id="ROLE_ADMIN_COLUMN">
+        T.adminId, T.roleId, R.roleType, R.roleName
+    </sql>
+
     <insert id="add" parameterType="AdminRoleRlat">
         INSERT INTO T_ADMINROLERLAT(id, adminId, roleId, memo)
         VALUES (#{id}, #{adminId}, #{roleId}, #{memo})
     </insert>
+
+    <!--根据管理员查询角色信息-->
+    <select id="findRoleById" parameterType="String" resultMap="AdminRoleRlat">
+        SELECT <include refid="ROLE_ADMIN_COLUMN"/> FROM T_ADMINROLERLAT T INNER JOIN T_ROLE R ON T.roleId=R.roleId WHERE T.adminId = #{adminId}
+    </select>
 
     <select id="findById" parameterType="String" resultMap="AdminRoleRlatMap">
         SELECT * FROM T_ADMINROLERLAT WHERE adminId = #{adminId}
