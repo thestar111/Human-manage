@@ -160,15 +160,15 @@ public interface AssessmentApi
 	 * 根据条件查询考核主题信息
 	 *
 	 * @param request
-	 * @param qryAssessTopicRequest
+	 * @param response
 	 * @return
 	 * @throws Exception
 	 */
-	@POST
+	@GET
 	@Path ("/query/condition")
 	@Produces (MediaType.APPLICATION_JSON)
 	QryAssessTopicResponse qryAssessTopicByCondition (@Context HttpServletRequest request,
-			QryAssessTopicRequest qryAssessTopicRequest) throws Exception;
+			@Context HttpServletResponse response) throws Exception;
 
 	/**
 	 * 根据员工编号查询去年的考核成绩

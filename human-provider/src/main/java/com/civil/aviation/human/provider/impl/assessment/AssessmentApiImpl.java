@@ -467,33 +467,44 @@ public class AssessmentApiImpl implements AssessmentApi
 	 * 根据条件查询考核主题信息
 	 *
 	 * @param request
-	 * @param qryAssessTopicRequest
+	 * @param response
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public QryAssessTopicResponse qryAssessTopicByCondition (HttpServletRequest request,
-			QryAssessTopicRequest qryAssessTopicRequest) throws Exception
+	public QryAssessTopicResponse qryAssessTopicByCondition (HttpServletRequest request, HttpServletResponse response)
+			throws Exception
 	{
 		QryAssessTopicResponse qryAssessTopicResponse = new QryAssessTopicResponse ();
 		Map<String, Object> params = Maps.newHashMap ();
-		if (null != qryAssessTopicRequest.getStatus ())
+		if (! StringUtils.isEmpty (request.getParameter ("status")))
 		{
-			params.put ("status", qryAssessTopicRequest.getStatus ());
+			params.put ("status", request.getParameter ("status"));
 		}
 
-		if (! StringUtils.isEmpty (qryAssessTopicRequest.getStartTime ()))
+		if (! StringUtils.isEmpty (request.getParameter ("startTime")))
 		{
-			params.put ("startTime", qryAssessTopicRequest.getStartTime ());
+			params.put ("startTime", request.getParameter ("startTime"));
 		}
 
-		if (! StringUtils.isEmpty (qryAssessTopicRequest.getEndTime ()))
+		if (! StringUtils.isEmpty (request.getParameter ("endTime")))
 		{
-			params.put ("endTime", qryAssessTopicRequest.getEndTime ());
+			params.put ("endTime", request.getParameter ("endTime"));
 		}
 
-		params.put ("pageIndex", qryAssessTopicRequest.getPageIndex ());
-		params.put ("pageSize", qryAssessTopicRequest.getPageSize ());
+		String pageIndex = request.getParameter ("pageIndex");
+		String pageSize = request.getParameter ("pageSize");
+
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+		if (StringUtils.isEmpty (pageSize))
+		{
+			pageSize = "10";
+		}
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
+		params.put ("pageSize", pageSize);
 
 		//查询考核标题信息
 		List<AssessTopic> assessTopics = assessmentMapper.qryAssessTopicByCondition (params);
