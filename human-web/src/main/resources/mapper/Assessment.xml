@@ -166,6 +166,7 @@
         <if test="catalog != null">
             TC.catalog=#{catalog}
         </if>
+        ORDER BY TC.catalog
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
         </if>
@@ -173,7 +174,7 @@
 
     <!--查询考核内容总数-->
     <select id="queryAssessContentCount" parameterType="Map" resultType="Integer">
-        SELECT COUNT (1) FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.id
+        SELECT COUNT(1) FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.id
         WHERE 1 = 1
         <if test="catalog != null">
             TC.catalog=#{catalog}
