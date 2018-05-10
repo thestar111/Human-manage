@@ -167,7 +167,7 @@
         FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.id
         WHERE 1 = 1
         <if test="catalog != null">
-            TC.catalog=#{catalog}
+            AND TC.catalog=#{catalog}
         </if>
         ORDER BY TC.catalog
         <if test="pageIndex != NULL and pageSize != NULL ">
@@ -180,7 +180,7 @@
         SELECT COUNT(1) FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.id
         WHERE 1 = 1
         <if test="catalog != null">
-            TC.catalog=#{catalog}
+            AND TC.catalog=#{catalog}
         </if>
     </select>
 
