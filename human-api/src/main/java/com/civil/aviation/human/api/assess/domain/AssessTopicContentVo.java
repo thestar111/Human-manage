@@ -1,31 +1,29 @@
 /**
- * 文 件 名:  AssessTarget
+ * 文 件 名:  AssessTopicContentVo
  * 版    权:  Quanten Technologies Co., Ltd. Copyright YYYY-YYYY,  All rights reserved
  * 描    述:  <描述>
  * 修 改 人:  zping
- * 修改时间:  2018/3/30 0030
+ * 修改时间:  2018/5/10 0010
  * 跟踪单号:  <跟踪单号>
  * 修改单号:  <修改单号>
  * 修改内容:  <修改内容>
  */
-package com.civil.aviation.human.database.entity;
+package com.civil.aviation.human.api.assess.domain;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 /**
- * <考核主题对象信息实体>
+ * <一句话功能简述> <功能详细描述>
  *
  * @author zping
- * @version 2018/3/30 0030
+ * @version 2018/5/10 0010
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
 @Getter
 @Setter
-public class AssessTopic implements Serializable
+public class AssessTopicContentVo
 {
 	/**
 	 * 业务编号
@@ -58,41 +56,6 @@ public class AssessTopic implements Serializable
 	private String endTime;
 
 	/**
-	 * 发布状态(0: 已发布  1：未发布)
-	 */
-	private Integer status;
-
-	/**
-	 * 扩展字段1
-	 */
-	private String extend1;
-
-	/**
-	 * 扩展字段2
-	 */
-	private String extend2;
-
-	/**
-	 * 扩展字段3
-	 */
-	private String extend3;
-
-	/**
-	 * 扩展字段4
-	 */
-	private String extend4;
-
-	/**
-	 * 扩展字段5
-	 */
-	private String extend5;
-
-	/**
-	 * 扩展字段6
-	 */
-	private String extend6;
-
-	/**
 	 * 考核内容
 	 */
 	private String assessContent;
@@ -105,19 +68,15 @@ public class AssessTopic implements Serializable
 	@Override
 	public String toString ()
 	{
-		final StringBuilder sb = new StringBuilder ("AssessTopic{");
-		sb.append ("id=").append (id);
+		final StringBuilder sb = new StringBuilder ("AssessTopicContent{");
+		sb.append ("id='").append (id).append ('\'');
 		sb.append (", rank=").append (rank);
 		sb.append (", department=").append (department);
 		sb.append (", title='").append (title).append ('\'');
 		sb.append (", startTime='").append (startTime).append ('\'');
 		sb.append (", endTime='").append (endTime).append ('\'');
-		sb.append (", extend1='").append (extend1).append ('\'');
-		sb.append (", extend2='").append (extend2).append ('\'');
-		sb.append (", extend3='").append (extend3).append ('\'');
-		sb.append (", extend4='").append (extend4).append ('\'');
-		sb.append (", extend5='").append (extend5).append ('\'');
-		sb.append (", extend6='").append (extend6).append ('\'');
+		sb.append (", assessContent='").append (assessContent).append ('\'');
+		sb.append (", catalogName='").append (catalogName).append ('\'');
 		sb.append ('}');
 		return sb.toString ();
 	}

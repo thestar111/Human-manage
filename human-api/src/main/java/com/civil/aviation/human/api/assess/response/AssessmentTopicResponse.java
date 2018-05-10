@@ -10,7 +10,7 @@
  */
 package com.civil.aviation.human.api.assess.response;
 
-import com.civil.aviation.human.api.assess.domain.AssessContentVo;
+import com.civil.aviation.human.api.assess.domain.AssessTopicContentVo;
 import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
 import com.civil.aviation.human.common.core.domain.Result;
 import lombok.Getter;
@@ -34,19 +34,13 @@ public class AssessmentTopicResponse extends Result
 	/**
 	 * 考核主题
 	 */
-	private AssessTopicVo assessTopic;
-
-	/**
-	 * 考核内容信息
-	 */
-	private List<AssessContentVo> assessContents;
+	private List<AssessTopicContentVo> assessTopics;
 
 	@Override
 	public String toString ()
 	{
 		final StringBuilder sb = new StringBuilder ("AssessmentTopicResponse{");
-		sb.append ("assessTopic=").append (assessTopic);
-		sb.append (", assessContents=").append (assessContents);
+		sb.append ("assessTopics=").append (assessTopics);
 		sb.append ('}');
 		return sb.toString ();
 	}

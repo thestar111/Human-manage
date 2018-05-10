@@ -13,6 +13,7 @@ package com.civil.aviation.human.database.mapper;
 import com.civil.aviation.human.database.entity.AssessContent;
 import com.civil.aviation.human.database.entity.AssessResult;
 import com.civil.aviation.human.database.entity.AssessTopic;
+import com.civil.aviation.human.database.entity.AssessTopicContent;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -154,7 +155,7 @@ public interface AssessmentMapper
 	 * @return
 	 * @throws SQLException
 	 */
-	AssessTopic qryEffectiveAssessTopic () throws SQLException;
+	List<AssessTopicContent> qryEffectiveAssessTopic () throws SQLException;
 
 	/**
 	 * 根据考核主题编号查询考核标准

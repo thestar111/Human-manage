@@ -92,6 +92,16 @@ public class AssessTopicVo implements Serializable
 	 */
 	private String extend6;
 
+	/**
+	 * 考核内容
+	 */
+	private String assessContent;
+
+	/**
+	 * 分类内容
+	 */
+	private String catalogName;
+
 	@Override
 	public String toString ()
 	{

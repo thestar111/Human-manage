@@ -11,10 +11,7 @@
 package com.civil.aviation.human.provider.impl.assessment;
 
 import com.civil.aviation.human.api.assess.AssessmentApi;
-import com.civil.aviation.human.api.assess.domain.AssessCatalogVo;
-import com.civil.aviation.human.api.assess.domain.AssessContentVo;
-import com.civil.aviation.human.api.assess.domain.AssessGradeVo;
-import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
+import com.civil.aviation.human.api.assess.domain.*;
 import com.civil.aviation.human.api.assess.request.*;
 import com.civil.aviation.human.api.assess.response.*;
 import com.civil.aviation.human.common.core.annotation.Api;
@@ -428,35 +425,29 @@ public class AssessmentApiImpl implements AssessmentApi
 		AssessmentTopicResponse result = new AssessmentTopicResponse ();
 
 		//查询当前生效的考核主题
-		AssessTopic assessTopic = assessmentMapper.qryEffectiveAssessTopic ();
+		List<AssessTopicContent> assessTopicContents = assessmentMapper.qryEffectiveAssessTopic ();
 
 		//为空，则说明不存在
-		if (null == assessTopic)
+		if (null == assessTopicContents || CollectionUtils.isEmpty (assessTopicContents))
 		{
-			result.setResultCode ("0");
+			result.setResultCode ("999999");
 			result.setResultMessage ("It is not time for assessment.");
 			return result;
 		}
-		//查询考核标准
-		List<AssessContent> assessContents = assessmentMapper.qryAssessContentByCatalogId (assessTopic.getId ());
-		List<AssessContentVo> assessContentVos = null;
-		AssessContentVo assessContentVo = null;
-		if (! CollectionUtils.isEmpty (assessContents))
+		else
 		{
-			assessContentVos = Lists.newArrayList ();
-			for (AssessContent assessContent : assessContents)
+			List<AssessTopicContentVo> assessTopicContentVos = Lists.newArrayList ();
+			AssessTopicContentVo assessTopicContentVo = null;
+			for (AssessTopicContent assessTopicContent : assessTopicContents)
 			{
-				assessContentVo = EntityMapperHandler.INSTANCE.assessContentToVo (assessContent);
-				assessContentVos.add (assessContentVo);
+				assessTopicContentVo = new AssessTopicContentVo ();
+				BeanUtils.copyProperties (assessTopicContent, assessTopicContentVo);
+				assessTopicContentVos.add (assessTopicContentVo);
 			}
+			result.setResultMessage ("query success.");
+			result.setResultCode (Constants.ResultCode.SUCCESS);
+			result.setAssessTopics (assessTopicContentVos);
 		}
-
-		AssessTopicVo assessTopicVo = EntityMapperHandler.INSTANCE.assessTopicToVo (assessTopic);
-
-		result.setResultMessage ("query success.");
-		result.setResultCode (Constants.ResultCode.SUCCESS);
-		result.setAssessContents (assessContentVos);
-		result.setAssessTopic (assessTopicVo);
 		return result;
 	}
 
