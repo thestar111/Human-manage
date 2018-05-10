@@ -11,6 +11,7 @@
 package com.civil.aviation.human.api.assess.response;
 
 import com.civil.aviation.human.api.assess.domain.AssessTopicVo;
+import com.civil.aviation.human.common.core.domain.Result;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +28,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class QryAssessTopicResponse implements Serializable
+public class QryAssessTopicResponse extends Result
 {
 	/**
 	 * 考核主题信息

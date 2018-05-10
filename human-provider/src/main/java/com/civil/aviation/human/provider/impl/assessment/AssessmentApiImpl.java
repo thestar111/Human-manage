@@ -157,7 +157,7 @@ public class AssessmentApiImpl implements AssessmentApi
 		AssessTopic assessTopic = EntityMapperHandler.INSTANCE
 				.voTOAssessTopic (modifyAssessmentRequest.getAssessTopic ());
 
-		//考核标准
+		//查询考核主题分类信息
 		List<AssessCatalogRela> assessCatalogRelas = Lists.newArrayList ();
 		AssessCatalogRela assessCatalogRela = null;
 		for (String assessCatalogId : modifyAssessmentRequest.getAssessCatalogIds ())
@@ -252,8 +252,7 @@ public class AssessmentApiImpl implements AssessmentApi
 		}
 
 		AssessContentVo assessContentVo = modifyAssessContentRequest.getAssessContent ();
-		AssessContent assessContent = new AssessContent ();
-		BeanUtils.copyProperties (assessContentVo, assessContent);
+		AssessContent assessContent = EntityMapperHandler.INSTANCE.voToAssessContent (assessContentVo);
 
 		int flag = assessmentMapper.modifyAssessContent (assessContent);
 		if (flag > 0)
@@ -335,8 +334,7 @@ public class AssessmentApiImpl implements AssessmentApi
 			AssessContentVo assessContentVo = null;
 			for (AssessContent assessContent : assessContents)
 			{
-				assessContentVo = new AssessContentVo ();
-				BeanUtils.copyProperties (assessContent, assessContentVo);
+				assessContentVo = EntityMapperHandler.INSTANCE.assessContentToVo (assessContent);
 				assessContentVos.add (assessContentVo);
 			}
 			qryAssessContentListResponse.setCount (assessmentMapper.queryAssessContentCount (params));
@@ -346,7 +344,7 @@ public class AssessmentApiImpl implements AssessmentApi
 	}
 
 	/**
-	 * 查询考核内容列表信息
+	 * 查询考核内容信息
 	 *
 	 * @param request
 	 * @param queryAssessContentRequest
@@ -366,8 +364,7 @@ public class AssessmentApiImpl implements AssessmentApi
 
 		if (null != assessContent)
 		{
-			AssessContentVo assessContentVo = new AssessContentVo ();
-			BeanUtils.copyProperties (assessContent, assessContentVo);
+			AssessContentVo assessContentVo = EntityMapperHandler.INSTANCE.assessContentToVo (assessContent);
 			qryAssessContentResponse.setAssessContent (assessContentVo);
 		}
 		else

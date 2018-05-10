@@ -49,14 +49,16 @@
     <select id="queryAssessResultByEmployee" resultType="AssessResult">
         SELECT
         <include refid="assessResultColumn"/>
-        FROM T_ASSESS_RESULT WHERE employee=#{0} AND weight=#{1} AND YEAR(time) = YEAR(DATE_ADD(NOW(), Interval -1 year))
+        FROM T_ASSESS_RESULT WHERE employee=#{0} AND weight=#{1} AND YEAR(time) = YEAR(DATE_ADD(NOW(), Interval -1
+        year))
     </select>
 
     <!-- 查询上一年员工自评考核成绩 -->
     <select id="queryAssessResultBySelf" resultType="AssessResult">
         SELECT
         <include refid="assessResultColumn"/>
-        FROM T_ASSESS_RESULT WHERE employee=#{employeeId} AND discussant=#{employeeId} AND YEAR(time) = YEAR(DATE_ADD(NOW(), Interval -1 year))
+        FROM T_ASSESS_RESULT WHERE employee=#{employeeId} AND discussant=#{employeeId} AND YEAR(time) =
+        YEAR(DATE_ADD(NOW(), Interval -1 year))
     </select>
 
     <update id="modifyAssessTopic" parameterType="AssessTopic">
@@ -136,10 +138,10 @@
 
     <!--修改考核内容-->
     <update id="modifyAssessContent" parameterType="AssessContent">
-        UPDATE T_ASSESS_CONTENT 
+        UPDATE T_ASSESS_CONTENT
         <set>
             <if test="content != null">
-                content = #{content}
+                content = #{content},
             </if>
             <if test="catalog != null">
                 catalog = #{catalog}
@@ -150,18 +152,31 @@
 
     <!--查询考核内容-->
     <select id="queryAssessContentById" parameterType="String" resultType="AssessContent">
-        SELECT <include refid="assessContentColumn"/> FROM T_ASSESS_CONTENT WHERE id = #{assessContentId}
+        SELECT
+        <include refid="assessContentColumn"/>
+        FROM T_ASSESS_CONTENT WHERE id = #{assessContentId}
     </select>
 
     <!--查询考核列表内容-->
     <select id="queryAssessContents" parameterType="Map" resultType="AssessContent">
-        SELECT <include refid="assessContentColumnAndCatalog"/> FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.catalog
+        SELECT
+        <include refid="assessContentColumnAndCatalog"/>
+        FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.id
         WHERE 1 = 1
         <if test="catalog != null">
             TC.catalog=#{catalog}
         </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <!--查询考核内容总数-->
+    <select id="queryAssessContentCount" parameterType="Map" resultType="Integer">
+        SELECT COUNT (1) FROM T_ASSESS_CONTENT TC INNER JOIN T_ASSESS_CATALOG TAC ON TC.catalog=TAC.id
+        WHERE 1 = 1
+        <if test="catalog != null">
+            TC.catalog=#{catalog}
         </if>
     </select>
 
