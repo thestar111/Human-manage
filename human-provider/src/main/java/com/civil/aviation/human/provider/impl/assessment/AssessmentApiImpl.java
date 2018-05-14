@@ -98,6 +98,16 @@ public class AssessmentApiImpl implements AssessmentApi
 		AssessTopic assessTopic = EntityMapperHandler.INSTANCE
 				.voTOAssessTopic (createAssessmentTopicRequest.getAssessTopic ());
 
+		//查询当前是否存在生效的考核主题
+		Map<String, Object> params = Maps.newHashMap ();
+		params.put ("startTime", assessTopic.getStartTime ());
+		params.put ("endTime", assessTopic.getStartTime ());
+		List<AssessTopic> assessTopics = assessmentMapper.qryAssessTopicByConfit (params);
+		if (! CollectionUtils.isEmpty (assessTopics))
+		{
+			return Result.fail ("考核时间不能重叠.");
+		}
+
 		//考核标准
 		List<AssessCatalogRela> assessCatalogRelas = Lists.newArrayList ();
 		AssessCatalogRela assessCatalogRela = null;
@@ -129,43 +139,43 @@ public class AssessmentApiImpl implements AssessmentApi
 	}
 
 	@Override
-	public QryAssessTopicByIdResponse queryAssessmentTopicById(HttpServletRequest request,
-				 QryAssessTopicByIdRequest qryAssessTopicByIdRequest) throws Exception
+	public QryAssessTopicByIdResponse queryAssessmentTopicById (HttpServletRequest request,
+			QryAssessTopicByIdRequest qryAssessTopicByIdRequest) throws Exception
 	{
-		QryAssessTopicByIdResponse qryAssessTopicByIdResponse = new QryAssessTopicByIdResponse();
+		QryAssessTopicByIdResponse qryAssessTopicByIdResponse = new QryAssessTopicByIdResponse ();
 		if (null == qryAssessTopicByIdRequest)
 		{
 			return (QryAssessTopicByIdResponse) Result.fail ("illega params is null.");
 		}
 
-		if (StringUtils.isEmpty(qryAssessTopicByIdRequest.getTopicId()))
+		if (StringUtils.isEmpty (qryAssessTopicByIdRequest.getTopicId ()))
 		{
 			return (QryAssessTopicByIdResponse) Result.fail ("illega params is null.");
 		}
 
-		AssessTopic assessTopic = assessmentMapper.queryAssessTopicById(qryAssessTopicByIdRequest.getTopicId());
+		AssessTopic assessTopic = assessmentMapper.queryAssessTopicById (qryAssessTopicByIdRequest.getTopicId ());
 
 		if (null != assessTopic)
 		{
 			AssessTopicVo assessTopicVo = EntityMapperHandler.INSTANCE.assessTopicToVo (assessTopic);
-			List<AssessCatalog> assessCatalogs = assessCatalogMapper.queryAssessCatalogByTopicId(assessTopic.getId());
-			if (!CollectionUtils.isEmpty(assessCatalogs))
+			List<AssessCatalog> assessCatalogs = assessCatalogMapper.queryAssessCatalogByTopicId (assessTopic.getId ());
+			if (! CollectionUtils.isEmpty (assessCatalogs))
 			{
-				List<AssessCatalogVo> assessCatalogVos = Lists.newArrayList();
+				List<AssessCatalogVo> assessCatalogVos = Lists.newArrayList ();
 				AssessCatalogVo assessCatalogVo = null;
-				for (AssessCatalog assessCatalog: assessCatalogs)
+				for (AssessCatalog assessCatalog : assessCatalogs)
 				{
-					assessCatalogVo = new AssessCatalogVo();
+					assessCatalogVo = new AssessCatalogVo ();
 					BeanUtils.copyProperties (assessCatalog, assessCatalogVo);
-					assessCatalogVos.add(assessCatalogVo);
+					assessCatalogVos.add (assessCatalogVo);
 				}
-				qryAssessTopicByIdResponse.setAssessCatalogVos(assessCatalogVos);
+				qryAssessTopicByIdResponse.setAssessCatalogVos (assessCatalogVos);
 			}
-			qryAssessTopicByIdResponse.setAssessTopic(assessTopicVo);
+			qryAssessTopicByIdResponse.setAssessTopic (assessTopicVo);
 		}
 		else
 		{
-			qryAssessTopicByIdResponse.setResultMessage("assessTopic not exist.");
+			qryAssessTopicByIdResponse.setResultMessage ("assessTopic not exist.");
 		}
 		return qryAssessTopicByIdResponse;
 	}
@@ -436,8 +446,9 @@ public class AssessmentApiImpl implements AssessmentApi
 
 		AssessResultVo assessResultVo = createAssessResultRequest.getAssessResult ();
 
-		if (null == assessmentMapper.queryAssessResult (assessResultVo.getEmployeeId (),
-				assessResultVo.getDiscussant (), assessResultVo.getTopic()))
+		if (null == assessmentMapper
+				.queryAssessResult (assessResultVo.getEmployeeId (), assessResultVo.getDiscussant (),
+						assessResultVo.getTopic ()))
 		{
 			AssessResult assessResult = EntityMapperHandler.INSTANCE
 					.voToAssessResult (createAssessResultRequest.getAssessResult ());
@@ -578,49 +589,53 @@ public class AssessmentApiImpl implements AssessmentApi
 		{
 			return (QryAssessResultByEmployResponse) Result.fail ("illega params.");
 		}
-		if(StringUtils.isEmpty(qryAssessResultByEmployRequest.getYear()))
+		if (StringUtils.isEmpty (qryAssessResultByEmployRequest.getYear ()))
 		{
-			qryAssessResultByEmployRequest.setYear(DateUtils.formatNow(DateUtils.YYYY));
+			qryAssessResultByEmployRequest.setYear (DateUtils.formatNow (DateUtils.YYYY));
 		}
 		AssessGradeVo assessGradeVo = new AssessGradeVo ();
 		//查询自评
 		AssessResult assessResult = assessmentMapper
-				.queryAssessResultBySelf (qryAssessResultByEmployRequest.getEmployeeId (), qryAssessResultByEmployRequest.getYear());
+				.queryAssessResultBySelf (qryAssessResultByEmployRequest.getEmployeeId (),
+						qryAssessResultByEmployRequest.getYear ());
 
 		//自评分数
-		if(null != assessResult)
+		if (null != assessResult)
 		{
+			assessGradeVo.setTime (assessResult.getTime ().substring (0, 4));
+			assessGradeVo.setTopic (assessResult.getTopic ());
 			Double score = assessResult.getScore () * assessResult.getWeight () / 100;
 			assessGradeVo.setScore (score);
 		}
 
 		//上级分数
 		List<AssessResult> higherAssessResult = assessmentMapper
-				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 60, qryAssessResultByEmployRequest.getYear());
+				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 60,
+						qryAssessResultByEmployRequest.getYear ());
 		if (! CollectionUtils.isEmpty (higherAssessResult))
 		{
-			assessGradeVo.setHigherUpScore (statisticalResults(higherAssessResult, 60));
+			assessGradeVo.setHigherUpScore (statisticalResults (higherAssessResult, 60));
 		}
 
 		//下级分数
 		List<AssessResult> lowerAssessResult = assessmentMapper
-				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 20, qryAssessResultByEmployRequest.getYear());
+				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 20,
+						qryAssessResultByEmployRequest.getYear ());
 		if (! CollectionUtils.isEmpty (lowerAssessResult))
 		{
-			assessGradeVo.setLowerUpScore (statisticalResults(lowerAssessResult, 20));
+			assessGradeVo.setLowerUpScore (statisticalResults (lowerAssessResult, 20));
 		}
 
 		//同级分数
 		List<AssessResult> visAssessResult = assessmentMapper
-				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 10, qryAssessResultByEmployRequest.getYear());
+				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 10,
+						qryAssessResultByEmployRequest.getYear ());
 		if (! CollectionUtils.isEmpty (visAssessResult))
 		{
-			assessGradeVo.setVis_a_vis_score (statisticalResults(visAssessResult, 10));
+			assessGradeVo.setVis_a_vis_score (statisticalResults (visAssessResult, 10));
 		}
 
 		assessGradeVo.setEmployeeId (qryAssessResultByEmployRequest.getEmployeeId ());
-		assessGradeVo.setTime (assessResult.getTime ().substring (0, 4));
-		assessGradeVo.setTopic (assessResult.getTopic ());
 		assessGradeVo.setEmployeeName (
 				employeeMappper.queryEmployById (qryAssessResultByEmployRequest.getEmployeeId ()).getName ());
 		qryAssessResultByEmployResponse.setAssessGrade (assessGradeVo);
@@ -628,10 +643,10 @@ public class AssessmentApiImpl implements AssessmentApi
 	}
 
 	@Override
-	public QryAssessResultsResponse qryAssessResults(HttpServletRequest request, HttpServletResponse response)
+	public QryAssessResultsResponse qryAssessResults (HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		QryAssessResultsResponse qryAssessResultsResponse = new QryAssessResultsResponse();
+		QryAssessResultsResponse qryAssessResultsResponse = new QryAssessResultsResponse ();
 		String seeseeYear = request.getParameter ("year");
 		Map<String, Object> params = Maps.newHashMap ();
 		if (! StringUtils.isEmpty (request.getParameter ("job")))
@@ -661,7 +676,7 @@ public class AssessmentApiImpl implements AssessmentApi
 
 		if (StringUtils.isEmpty (seeseeYear))
 		{
-			seeseeYear = DateUtils.formatNow(YYYY);
+			seeseeYear = DateUtils.formatNow (YYYY);
 		}
 
 		String pageIndex = request.getParameter ("pageIndex");
@@ -680,24 +695,24 @@ public class AssessmentApiImpl implements AssessmentApi
 		//查询员工编号
 		List<Employee> employees = employeeMappper.queryAssessResultEmploy (params);
 
-		if (!CollectionUtils.isEmpty(employees))
+		if (! CollectionUtils.isEmpty (employees))
 		{
-			List<AssessGradeVo> assessGradeVos = Lists.newArrayList();
+			List<AssessGradeVo> assessGradeVos = Lists.newArrayList ();
 			AssessGradeVo assessGradeVo = null;
-			for (Employee employee : employees )
+			for (Employee employee : employees)
 			{
 				assessGradeVo = new AssessGradeVo ();
-				String employeeId = employee.getId();
-				String employeeName = employee.getName();
-				assessGradeVo.setEmployeeName(employeeName);
-				assessGradeVo.setEmployeeId(employeeId);
+				String employeeId = employee.getId ();
+				String employeeName = employee.getName ();
+				assessGradeVo.setEmployeeName (employeeName);
+				assessGradeVo.setEmployeeId (employeeId);
 				//查询自评
 				AssessResult assessResult = assessmentMapper.queryAssessResultBySelf (employeeId, seeseeYear);
 				//自评分数
-				if(null != assessResult)
+				if (null != assessResult)
 				{
 					Double score = assessResult.getScore () * assessResult.getWeight () / 100;
-					assessGradeVo.setTotal(1);
+					assessGradeVo.setTotal (1);
 					assessGradeVo.setScore (score);
 				}
 
@@ -706,8 +721,8 @@ public class AssessmentApiImpl implements AssessmentApi
 						.queryAssessResultByEmployee (employeeId, 60, seeseeYear);
 				if (! CollectionUtils.isEmpty (higherAssessResult))
 				{
-					assessGradeVo.setTotal(assessGradeVo.getTotal() + higherAssessResult.size());
-					assessGradeVo.setHigherUpScore (statisticalResults(higherAssessResult, 60));
+					assessGradeVo.setTotal (assessGradeVo.getTotal () + higherAssessResult.size ());
+					assessGradeVo.setHigherUpScore (statisticalResults (higherAssessResult, 60));
 				}
 
 				//下级分数
@@ -715,8 +730,8 @@ public class AssessmentApiImpl implements AssessmentApi
 						.queryAssessResultByEmployee (employeeId, 20, seeseeYear);
 				if (! CollectionUtils.isEmpty (lowerAssessResult))
 				{
-					assessGradeVo.setTotal(assessGradeVo.getTotal() + lowerAssessResult.size());
-					assessGradeVo.setLowerUpScore (statisticalResults(lowerAssessResult, 20));
+					assessGradeVo.setTotal (assessGradeVo.getTotal () + lowerAssessResult.size ());
+					assessGradeVo.setLowerUpScore (statisticalResults (lowerAssessResult, 20));
 				}
 
 				//同级分数
@@ -724,13 +739,13 @@ public class AssessmentApiImpl implements AssessmentApi
 						.queryAssessResultByEmployee (employeeId, 10, seeseeYear);
 				if (! CollectionUtils.isEmpty (visAssessResult))
 				{
-					assessGradeVo.setTotal(assessGradeVo.getTotal() + visAssessResult.size());
-					assessGradeVo.setVis_a_vis_score (statisticalResults(visAssessResult, 10));
+					assessGradeVo.setTotal (assessGradeVo.getTotal () + visAssessResult.size ());
+					assessGradeVo.setVis_a_vis_score (statisticalResults (visAssessResult, 10));
 				}
-				assessGradeVos.add(assessGradeVo);
+				assessGradeVos.add (assessGradeVo);
 			}
-			qryAssessResultsResponse.setAssessGrades(assessGradeVos);
-			qryAssessResultsResponse.setTotal(employeeMappper.queryAssessResultEmployCount(params));
+			qryAssessResultsResponse.setAssessGrades (assessGradeVos);
+			qryAssessResultsResponse.setTotal (employeeMappper.queryAssessResultEmployCount (params));
 		}
 		return qryAssessResultsResponse;
 	}
@@ -738,11 +753,11 @@ public class AssessmentApiImpl implements AssessmentApi
 	/**
 	 * 统计成绩
 	 *
-	 * @param assessResults	成绩列表
-	 * @param weight			权重
+	 * @param assessResults 成绩列表
+	 * @param weight        权重
 	 * @return
 	 */
-	private static double statisticalResults(List<AssessResult> assessResults, int weight)
+	private static double statisticalResults (List<AssessResult> assessResults, int weight)
 	{
 		if (! CollectionUtils.isEmpty (assessResults))
 		{
@@ -771,14 +786,14 @@ public class AssessmentApiImpl implements AssessmentApi
 	{
 		if (StringUtils.isEmpty (deleteAssessTopicRequest.getAssessTopicId ()))
 		{
-			return Result.fail ("assess topic id is null.");
+			return Result.fail ("考核主题编号不能为空.");
 		}
 
 		int flag = assessmentMapper.deleteAssessTopic (deleteAssessTopicRequest.getAssessTopicId ());
 
 		if (flag > 0)
 		{
-			if (assessmentMapper.deleteAssessContent (deleteAssessTopicRequest.getAssessTopicId ()) > 0)
+			if (assessCatalogMapper.deleteCatalogRelas (deleteAssessTopicRequest.getAssessTopicId ()) > 0)
 			{
 				return Result.success ("delete assess result success.");
 			}
@@ -789,7 +804,7 @@ public class AssessmentApiImpl implements AssessmentApi
 		}
 		else
 		{
-			return Result.fail ("delete assess result failed.");
+			return Result.fail ("当前考核主题不允许删除.");
 		}
 	}
 

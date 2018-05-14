@@ -45,7 +45,7 @@ public interface UserApi
 	@POST
 	@Path ("/regist")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result regist(@Context HttpServletRequest request, CreateEmployeeRequest createEmployeeRequest) throws Exception;
+	Result regist (@Context HttpServletRequest request, CreateEmployeeRequest createEmployeeRequest) throws Exception;
 
 	/**
 	 * 用户修改接口
@@ -56,7 +56,7 @@ public interface UserApi
 	@POST
 	@Path ("/modify")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result modify(@Context HttpServletRequest request, ModifyEmployeeRequest modifyEmployeeRequest) throws Exception;
+	Result modify (@Context HttpServletRequest request, ModifyEmployeeRequest modifyEmployeeRequest) throws Exception;
 
 	/**
 	 * 用户删除接口
@@ -67,7 +67,7 @@ public interface UserApi
 	@POST
 	@Path ("/delete")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result delete(@Context HttpServletRequest request, DelEmployeeRequest delEmployeeRequest) throws Exception;
+	Result delete (@Context HttpServletRequest request, DelEmployeeRequest delEmployeeRequest) throws Exception;
 
 	/**
 	 * 用户查询接口
@@ -78,8 +78,8 @@ public interface UserApi
 	@POST
 	@Path ("/findById")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryEmployeeByIdResponse findById(@Context HttpServletRequest request,
-                                     QryEmployeeByIdRequest qryEmployeeByIdRequest) throws Exception;
+	QryEmployeeByIdResponse findById (@Context HttpServletRequest request,
+			QryEmployeeByIdRequest qryEmployeeByIdRequest) throws Exception;
 
 	/**
 	 * 用户查询接口
@@ -90,8 +90,8 @@ public interface UserApi
 	@POST
 	@Path ("/queryByCondition")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryEmployeeConditionResponse queryByCondition(@Context HttpServletRequest request,
-                                                  QryEmployeeConditionRequest qryEmployeeConditionRequest) throws Exception;
+	QryEmployeeConditionResponse queryByCondition (@Context HttpServletRequest request,
+			QryEmployeeConditionRequest qryEmployeeConditionRequest) throws Exception;
 
 	/**
 	 * 查询部门下的员工信息
@@ -102,8 +102,20 @@ public interface UserApi
 	@GET
 	@Path ("/department")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryEmployeeConditionResponse queryByDepartment(@Context HttpServletRequest request
-            , @Context HttpServletResponse response) throws Exception;
+	QryEmployeeConditionResponse queryByDepartment (@Context HttpServletRequest request,
+			@Context HttpServletResponse response) throws Exception;
+
+	/**
+	 * 查询新注册的员工信息
+	 *
+	 * @param request
+	 * @return
+	 */
+	@GET
+	@Path ("/supplement")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryEmployeeConditionResponse queryBySupplemnet (@Context HttpServletRequest request,
+			@Context HttpServletResponse response) throws Exception;
 
 	/**
 	 * 密码重置
@@ -116,7 +128,7 @@ public interface UserApi
 	@POST
 	@Path ("/reset")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result resetPassword(@Context HttpServletRequest request, ResetPasswordRequest resetPasswordRequest)
+	Result resetPassword (@Context HttpServletRequest request, ResetPasswordRequest resetPasswordRequest)
 			throws Exception;
 
 	/**
@@ -130,7 +142,7 @@ public interface UserApi
 	@POST
 	@Path ("/modifyPassword")
 	@Produces (MediaType.APPLICATION_JSON)
-	Result modifyPassword(@Context HttpServletRequest request, ResetPasswordRequest resetPasswordRequest)
+	Result modifyPassword (@Context HttpServletRequest request, ResetPasswordRequest resetPasswordRequest)
 			throws Exception;
 
 	/**
@@ -142,6 +154,6 @@ public interface UserApi
 	@POST
 	@Path ("/assess/condition")
 	@Produces (MediaType.APPLICATION_JSON)
-	QryEmployeeConditionResponse queryAssessEmpByCondition(@Context HttpServletRequest request,
-                                                           QryAssessEmployeeConditionRequest qryAssessEmployeeConditionRequest) throws Exception;
+	QryEmployeeConditionResponse queryAssessEmpByCondition (@Context HttpServletRequest request,
+			QryAssessEmployeeConditionRequest qryAssessEmployeeConditionRequest) throws Exception;
 }

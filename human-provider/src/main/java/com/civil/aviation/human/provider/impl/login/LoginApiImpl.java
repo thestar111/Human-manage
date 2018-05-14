@@ -16,7 +16,9 @@ import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.domain.Result;
 import com.civil.aviation.human.common.core.utils.SessionUtils;
 import com.civil.aviation.human.database.entity.Employee;
+import com.civil.aviation.human.database.entity.Role;
 import com.civil.aviation.human.database.mapper.LoginMapper;
+import com.civil.aviation.human.database.mapper.RoleMapper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -30,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * <一句话功能简述> <功能详细描述>
@@ -52,6 +56,9 @@ public class LoginApiImpl implements LoginApi
 
 	@Autowired
 	private LoginMapper loginMapper;
+
+	@Autowired
+	private RoleMapper roleMapper;
 
 	/**
 	 * 系统登录接口
@@ -86,6 +93,20 @@ public class LoginApiImpl implements LoginApi
 			{
 				currentUser.login (token);
 				Employee employee = (Employee) SessionUtils.getValue (SessionUtils.EMPLOYEE_SESSION_KEY);
+				Set<Role> roles = roleMapper.qryRoleByEmployeeId (employee.getId ());
+				if (null != roles && roles.size () > 0)
+				{
+					Iterator roleIterable = roles.iterator ();
+					if (roleIterable.hasNext ())
+					{
+						Role role = (Role) roleIterable.next ();
+						Cookie type = new Cookie ("type", role.getRoleType ());
+						type.setPath ("/");
+						type.setMaxAge (3600 * 24 * 7);
+						type.setHttpOnly (true);
+						response.addCookie (type);
+					}
+				}
 				if (null == employee.getSupplement ())
 				{
 					employee.setSupplement (0);

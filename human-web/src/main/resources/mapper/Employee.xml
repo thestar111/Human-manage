@@ -84,9 +84,8 @@
 
     <!--根据编号查询-->
     <select id="queryEmployById" parameterType="String" resultType="Employee">
-        SELECT
-        <include refid="sqlColumn"/>
-        FROM T_EMPLOYEE WHERE id = #{employeeId}
+        SELECT E.*, D.`name` AS departName, R.`name` AS rankName , J.`name` AS jobName, O.name AS officeName
+        FROM T_EMPLOYEE E, T_JOB J, T_DEPARTMENT D, T_RANK R, T_OFFICE O WHERE E.department=D.id AND E.job=J.id AND E.rank=R.id AND E.office=O.id AND E.id = #{employeeId}
     </select>
 
     <!--查询员工列表-->
@@ -116,6 +115,27 @@
         </if>
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <!--查询新员工列表-->
+    <select id="querySupplementEmploy" parameterType="Map" resultType="Employee">
+        SELECT E.* FROM T_EMPLOYEE E
+        WHERE supplement = 0
+        <if test="name != NULL">
+            AND E.name LIKE concat(#{name},'%')
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <!--查询新员工列表总数-->
+    <select id="querySupplementEmployCount" parameterType="Map" resultType="Integer">
+        SELECT COUNT(1) FROM T_EMPLOYEE E
+        WHERE supplement = 0
+        <if test="name != NULL">
+            AND E.name LIKE concat(#{name},'%')
         </if>
     </select>
 

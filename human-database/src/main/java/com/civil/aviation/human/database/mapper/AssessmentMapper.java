@@ -186,6 +186,15 @@ public interface AssessmentMapper
 	List<AssessTopic> qryAssessTopicByCondition (Map<String, Object> params) throws SQLException;
 
 	/**
+	 * 根据开始结束时间查询是否存在冲突的考核主题
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AssessTopic> qryAssessTopicByConfit (Map<String, Object> params) throws SQLException;
+
+	/**
 	 * 查询总数
 	 *
 	 * @param params

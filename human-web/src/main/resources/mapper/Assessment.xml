@@ -132,9 +132,10 @@
         FROM T_ASSESS_CONTENT WHERE catalog = #{catalogId}
     </select>
 
-    <!--只能删除未发布的考核主题-->
+    <!--只能删除已过期的考核主题-->
     <delete id="deleteAssessTopic" parameterType="String">
-        DELETE FROM T_ASSESS_TOPIC WHERE id=#{topicId} AND status=1
+        DELETE FROM T_ASSESS_TOPIC WHERE id=#{topicId}
+        AND (<![CDATA[ endTime < DATE_FORMAT(NOW(), '%Y-%m-%d') ]]> OR <![CDATA[ startTime > DATE_FORMAT(NOW(), '%Y-%m-%d') ]]>)
     </delete>
 
     <!--删除考核内容-->
@@ -203,6 +204,16 @@
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
         </if>
+    </select>
+
+    <!--查询是否存在时间重叠的考核信息-->
+    <select id="qryAssessTopicByConfit" parameterType="Map" resultType="AssessTopic">
+        SELECT
+        <include refid="assessTopicColumn"/>
+        FROM T_ASSESS_TOPIC WHERE
+        (<![CDATA[ startTime <= #{startTime} ]]> AND <![CDATA[ endTime >= #{startTime} ]]>)
+        OR
+        (<![CDATA[ startTime <= #{endTime} ]]> AND <![CDATA[ endTime >= #{endTime} ]]>)
     </select>
 
     <select id="qryAssessTopicCountByCondition" parameterType="Map" resultType="Integer">

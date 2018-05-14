@@ -364,6 +364,66 @@ public class UserApiImpl implements UserApi
 	}
 
 	/**
+	 * 查询新注册的员工信息
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@Override
+	public QryEmployeeConditionResponse queryBySupplemnet (HttpServletRequest request, HttpServletResponse response)
+			throws Exception
+	{
+		QryEmployeeConditionResponse qryEmployeeConditionResponse = new QryEmployeeConditionResponse ();
+		Map<String, Object> params = Maps.newHashMap ();
+		Employee employee = (Employee) SessionUtils.getValue (SessionUtils.EMPLOYEE_SESSION_KEY);
+		if (null == employee)
+		{
+			return (QryEmployeeConditionResponse) Result.fail ("User not login.");
+		}
+
+		if (! StringUtils.isEmpty (request.getParameter ("name")))
+		{
+			params.put ("name", request.getParameter ("name"));
+		}
+
+		String pageIndex = request.getParameter ("pageIndex");
+		String pageSize = request.getParameter ("pageSize");
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+		if (StringUtils.isEmpty (pageSize))
+		{
+			pageSize = "10";
+		}
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
+		params.put ("pageSize", pageSize);
+
+		List<Employee> employees = employeeMappper.querySupplementEmploy (params);
+		List<EmployeeVo> employeeVos = null;
+
+		if (! CollectionUtils.isEmpty (employees))
+		{
+			employeeVos = Lists.newArrayList ();
+			EmployeeVo employeeVo = null;
+			for (Employee e : employees)
+			{
+				employeeVo = EntityMapperHandler.INSTANCE.employeeToDTO (e);
+				employeeVos.add (employeeVo);
+			}
+			qryEmployeeConditionResponse.setEmployees (employeeVos);
+			qryEmployeeConditionResponse.setCount (employeeMappper.querySupplementEmployCount (params));
+		}
+		else
+		{
+			qryEmployeeConditionResponse.setEmployees (employeeVos);
+			qryEmployeeConditionResponse.setCount (0);
+		}
+		return qryEmployeeConditionResponse;
+	}
+
+	/**
 	 * @param request
 	 * @param resetPasswordRequest
 	 * @return
@@ -458,18 +518,18 @@ public class UserApiImpl implements UserApi
 			return (QryEmployeeConditionResponse) Result.fail ("rankId is null.");
 		}
 
-		if (StringUtils.isEmpty(qryAssessEmployeeConditionRequest.getTopicId ()))
+		if (StringUtils.isEmpty (qryAssessEmployeeConditionRequest.getTopicId ()))
 		{
 			return (QryEmployeeConditionResponse) Result.fail ("topicId is null.");
 		}
 
 		// 当前员工编号
-		String disscussant = (String) SessionUtils.getValue(SessionUtils.EMPLOYEE_ID_SESSION_KEY);
+		String disscussant = (String) SessionUtils.getValue (SessionUtils.EMPLOYEE_ID_SESSION_KEY);
 
 		List<Employee> employees = employeeMappper
 				.queryAssessEmploy (qryAssessEmployeeConditionRequest.getDepartment (),
-						qryAssessEmployeeConditionRequest.getRank (),
-						disscussant, qryAssessEmployeeConditionRequest.getTopicId());
+						qryAssessEmployeeConditionRequest.getRank (), disscussant,
+						qryAssessEmployeeConditionRequest.getTopicId ());
 		List<EmployeeVo> employeeVos = null;
 		if (! CollectionUtils.isEmpty (employees))
 		{

@@ -63,6 +63,24 @@ public interface EmployeeMappper
 	List<Employee> queryEmploy (Map<String, Object> params) throws SQLException;
 
 	/**
+	 * 查询新注册的员工列表信息
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	List<Employee> querySupplementEmploy (Map<String, Object> params) throws SQLException;
+
+	/**
+	 * 查询新注册的员工总数
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	int querySupplementEmployCount (Map<String, Object> params) throws SQLException;
+
+	/**
 	 * 查询能参与考核成绩员工列表信息
 	 *
 	 * @param params
