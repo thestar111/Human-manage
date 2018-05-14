@@ -47,23 +47,26 @@
     <select id="queryAssessResult" resultType="AssessResult">
         SELECT
         <include refid="assessResultColumn"/>
-        FROM T_ASSESS_RESULT WHERE employee=#{0} AND discussant=#{1} AND time=DATE_FORMAT(NOW(),'%Y-01-01 00:00:00')
+        FROM T_ASSESS_RESULT WHERE employee=#{0} AND discussant=#{1} AND topic=#{2}
     </select>
 
     <!-- 查询上一年员工考核成绩 -->
     <select id="queryAssessResultByEmployee" resultType="AssessResult">
         SELECT
         <include refid="assessResultColumn"/>
-        FROM T_ASSESS_RESULT WHERE employee=#{0} AND weight=#{1} AND YEAR(time) = YEAR(DATE_ADD(NOW(), Interval -1
-        year))
+        FROM T_ASSESS_RESULT WHERE employee=#{0} AND weight=#{1} AND YEAR(time) = #{2}
     </select>
 
     <!-- 查询上一年员工自评考核成绩 -->
     <select id="queryAssessResultBySelf" resultType="AssessResult">
         SELECT
         <include refid="assessResultColumn"/>
-        FROM T_ASSESS_RESULT WHERE employee=#{employeeId} AND discussant=#{employeeId} AND YEAR(time) =
-        YEAR(DATE_ADD(NOW(), Interval -1 year))
+        FROM T_ASSESS_RESULT WHERE employee=#{0} AND discussant=#{0} AND YEAR(time) = #{1}
+    </select>
+
+    <!--查询考核主题-->
+    <select id="queryAssessTopicById" parameterType="String" resultType="AssessTopic">
+        SELECT * FROM T_ASSESS_TOPIC WHERE id = #{assessTopicId}
     </select>
 
     <update id="modifyAssessTopic" parameterType="AssessTopic">

@@ -458,10 +458,18 @@ public class UserApiImpl implements UserApi
 			return (QryEmployeeConditionResponse) Result.fail ("rankId is null.");
 		}
 
+		if (StringUtils.isEmpty(qryAssessEmployeeConditionRequest.getTopicId ()))
+		{
+			return (QryEmployeeConditionResponse) Result.fail ("topicId is null.");
+		}
+
+		// 当前员工编号
+		String disscussant = (String) SessionUtils.getValue(SessionUtils.EMPLOYEE_ID_SESSION_KEY);
+
 		List<Employee> employees = employeeMappper
 				.queryAssessEmploy (qryAssessEmployeeConditionRequest.getDepartment (),
 						qryAssessEmployeeConditionRequest.getRank (),
-						qryAssessEmployeeConditionRequest.getDiscussant ());
+						disscussant, qryAssessEmployeeConditionRequest.getTopicId());
 		List<EmployeeVo> employeeVos = null;
 		if (! CollectionUtils.isEmpty (employees))
 		{

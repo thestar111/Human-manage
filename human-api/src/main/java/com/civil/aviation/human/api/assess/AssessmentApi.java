@@ -51,6 +51,20 @@ public interface AssessmentApi
 			CreateAssessmentTopicRequest createAssessmentTopicRequest) throws Exception;
 
 	/**
+	 * 根据编号查询考核主题
+	 *
+	 * @param request
+	 * @param qryAssessTopicByIdRequest
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path ("/qryAssessmentTopicById")
+	@Produces (MediaType.APPLICATION_JSON)
+	QryAssessTopicByIdResponse queryAssessmentTopicById (@Context HttpServletRequest request, QryAssessTopicByIdRequest qryAssessTopicByIdRequest)
+			throws Exception;
+
+	/**
 	 * 修改考核主题
 	 *
 	 * @param request
@@ -183,6 +197,20 @@ public interface AssessmentApi
 	@Produces (MediaType.APPLICATION_JSON)
 	QryAssessResultByEmployResponse qryAssessResultByEmployee (@Context HttpServletRequest request,
 			QryAssessResultByEmployRequest qryAssessResultByEmployRequest) throws Exception;
+
+	/**
+	 * 查询员工考核成绩列表
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+	@Path ("/query/assessResult")
+	@Produces (MediaType.APPLICATION_JSON)
+    QryAssessResultsResponse qryAssessResults (@Context HttpServletRequest request,
+			@Context HttpServletResponse response) throws Exception;
 
 	/**
 	 * 删除考核主题

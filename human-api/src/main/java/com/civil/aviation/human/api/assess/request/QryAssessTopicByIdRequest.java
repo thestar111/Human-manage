@@ -1,45 +1,42 @@
 /**
- * 文 件 名:  QryAssessResultByEmployRequest
+ * 文 件 名:  QryAssessTopicRequest
  * 版    权:  Quanten Technologies Co., Ltd. Copyright YYYY-YYYY,  All rights reserved
  * 描    述:  <描述>
  * 修 改 人:  zping
- * 修改时间:  2018/4/19 0019
+ * 修改时间:  2018/4/2 0002
  * 跟踪单号:  <跟踪单号>
  * 修改单号:  <修改单号>
  * 修改内容:  <修改内容>
  */
 package com.civil.aviation.human.api.assess.request;
 
-import com.civil.aviation.human.api.base.BaseRequest;
+import com.civil.aviation.human.api.base.BasePageRequest;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <根据员工编号查询考核成绩>
+ * <一句话功能简述> <功能详细描述>
  *
  * @author zping
- * @version 2018/4/19 0019
+ * @version 2018/4/2 0002
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
 @Getter
 @Setter
-public class QryAssessResultByEmployRequest extends BaseRequest
+public class QryAssessTopicByIdRequest extends BasePageRequest
 {
+
 	/**
-	 * 员工编号
+	 * 开始时间
 	 */
-	private String employeeId;
-	/**
-	 * 年份
-	 */
-	private String year;
+	private String topicId;
 
 	@Override
 	public String toString ()
 	{
-		final StringBuilder sb = new StringBuilder ("QryAssessResultByEmployRequest{");
-		sb.append ("employeeId='").append (employeeId).append ('\'');
+		final StringBuilder sb = new StringBuilder ("QryAssessTopicByIdRequest{");
+		sb.append ("topicId='").append (topicId).append ('\'');
 		sb.append ('}');
 		return sb.toString ();
 	}

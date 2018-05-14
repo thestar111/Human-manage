@@ -119,14 +119,64 @@
         </if>
     </select>
 
+    <!--查询可以参与考核员工信息， 除普通员工外-->
+    <select id="queryAssessResultEmploy" parameterType="Map" resultType="Employee">
+        <![CDATA[
+            SELECT E.id, E.name FROM T_EMPLOYEE E WHERE rank <> 4
+        ]]>
+        <if test="name != NULL">
+            AND E.name LIKE concat(#{name},'%')
+        </if>
+        <if test="department != NULL">
+            AND E.department = #{department}
+        </if>
+        <if test="job != NULL">
+            AND E.job = #{job}
+        </if>
+        <if test="rank != NULL">
+            AND E.rank = #{rank}
+        </if>
+        <if test="office != NULL">
+            AND E.office = #{office}
+        </if>
+        <if test="employeeId != NULL">
+            AND E.id = #{employeeId}
+        </if>
+        <if test="pageIndex != NULL and pageSize != NULL ">
+            limit ${pageIndex}, ${pageSize}
+        </if>
+    </select>
+
+    <select id="queryAssessResultEmployCount" parameterType="Map" resultType="Integer">
+        <![CDATA[
+            SELECT COUNT(1) FROM T_EMPLOYEE E WHERE rank <> 4
+        ]]>
+        <if test="name != NULL">
+            AND E.name LIKE concat(#{name},'%')
+        </if>
+        <if test="department != NULL">
+            AND E.department = #{department}
+        </if>
+        <if test="job != NULL">
+            AND E.job = #{job}
+        </if>
+        <if test="rank != NULL">
+            AND E.rank = #{rank}
+        </if>
+        <if test="office != NULL">
+            AND E.office = #{office}
+        </if>
+        <if test="employeeId != NULL">
+            AND E.id = #{employeeId}
+        </if>
+    </select>
+
     <!--查询考核员工信息-->
     <select id="queryAssessEmploy" resultType="Employee">
-        SELECT
-        <include refid="sqlColumn"/>
-        FROM T_EMPLOYEE T WHERE
+        SELECT T.id, T.name FROM T_EMPLOYEE T WHERE
         NOT EXISTS (SELECT employee FROM T_ASSESS_RESULT A WHERE A.discussant = #{2} AND
-        A.time=DATE_FORMAT(NOW(),'%Y-01-01 00:00:00') AND A.employee = T.id)
-        AND department = #{0} AND rank = #{1};
+        A.topic=#{3} AND A.employee = T.id)
+        AND department = #{0} AND rank = #{1}
     </select>
 
     <!--查询员工列表总数-->

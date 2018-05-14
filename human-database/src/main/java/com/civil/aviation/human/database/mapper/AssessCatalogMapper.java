@@ -27,6 +27,14 @@ public interface AssessCatalogMapper
 	int addCatalogRela (List<AssessCatalogRela> assessCatalogRelas);
 
 	/**
+	 * 根据考核主题编号查询考核分类信息
+	 *
+	 * @param topicId
+	 * @return
+	 */
+	List<AssessCatalog> queryAssessCatalogByTopicId(String topicId);
+
+	/**
 	 * 修改考核分类
 	 *
 	 * @param assessCatalog

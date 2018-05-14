@@ -31,41 +31,38 @@ public class AssessGradeVo implements Serializable
 	 * 员工编号
 	 */
 	private String employeeId;
-
 	/**
 	 * 员工名称
 	 */
 	private String employeeName;
-
 	/**
 	 * 考核主题编号
 	 */
 	private String topic;
-
 	/**
 	 * 上级分数
 	 */
-	private double higherUpScore;
-
+	private double higherUpScore = 0.0;
 	/**
 	 * 下级分数
 	 */
-	private double lowerUpScore;
-
+	private double lowerUpScore = 0.0;
 	/**
 	 * 自评分数
 	 */
-	private double score;
-
+	private double score = 0.0;
 	/**
 	 * 同级分数
 	 */
-	private double vis_a_vis_score;
-
+	private double vis_a_vis_score = 0.0;
 	/**
 	 * 考核时间
 	 */
 	private String time;
+	/**
+	 * 参与考核人数
+	 */
+	private int total;
 
 	@Override
 	public String toString ()

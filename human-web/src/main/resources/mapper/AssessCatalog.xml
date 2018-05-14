@@ -23,7 +23,7 @@
     <insert id="addCatalogRela" parameterType="AssessCatalogRela">
         INSERT INTO T_ASSESS_CATALOG_RELA(<include refid="assessCatalogRelaColumn"/>)
         VALUES
-        <foreach collection="assessCatalogRelas" separator="," item="assessCatalogRela">
+        <foreach collection="list" separator="," item="assessCatalogRela">
             (#{assessCatalogRela.id}, #{assessCatalogRela.topicId}, #{assessCatalogRela.assessCatalogId})
         </foreach>
     </insert>
@@ -37,6 +37,10 @@
     <delete id="deleteCatalogRela">
         DELETE FROM T_ASSESS_CATALOG_RELA WHERE topicId = #{topicId} AND assessCatalogId = #{catalogId}
     </delete>
+
+    <select id="queryAssessCatalogByTopicId" parameterType="String" resultType="AssessCatalog">
+        SELECT C.* FROM T_ASSESS_CATALOG C INNER JOIN T_ASSESS_CATALOG_RELA R on C.id=R.assessCatalogId WHERE R.topicId = #{topicId};
+    </select>
 
     <!--修改考核分类-->
     <update id="modify" parameterType="AssessCatalog">

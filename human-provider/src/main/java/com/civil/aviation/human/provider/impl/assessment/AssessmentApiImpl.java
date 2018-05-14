@@ -17,6 +17,7 @@ import com.civil.aviation.human.api.assess.response.*;
 import com.civil.aviation.human.common.core.annotation.Api;
 import com.civil.aviation.human.common.core.cons.Constants;
 import com.civil.aviation.human.common.core.domain.Result;
+import com.civil.aviation.human.common.core.utils.DateUtils;
 import com.civil.aviation.human.common.core.utils.SessionUtils;
 import com.civil.aviation.human.database.entity.*;
 import com.civil.aviation.human.database.mapper.AssessCatalogMapper;
@@ -34,8 +35,11 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.civil.aviation.human.common.core.utils.DateUtils.YYYY;
 
 /**
  * <员工考核主题接口实现>
@@ -122,6 +126,48 @@ public class AssessmentApiImpl implements AssessmentApi
 		{
 			return Result.fail ("add assess topic failed.");
 		}
+	}
+
+	@Override
+	public QryAssessTopicByIdResponse queryAssessmentTopicById(HttpServletRequest request,
+				 QryAssessTopicByIdRequest qryAssessTopicByIdRequest) throws Exception
+	{
+		QryAssessTopicByIdResponse qryAssessTopicByIdResponse = new QryAssessTopicByIdResponse();
+		if (null == qryAssessTopicByIdRequest)
+		{
+			return (QryAssessTopicByIdResponse) Result.fail ("illega params is null.");
+		}
+
+		if (StringUtils.isEmpty(qryAssessTopicByIdRequest.getTopicId()))
+		{
+			return (QryAssessTopicByIdResponse) Result.fail ("illega params is null.");
+		}
+
+		AssessTopic assessTopic = assessmentMapper.queryAssessTopicById(qryAssessTopicByIdRequest.getTopicId());
+
+		if (null != assessTopic)
+		{
+			AssessTopicVo assessTopicVo = EntityMapperHandler.INSTANCE.assessTopicToVo (assessTopic);
+			List<AssessCatalog> assessCatalogs = assessCatalogMapper.queryAssessCatalogByTopicId(assessTopic.getId());
+			if (!CollectionUtils.isEmpty(assessCatalogs))
+			{
+				List<AssessCatalogVo> assessCatalogVos = Lists.newArrayList();
+				AssessCatalogVo assessCatalogVo = null;
+				for (AssessCatalog assessCatalog: assessCatalogs)
+				{
+					assessCatalogVo = new AssessCatalogVo();
+					BeanUtils.copyProperties (assessCatalog, assessCatalogVo);
+					assessCatalogVos.add(assessCatalogVo);
+				}
+				qryAssessTopicByIdResponse.setAssessCatalogVos(assessCatalogVos);
+			}
+			qryAssessTopicByIdResponse.setAssessTopic(assessTopicVo);
+		}
+		else
+		{
+			qryAssessTopicByIdResponse.setResultMessage("assessTopic not exist.");
+		}
+		return qryAssessTopicByIdResponse;
 	}
 
 	/**
@@ -388,8 +434,10 @@ public class AssessmentApiImpl implements AssessmentApi
 			return Result.fail ("illega params is null.");
 		}
 
-		if (null == assessmentMapper.queryAssessResult (createAssessResultRequest.getAssessResult ().getEmployeeId (),
-				createAssessResultRequest.getAssessResult ().getDiscussant ()))
+		AssessResultVo assessResultVo = createAssessResultRequest.getAssessResult ();
+
+		if (null == assessmentMapper.queryAssessResult (assessResultVo.getEmployeeId (),
+				assessResultVo.getDiscussant (), assessResultVo.getTopic()))
 		{
 			AssessResult assessResult = EntityMapperHandler.INSTANCE
 					.voToAssessResult (createAssessResultRequest.getAssessResult ());
@@ -530,55 +578,44 @@ public class AssessmentApiImpl implements AssessmentApi
 		{
 			return (QryAssessResultByEmployResponse) Result.fail ("illega params.");
 		}
-
+		if(StringUtils.isEmpty(qryAssessResultByEmployRequest.getYear()))
+		{
+			qryAssessResultByEmployRequest.setYear(DateUtils.formatNow(DateUtils.YYYY));
+		}
 		AssessGradeVo assessGradeVo = new AssessGradeVo ();
 		//查询自评
 		AssessResult assessResult = assessmentMapper
-				.queryAssessResultBySelf (qryAssessResultByEmployRequest.getEmployeeId ());
+				.queryAssessResultBySelf (qryAssessResultByEmployRequest.getEmployeeId (), qryAssessResultByEmployRequest.getYear());
+
 		//自评分数
-		Double score = assessResult.getScore () * assessResult.getWeight () / 100;
-		assessGradeVo.setScore (score);
+		if(null != assessResult)
+		{
+			Double score = assessResult.getScore () * assessResult.getWeight () / 100;
+			assessGradeVo.setScore (score);
+		}
 
 		//上级分数
 		List<AssessResult> higherAssessResult = assessmentMapper
-				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 60);
+				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 60, qryAssessResultByEmployRequest.getYear());
 		if (! CollectionUtils.isEmpty (higherAssessResult))
 		{
-			double higherTotal = 0;
-			for (AssessResult result : higherAssessResult)
-			{
-				higherTotal += result.getScore ();
-			}
-			Double higherScore = higherTotal / higherAssessResult.size () * 60 / 100;
-			assessGradeVo.setHigherUpScore (higherScore);
+			assessGradeVo.setHigherUpScore (statisticalResults(higherAssessResult, 60));
 		}
 
 		//下级分数
 		List<AssessResult> lowerAssessResult = assessmentMapper
-				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 20);
+				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 20, qryAssessResultByEmployRequest.getYear());
 		if (! CollectionUtils.isEmpty (lowerAssessResult))
 		{
-			double lowerTotal = 0;
-			for (AssessResult result : lowerAssessResult)
-			{
-				lowerTotal += result.getScore ();
-			}
-			Double lowerScore = lowerTotal / lowerAssessResult.size () * 20 / 100;
-			assessGradeVo.setLowerUpScore (lowerScore);
+			assessGradeVo.setLowerUpScore (statisticalResults(lowerAssessResult, 20));
 		}
 
 		//同级分数
 		List<AssessResult> visAssessResult = assessmentMapper
-				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 10);
+				.queryAssessResultByEmployee (qryAssessResultByEmployRequest.getEmployeeId (), 10, qryAssessResultByEmployRequest.getYear());
 		if (! CollectionUtils.isEmpty (visAssessResult))
 		{
-			double visTotal = 0;
-			for (AssessResult result : visAssessResult)
-			{
-				visTotal += result.getScore ();
-			}
-			Double visScore = visTotal / visAssessResult.size () * 10 / 100;
-			assessGradeVo.setVis_a_vis_score (visScore);
+			assessGradeVo.setVis_a_vis_score (statisticalResults(visAssessResult, 10));
 		}
 
 		assessGradeVo.setEmployeeId (qryAssessResultByEmployRequest.getEmployeeId ());
@@ -588,6 +625,136 @@ public class AssessmentApiImpl implements AssessmentApi
 				employeeMappper.queryEmployById (qryAssessResultByEmployRequest.getEmployeeId ()).getName ());
 		qryAssessResultByEmployResponse.setAssessGrade (assessGradeVo);
 		return qryAssessResultByEmployResponse;
+	}
+
+	@Override
+	public QryAssessResultsResponse qryAssessResults(HttpServletRequest request, HttpServletResponse response)
+			throws Exception
+	{
+		QryAssessResultsResponse qryAssessResultsResponse = new QryAssessResultsResponse();
+		String seeseeYear = request.getParameter ("year");
+		Map<String, Object> params = Maps.newHashMap ();
+		if (! StringUtils.isEmpty (request.getParameter ("job")))
+		{
+			params.put ("job", request.getParameter ("job"));
+		}
+
+		if (! StringUtils.isEmpty (request.getParameter ("name")))
+		{
+			params.put ("name", request.getParameter ("name"));
+		}
+
+		if (! StringUtils.isEmpty (request.getParameter ("rank")))
+		{
+			params.put ("rank", request.getParameter ("rank"));
+		}
+
+		if (! StringUtils.isEmpty (request.getParameter ("office")))
+		{
+			params.put ("office", request.getParameter ("office"));
+		}
+
+		if (! StringUtils.isEmpty (request.getParameter ("department")))
+		{
+			params.put ("department", request.getParameter ("department"));
+		}
+
+		if (StringUtils.isEmpty (seeseeYear))
+		{
+			seeseeYear = DateUtils.formatNow(YYYY);
+		}
+
+		String pageIndex = request.getParameter ("pageIndex");
+		String pageSize = request.getParameter ("pageSize");
+		if (StringUtils.isEmpty (pageIndex))
+		{
+			pageIndex = "1";
+		}
+		if (StringUtils.isEmpty (pageSize))
+		{
+			pageSize = "10";
+		}
+		params.put ("pageIndex", (Integer.valueOf (pageIndex) - 1) * Integer.valueOf (pageSize));
+		params.put ("pageSize", pageSize);
+
+		//查询员工编号
+		List<Employee> employees = employeeMappper.queryAssessResultEmploy (params);
+
+		if (!CollectionUtils.isEmpty(employees))
+		{
+			List<AssessGradeVo> assessGradeVos = Lists.newArrayList();
+			AssessGradeVo assessGradeVo = null;
+			for (Employee employee : employees )
+			{
+				assessGradeVo = new AssessGradeVo ();
+				String employeeId = employee.getId();
+				String employeeName = employee.getName();
+				assessGradeVo.setEmployeeName(employeeName);
+				assessGradeVo.setEmployeeId(employeeId);
+				//查询自评
+				AssessResult assessResult = assessmentMapper.queryAssessResultBySelf (employeeId, seeseeYear);
+				//自评分数
+				if(null != assessResult)
+				{
+					Double score = assessResult.getScore () * assessResult.getWeight () / 100;
+					assessGradeVo.setTotal(1);
+					assessGradeVo.setScore (score);
+				}
+
+				//上级分数
+				List<AssessResult> higherAssessResult = assessmentMapper
+						.queryAssessResultByEmployee (employeeId, 60, seeseeYear);
+				if (! CollectionUtils.isEmpty (higherAssessResult))
+				{
+					assessGradeVo.setTotal(assessGradeVo.getTotal() + higherAssessResult.size());
+					assessGradeVo.setHigherUpScore (statisticalResults(higherAssessResult, 60));
+				}
+
+				//下级分数
+				List<AssessResult> lowerAssessResult = assessmentMapper
+						.queryAssessResultByEmployee (employeeId, 20, seeseeYear);
+				if (! CollectionUtils.isEmpty (lowerAssessResult))
+				{
+					assessGradeVo.setTotal(assessGradeVo.getTotal() + lowerAssessResult.size());
+					assessGradeVo.setLowerUpScore (statisticalResults(lowerAssessResult, 20));
+				}
+
+				//同级分数
+				List<AssessResult> visAssessResult = assessmentMapper
+						.queryAssessResultByEmployee (employeeId, 10, seeseeYear);
+				if (! CollectionUtils.isEmpty (visAssessResult))
+				{
+					assessGradeVo.setTotal(assessGradeVo.getTotal() + visAssessResult.size());
+					assessGradeVo.setVis_a_vis_score (statisticalResults(visAssessResult, 10));
+				}
+				assessGradeVos.add(assessGradeVo);
+			}
+			qryAssessResultsResponse.setAssessGrades(assessGradeVos);
+			qryAssessResultsResponse.setTotal(employeeMappper.queryAssessResultEmployCount(params));
+		}
+		return qryAssessResultsResponse;
+	}
+
+	/**
+	 * 统计成绩
+	 *
+	 * @param assessResults	成绩列表
+	 * @param weight			权重
+	 * @return
+	 */
+	private static double statisticalResults(List<AssessResult> assessResults, int weight)
+	{
+		if (! CollectionUtils.isEmpty (assessResults))
+		{
+			double visTotal = 0;
+			for (AssessResult result : assessResults)
+			{
+				visTotal += result.getScore ();
+			}
+			Double visScore = visTotal / assessResults.size () * weight / 100;
+			return visScore;
+		}
+		return 0;
 	}
 
 	/**

@@ -14,6 +14,7 @@ import com.civil.aviation.human.database.entity.AssessContent;
 import com.civil.aviation.human.database.entity.AssessResult;
 import com.civil.aviation.human.database.entity.AssessTopic;
 import com.civil.aviation.human.database.entity.AssessTopicContent;
+import org.springframework.util.StringUtils;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -85,6 +86,15 @@ public interface AssessmentMapper
 	int addAssessTopic (AssessTopic assessTopic) throws SQLException;
 
 	/**
+	 * 查询考核主题
+	 *
+	 * @param assessTopicId
+	 * @return
+	 * @throws SQLException
+	 */
+	AssessTopic queryAssessTopicById (String assessTopicId) throws SQLException;
+
+	/**
 	 * 修改考核主题
 	 *
 	 * @param assessTopic
@@ -110,7 +120,7 @@ public interface AssessmentMapper
 	 * @return
 	 * @throws SQLException
 	 */
-	AssessResult queryAssessResult (String employeeId, String discussant) throws SQLException;
+	AssessResult queryAssessResult (String employeeId, String discussant, String topicId) throws SQLException;
 
 	/**
 	 * 根据员工编号查询上一年的考核成绩
@@ -120,7 +130,7 @@ public interface AssessmentMapper
 	 * @return
 	 * @throws SQLException
 	 */
-	List<AssessResult> queryAssessResultByEmployee (String employeeId, int weight) throws SQLException;
+	List<AssessResult> queryAssessResultByEmployee (String employeeId, int weight, String year) throws SQLException;
 
 	/**
 	 * 根据员工编号查询上一年的考核成绩
@@ -129,7 +139,7 @@ public interface AssessmentMapper
 	 * @return
 	 * @throws SQLException
 	 */
-	AssessResult queryAssessResultBySelf (String employeeId) throws SQLException;
+	AssessResult queryAssessResultBySelf (String employeeId, String year) throws SQLException;
 
 	/**
 	 * 删除考核主题

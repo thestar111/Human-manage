@@ -63,6 +63,24 @@ public interface EmployeeMappper
 	List<Employee> queryEmploy (Map<String, Object> params) throws SQLException;
 
 	/**
+	 * 查询能参与考核成绩员工列表信息
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	List<Employee> queryAssessResultEmploy (Map<String, Object> params) throws SQLException;
+
+	/**
+	 * 查询能参与考核成绩员工列表信息总数
+	 *
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	int queryAssessResultEmployCount (Map<String, Object> params) throws SQLException;
+
+	/**
 	 * 查询需要考核员工列表信息
 	 *
 	 * @param departmentId
@@ -71,7 +89,7 @@ public interface EmployeeMappper
 	 * @return
 	 * @throws SQLException
 	 */
-	List<Employee> queryAssessEmploy (Integer departmentId, Integer rankId, String discussant) throws SQLException;
+	List<Employee> queryAssessEmploy (Integer departmentId, Integer rankId, String discussant, String topicId) throws SQLException;
 
 	/**
 	 * 查询员工

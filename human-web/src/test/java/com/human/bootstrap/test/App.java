@@ -131,7 +131,7 @@ public class App
 	@Test
 	public void addResult () throws Exception
 	{
-		AssessResult result = assessmentMapper.queryAssessResult ("107189", "20113392");
+		AssessResult result = assessmentMapper.queryAssessResult ("107189", "20113392", "");
 		System.out.println (result);
 		/*AssessResult assessResult = new AssessResult ();
 		assessResult.setDiscussant ("20113392");

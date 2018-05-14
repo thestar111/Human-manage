@@ -42,6 +42,11 @@ public class QryAssessEmployeeConditionRequest extends BaseRequest
 	 */
 	private String discussant;
 
+	/**
+	 * 考核主题编号
+	 */
+	private String topicId;
+
 	@Override
 	public String toString ()
 	{
