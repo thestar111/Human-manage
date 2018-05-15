@@ -113,6 +113,7 @@
         <if test="employeeId != NULL">
             AND E.id = #{employeeId}
         </if>
+        ORDER BY E.createTime DESC
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
         </if>
@@ -125,6 +126,7 @@
         <if test="name != NULL">
             AND E.name LIKE concat(#{name},'%')
         </if>
+        ORDER BY E.createTime DESC
         <if test="pageIndex != NULL and pageSize != NULL ">
             limit ${pageIndex}, ${pageSize}
         </if>

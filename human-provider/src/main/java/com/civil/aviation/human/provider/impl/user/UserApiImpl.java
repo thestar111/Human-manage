@@ -114,6 +114,52 @@ public class UserApiImpl implements UserApi
 	}
 
 	/**
+	 * 用户添加接口
+	 *
+	 * @param request
+	 * @param createEmployeeRequest
+	 * @return
+	 */
+	@Override
+	public Result addUser (HttpServletRequest request, CreateEmployeeRequest createEmployeeRequest) throws Exception
+	{
+		if (null == createEmployeeRequest || null == createEmployeeRequest.getEmployee ())
+		{
+			return Result.fail ("illega Parameters.");
+		}
+
+		//查询是否已存在该员工
+		Employee employee1 = employeeMappper.queryEmployById (createEmployeeRequest.getEmployee ().getEmployeeId ());
+		if (null != employee1)
+		{
+			return Result.fail ("员工已存在.");
+		}
+
+		Employee employee = EntityMapperHandler.INSTANCE.employeeToEntity (createEmployeeRequest.getEmployee ());
+		if (StringUtils.isEmpty (employee.getPassword ()))
+		{
+			employee.setPassword (DEFAULT_PASSWORD);
+		}
+		employee.setPassword (Coder.encryptBASE64 (Coder.encryptMD5 (employee.getPassword ().getBytes ())));
+		//管理添加员工默认为正常用户
+		employee.setSupplement (1);
+		int flag = employeeMappper.add (employee);
+		if (flag > 0)
+		{
+			//员工自注册绑定普通员工角色
+			Map<String, String> params = Maps.newHashMap ();
+			params.put ("admin", employee.getId ());
+			params.put ("role", NORMAL_ROLE_DEFAULT);
+			adminRoleMapper.bindRole (params);
+			return Result.success ("user add success.");
+		}
+		else
+		{
+			return Result.fail ("user add failed.");
+		}
+	}
+
+	/**
 	 * 用户修改接口
 	 *
 	 * @param request
@@ -291,40 +337,32 @@ public class UserApiImpl implements UserApi
 		AdminRoleRlat adminRoleRlat = adminRoleMapper.findRoleById (employee.getId ());
 		if (null == adminRoleRlat)
 		{
-			return (QryEmployeeConditionResponse) Result.fail ("User invalid.");
+			return (QryEmployeeConditionResponse) Result.fail ("该用户非法.");
 		}
 
-		/** 非管理员只能查看自己信息的员工*/
-		if ("1".equals (adminRoleRlat.getRoleType ()))
+		if (! StringUtils.isEmpty (request.getParameter ("job")))
 		{
-			params.put ("employeeId", employee.getId ());
+			params.put ("job", request.getParameter ("job"));
 		}
-		else
+
+		if (! StringUtils.isEmpty (request.getParameter ("name")))
 		{
-			if (! StringUtils.isEmpty (request.getParameter ("job")))
-			{
-				params.put ("job", request.getParameter ("job"));
-			}
+			params.put ("name", request.getParameter ("name"));
+		}
 
-			if (! StringUtils.isEmpty (request.getParameter ("name")))
-			{
-				params.put ("name", request.getParameter ("name"));
-			}
+		if (! StringUtils.isEmpty (request.getParameter ("rank")))
+		{
+			params.put ("rank", request.getParameter ("rank"));
+		}
 
-			if (! StringUtils.isEmpty (request.getParameter ("rank")))
-			{
-				params.put ("rank", request.getParameter ("rank"));
-			}
+		if (! StringUtils.isEmpty (request.getParameter ("office")))
+		{
+			params.put ("office", request.getParameter ("office"));
+		}
 
-			if (! StringUtils.isEmpty (request.getParameter ("office")))
-			{
-				params.put ("office", request.getParameter ("office"));
-			}
-
-			if (! StringUtils.isEmpty (request.getParameter ("department")))
-			{
-				params.put ("department", request.getParameter ("department"));
-			}
+		if (! StringUtils.isEmpty (request.getParameter ("department")))
+		{
+			params.put ("department", request.getParameter ("department"));
 		}
 
 		String pageIndex = request.getParameter ("pageIndex");

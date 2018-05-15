@@ -103,7 +103,7 @@ public class LoginApiImpl implements LoginApi
 						Cookie type = new Cookie ("type", role.getRoleType ());
 						type.setPath ("/");
 						type.setMaxAge (3600 * 24 * 7);
-						type.setHttpOnly (true);
+						//type.setHttpOnly (true);
 						response.addCookie (type);
 					}
 				}

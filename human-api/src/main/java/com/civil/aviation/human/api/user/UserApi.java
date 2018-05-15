@@ -48,6 +48,17 @@ public interface UserApi
 	Result regist (@Context HttpServletRequest request, CreateEmployeeRequest createEmployeeRequest) throws Exception;
 
 	/**
+	 * 用户注册接口
+	 *
+	 * @param request
+	 * @return
+	 */
+	@POST
+	@Path ("/add")
+	@Produces (MediaType.APPLICATION_JSON)
+	Result addUser (@Context HttpServletRequest request, CreateEmployeeRequest createEmployeeRequest) throws Exception;
+
+	/**
 	 * 用户修改接口
 	 *
 	 * @param request
